@@ -8,6 +8,7 @@ import corsOptions from "./config/corsOptions.js";
 import cookieParser from "cookie-parser";
 import socketConnection from "./socket/socket.js";
 import root from "./routes/root.js";
+import authRoutes from "./routes/authRoutes.js";
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT;
@@ -23,6 +24,8 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "/public")));
 
 app.use("/", root);
+
+app.use("/auth", authRoutes);
 
 app.all("*", (req, res) => {
 	res.status(404);

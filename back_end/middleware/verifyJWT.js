@@ -18,7 +18,7 @@ const verifyJWT = (req, res, next) => {
 		{ ignoreExpiration: false, audience: `${audience}`, issuer: `${issuer}` },
 		(err, decoded) => {
 			if (err) return res.status(403).json({ message: "Forbidden" });
-			req.userId = decoded.UserInfo.userId;
+			req.user_id = decoded.User.user_id;
 			next();
 		}
 	);
