@@ -29,10 +29,10 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
 		}
 
 		const generateOtp = crypto.randomInt(100000, 999999).toString();
-
+		const hashedOtp = bcrypt.hash(generateOtp, saltRounds);
 		const createOtp = await prisma.otp.create({
 			data: {
-				otp: generateOtp,
+				otp: hashedOtp,
 				email,
 			},
 		});
@@ -63,7 +63,7 @@ const register = asyncHandler(async (req, res) => {
 			return res.status(400).json({ message: "Invalid provided otp" });
 		}
 
-		const compareOtp = await bcrypt.compare(otp, foundOtp?.otp);
+		const compareOtp = await bcrypt.compare(otp, foundOtpExist?.otp);
 
 		if (!compareOtp) {
 			return res.status(400).json({ message: "Invalid Otp!" });
