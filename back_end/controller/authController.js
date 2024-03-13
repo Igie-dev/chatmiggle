@@ -29,6 +29,8 @@ const signIn = asyncHandler(async (req, res) => {
 			{
 				User: {
 					email: email,
+					first_name: foundUser?.first_name,
+					last_name: foundUser?.last_name,
 					user_id: foundUser?.user_id,
 				},
 				aud: `${audience}`,
@@ -41,6 +43,8 @@ const signIn = asyncHandler(async (req, res) => {
 			{
 				User: {
 					email: email,
+					first_name: foundUser?.first_name,
+					last_name: foundUser?.last_name,
 					user_id: foundUser?.user_id,
 				},
 				aud: `${audience}`,
@@ -95,6 +99,8 @@ const refresh = asyncHandler(async (req, res) => {
 					{
 						User: {
 							email: email,
+							first_name: foundUser?.first_name,
+							last_name: foundUser?.last_name,
 							user_id: foundUser?.user_id,
 						},
 						aud: `${audience}`,
