@@ -4,7 +4,8 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { v4 as uuid } from "uuid";
 import { dateNow, formatDate } from "../lib/formatDate.js";
-const saltRounds = process.env.SALTROUND;
+import otpEmail from "../lib/otpMailer.js";
+const saltRounds = Number(process.env.SALTROUND);
 
 const requestVerifyEmail = asyncHandler(async (req, res) => {
 	const { email } = req.body;
@@ -29,7 +30,7 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
 		}
 
 		const generateOtp = crypto.randomInt(100000, 999999).toString();
-		const hashedOtp = bcrypt.hash(generateOtp, saltRounds);
+		const hashedOtp = await bcrypt.hash(generateOtp, saltRounds);
 		const createOtp = await prisma.otp.create({
 			data: {
 				otp: hashedOtp,
@@ -38,7 +39,7 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
 		});
 
 		//send email
-		await otpEmail(createOtp?.email, createOtp?.otp);
+		await otpEmail(createOtp?.email, generateOtp);
 
 		return res.status(200).json({
 			email,
@@ -70,7 +71,7 @@ const register = asyncHandler(async (req, res) => {
 		}
 
 		const today = dateNow();
-		const otpDate = formatDate(foundOtpExist?.otp);
+		const otpDate = formatDate(foundOtpExist?.createdAt);
 
 		const isExpired =
 			(today.getDate() !== otpDate.getDate()) |
@@ -83,6 +84,7 @@ const register = asyncHandler(async (req, res) => {
 		}
 
 		const decriptPass = await bcrypt.hash(password, Number(saltRounds));
+
 		const createUser = await prisma.user.create({
 			data: {
 				user_id: uuid(),
@@ -98,7 +100,7 @@ const register = asyncHandler(async (req, res) => {
 		}
 
 		await prisma.otp.delete({ where: { email } });
-		return res.status(201).json({ message: "Registered" });
+		return res.status(201).json({ email, message: "Registered" });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "Something went wrong" });
