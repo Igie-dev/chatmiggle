@@ -1,0 +1,80 @@
+.loader_ring_container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 40;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	gap: 1em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.loading_ring_wrapper {
+	display: inline-block;
+	position: relative;
+	width: 2rem;
+	height: 2rem;
+}
+
+.loading_ring_wrapper div {
+	display: block;
+	position: absolute;
+	width: 2rem;
+	height: 2rem;
+	margin: 5px;
+	border: 5px solid hsl(var(--primary));
+	border-radius: 50%;
+	animation: lds_ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: hsl(var(--primary)) transparent transparent transparent;
+}
+
+.loading_ring_wrapper div:nth-child(1) {
+	animation-delay: -0.45s;
+}
+.loading_ring_wrapper div:nth-child(2) {
+	animation-delay: -0.3s;
+}
+.loading_ring_wrapper div:nth-child(3) {
+	animation-delay: -0.15s;
+}
+
+@keyframes lds_ring {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* buttons loader */
+
+.btn_loading_ring_wrapper {
+	display: inline-block;
+	position: relative;
+	width: 1rem;
+	height: 1rem;
+}
+
+.btn_loading_ring_wrapper div {
+	display: block;
+	position: absolute;
+	width: 1rem;
+	height: 1rem;
+	border: 5px solid hsl(var(--accent));
+	border-radius: 50%;
+	animation: lds_ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: hsl(var(--accent)) transparent transparent transparent;
+}
+
+.btn_loading_ring_wrapper div:nth-child(1) {
+	animation-delay: -0.45s;
+}
+.btn_loading_ring_wrapper div:nth-child(2) {
+	animation-delay: -0.3s;
+}
+.btn_loading_ring_wrapper div:nth-child(3) {
+	animation-delay: -0.15s;
+}
