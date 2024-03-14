@@ -88,3 +88,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
 		}),
 	}),
 });
+
+export const {
+	useSignOutMutation,
+	useRefreshMutation,
+	useSignInMutation,
+	useRegisterMutation,
+	useRequestVerifyEmailMutation,
+} = authApiSlice;

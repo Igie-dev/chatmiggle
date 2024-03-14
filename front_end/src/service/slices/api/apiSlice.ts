@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials } from "../auth/authSlice";
-const URL = import.meta.env.VITE_URL_ENDPOINT;
+const URL = import.meta.env.VITE_SERVER_URL;
 
 const baseQuery = fetchBaseQuery({
 	baseUrl: URL,
 	credentials: "include",
 	prepareHeaders: (headers, { getState }: any) => {
 		const token = getState().auth.token;
+
 		if (token) {
 			headers.set("authorization", `Bearer ${token}`);
 		}

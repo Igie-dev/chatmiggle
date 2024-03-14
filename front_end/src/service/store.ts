@@ -4,9 +4,11 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { useDispatch } from "react-redux";
 import { apiSlice } from "./slices/api/apiSlice";
 import userReducer from "./slices/user/userSlice";
+import authReducer from "./slices/auth/authSlice";
 const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
+		auth: authReducer,
 		user: userReducer,
 	},
 	middleware: (getDefaultMiddleware) => [
