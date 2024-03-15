@@ -5,11 +5,13 @@ import { useDispatch } from "react-redux";
 import { apiSlice } from "./slices/api/apiSlice";
 import userReducer from "./slices/user/userSlice";
 import authReducer from "./slices/auth/authSlice";
+import channelReducer from "./slices/channel/channelSlice";
 const store = configureStore({
 	reducer: {
 		[apiSlice.reducerPath]: apiSlice.reducer,
 		auth: authReducer,
 		user: userReducer,
+		channel: channelReducer,
 	},
 	middleware: (getDefaultMiddleware) => [
 		...getDefaultMiddleware(),
