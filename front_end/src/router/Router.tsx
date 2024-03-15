@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Persist from "@/pages/authPage/login/Persist";
 import RouteGuard from "./RouteGuard";
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
+import Redirect from "./Redirect";
 export default function Router() {
 	const LandingPage = lazy(() => import("@/pages/landingPage/LandingPage"));
 
@@ -27,7 +28,9 @@ export default function Router() {
 				<Routes>
 					<Route path="*" element={<p>Error</p>} />
 					{/* <Route element={<Redirect />}> */}
-					<Route path="/" element={<LandingPage />} />
+					<Route element={<Redirect />}>
+						<Route path="/" element={<LandingPage />} />
+					</Route>
 					<Route path="/login" element={<LoginPage />} />
 					<Route path="/register" element={<RegisterPage />}>
 						<Route path="/register/form" element={<RegisterForm />} />
