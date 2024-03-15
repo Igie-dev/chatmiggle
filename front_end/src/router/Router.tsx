@@ -21,7 +21,13 @@ export default function Router() {
 		() => import("@/pages/authPage/register/RegisterVeryOtp")
 	);
 
-	const MainPage = lazy(() => import("@/pages/mainPage/MainPage"));
+	const ChatPage = lazy(() => import("@/pages/chatPage/ChatPage"));
+
+	const ChatBoxScreen = lazy(
+		() => import("@/pages/chatPage/main/ChatBoxScreen")
+	);
+
+	const UserListPage = lazy(() => import("@/pages/userListPage/UserListPage"));
 	return (
 		<Suspense fallback={<LoaderSpinner />}>
 			<BrowserRouter>
@@ -40,8 +46,11 @@ export default function Router() {
 					{/* </Route> */}
 					<Route element={<Persist />}>
 						<Route element={<RouteGuard />}>
-							<Route path="/chat" element={<MainPage />}>
-								{/* <Route path="/message/channel" element={<ChatScreen />} /> */}
+							<Route path="/chat" element={<ChatPage />}>
+								<Route path="/chat/:channelid" element={<ChatBoxScreen />} />
+							</Route>
+							<Route path="/u" element={<UserListPage />}>
+								<Route path="/u/:channelid" element={<ChatBoxScreen />} />
 							</Route>
 						</Route>
 					</Route>
