@@ -56,4 +56,17 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+	::-webkit-scrollbar {
+		width: 8px;
+	}
+	::-webkit-scrollbar-track {
+		@apply bg-background;
+	}
+	::-webkit-scrollbar-thumb {
+		@apply bg-accent;
+		border-radius: 8px;
+	}
+	::-webkit-scrollbar-thumb:hover {
+		@apply bg-accent;
+	}
 }

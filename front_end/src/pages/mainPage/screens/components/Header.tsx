@@ -8,7 +8,7 @@ export default function Header() {
 	const { first_name } = useAppSelector(getCurrentUser);
 
 	return (
-		<header className="flex flex-col w-full h-fit">
+		<header className="flex flex-col w-full h-[15%]">
 			<div className="flex items-center justify-between w-full h-16">
 				<div className="flex items-center h-full gap-2">
 					<Avatar className="w-9 h-9">
