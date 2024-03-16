@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useRegisterMutation } from "@/service/slices/auth/authApiSlice";
 import { useSearchParams } from "react-router-dom";
 import { decryptText } from "@/lib/helper";
+import { Input } from "@/components/ui/input";
 export default function VerifyOtp() {
 	const [register, { isLoading, isError, error }] = useRegisterMutation();
 	const inputRef = useRef<HTMLInputElement | null>(null);
@@ -68,7 +69,7 @@ export default function VerifyOtp() {
 				) : null}
 			</header>
 			<main className="flex flex-col items-center w-full gap-8">
-				<input
+				<Input
 					ref={inputRef}
 					type="text"
 					placeholder="Enter your Otp"

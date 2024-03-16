@@ -6,6 +6,7 @@ import BtnLoader from "@/components/loader/BtnLoader";
 import { Link, useNavigate } from "react-router-dom";
 import { useRequestVerifyEmailMutation } from "@/service/slices/auth/authApiSlice";
 import { encryptText } from "@/lib/helper";
+import { Input } from "@/components/ui/input";
 
 export default function RegisterForm() {
 	const navigate = useNavigate();
@@ -86,7 +87,7 @@ export default function RegisterForm() {
 					<label htmlFor="firstName" className="text-sm font-semibold">
 						First Name
 					</label>
-					<input
+					<Input
 						ref={inputRef}
 						type="text"
 						id="firstName"
@@ -111,7 +112,7 @@ export default function RegisterForm() {
 					<label htmlFor="lastName" className="text-sm font-semibold">
 						Last Name
 					</label>
-					<input
+					<Input
 						type="text"
 						id="lastName"
 						autoComplete="false"
@@ -135,7 +136,7 @@ export default function RegisterForm() {
 					<label htmlFor="email" className="text-sm font-semibold">
 						Email
 					</label>
-					<input
+					<Input
 						type="text"
 						id="email"
 						autoComplete="false"
@@ -159,7 +160,7 @@ export default function RegisterForm() {
 					<label htmlFor="password" className="text-sm font-semibold">
 						Create password
 					</label>
-					<input
+					<Input
 						type="password"
 						id="password"
 						autoComplete="false"
@@ -183,7 +184,7 @@ export default function RegisterForm() {
 					<label htmlFor="confirmpass" className="text-sm font-semibold">
 						Confirm password
 					</label>
-					<input
+					<Input
 						type="password"
 						id="confirmpass"
 						placeholder="Confirm your password"

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSignInMutation } from "@/service/slices/auth/authApiSlice";
 import { Button } from "@/components/ui/button";
 import BtnLoader from "@/components/loader/BtnLoader";
+import { Input } from "@/components/ui/input";
 export default function LoginPage() {
 	const navigate = useNavigate();
 	const [isOpenEye, setIsOpenEye] = useState(false);
@@ -56,7 +57,7 @@ export default function LoginPage() {
 						<label htmlFor="email" className="text-sm font-semibold">
 							Email
 						</label>
-						<input
+						<Input
 							ref={inputRef}
 							type="text"
 							id="email"
@@ -84,7 +85,7 @@ export default function LoginPage() {
 						<label htmlFor="password" className="text-sm font-semibold">
 							Password
 						</label>
-						<input
+						<Input
 							type={isOpenEye ? "text" : "password"}
 							id="password"
 							autoComplete="false"
