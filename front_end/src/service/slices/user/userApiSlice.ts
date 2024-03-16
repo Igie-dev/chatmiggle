@@ -4,8 +4,8 @@ import { apiSlice } from "../api/apiSlice";
 const userApiSlice = apiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		getUsers: builder.query({
-			query: () => ({
-				url: "/user",
+			query: (cursor: number) => ({
+				url: `/user?take=40&cursor=${cursor}`,
 				method: "GET",
 			}),
 			providesTags: ["user"],
