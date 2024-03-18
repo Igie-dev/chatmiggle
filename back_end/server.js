@@ -11,6 +11,7 @@ import root from "./routes/root.js";
 import authRoutes from "./routes/authRoutes.js";
 import registerRoutes from "./routes/registerRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import imageRoutes from "./routes/imageRoutes.js";
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT;
@@ -32,6 +33,8 @@ app.use("/auth", authRoutes);
 app.use("/register", registerRoutes);
 
 app.use("/user", userRoutes);
+
+app.use("/image", imageRoutes);
 
 app.all("*", (req, res) => {
 	res.status(404);
