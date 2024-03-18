@@ -2,7 +2,10 @@ import { Input } from "@/components/ui/input";
 import UsersCard from "./UsersCard";
 import { useGetUsersQuery } from "@/service/slices/user/userApiSlice";
 import LoadingSkeleton from "./LoadingSkeleton";
+import { useAppSelector } from "@/service/store";
+import { getCurrentUser } from "@/service/slices/user/userSlice";
 export default function UsersList() {
+	const { user_id } = useAppSelector(getCurrentUser);
 	const { data, isFetching } = useGetUsersQuery(0);
 
 	return (
@@ -19,9 +22,11 @@ export default function UsersList() {
 				{isFetching ? (
 					<LoadingSkeleton />
 				) : data?.users?.length > 0 ? (
-					data?.users?.map((user: TUser) => {
-						return <UsersCard key={user.id} user={user} />;
-					})
+					data?.users
+						?.filter((u: TUser) => u.user_id !== user_id)
+						.map((user: TUser) => {
+							return <UsersCard key={user.user_id} user={user} />;
+						})
 				) : (
 					<p>Empty</p>
 				)}
