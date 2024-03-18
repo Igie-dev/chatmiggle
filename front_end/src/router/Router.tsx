@@ -37,6 +37,17 @@ export default function Router() {
 		() => import("@/pages/mainPage/screens/groupListScreen/GroupListScreen")
 	);
 
+	const AvatarScreen = lazy(
+		() => import("@/pages/mainPage/screens/avatarScreen/AvatarScreen")
+	);
+
+	const UploadAvatar = lazy(
+		() => import("@/pages/mainPage/screens/avatarScreen/forms/UploadAvatar")
+	);
+
+	const RemovedAvatar = lazy(
+		() => import("@/pages/mainPage/screens/avatarScreen/forms/RemoveAvatar")
+	);
 	return (
 		<Suspense fallback={<LoaderSpinner />}>
 			<BrowserRouter>
@@ -66,6 +77,10 @@ export default function Router() {
 							{/* Group List */}
 							<Route path="/g" element={<GroupListScreen />}>
 								<Route path="/g/:channelid" element={<ChatBox />} />
+							</Route>
+							<Route path="/avatar" element={<AvatarScreen />}>
+								<Route path="/avatar/upload" element={<UploadAvatar />} />
+								<Route path="/avatar/remove" element={<RemovedAvatar />} />
 							</Route>
 						</Route>
 					</Route>
