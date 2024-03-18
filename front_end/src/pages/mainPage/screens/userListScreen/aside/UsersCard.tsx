@@ -1,17 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Ellipsis } from "lucide-react";
-
+import UserAvatar from "@/components/shared/UserAvatar";
 type Props = {
 	user: TUser;
 };
 export default function UsersCard({ user }: Props) {
 	return (
 		<li className="relative flex items-center w-full gap-3 px-2 py-3 rounded-md cursor-pointer hover:bg-secondary/70 h-fit">
-			<div className="w-10 h-10 border rounded-full">
-				<Avatar className="w-full h-full">
-					<AvatarImage src="https://github.com/shadcn.png" />
-					<AvatarFallback>CN</AvatarFallback>
-				</Avatar>
+			<div className="w-10 h-10 rounded-full">
+				<UserAvatar userId={user.user_id} />
 			</div>
 			<p className="text-sm font-semibold  w-[70%] truncate">
 				{user?.first_name + " " + user?.last_name}
