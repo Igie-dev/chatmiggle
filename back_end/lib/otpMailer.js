@@ -2,24 +2,24 @@ import dotenv from "dotenv";
 dotenv.config();
 import nodemailer from "nodemailer";
 const appName = process.env.APP_NAME;
-const mailerEmail = process.env.MAILER_EMAIL;
+const mailerEmail = process.env.SYSTEM_EMAIL;
 const mailerPass = process.env.MAILER_PASSWORD;
 
 const otpEmail = (email, otp) => {
-	return new Promise(async (resolve, reject) => {
-		const transporter = nodemailer.createTransport({
-			service: "gmail",
-			auth: {
-				user: mailerEmail,
-				pass: mailerPass,
-			},
-		});
+  return new Promise(async (resolve, reject) => {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: mailerEmail,
+        pass: mailerPass,
+      },
+    });
 
-		const mail_config = {
-			from: mailerEmail,
-			to: email,
-			subject: "Email verification Otp",
-			html: `<!DOCTYPE html>
+    const mail_config = {
+      from: mailerEmail,
+      to: email,
+      subject: "Email verification Otp",
+      html: `<!DOCTYPE html>
       <html lang="en">
       
       <head>
@@ -58,16 +58,16 @@ const otpEmail = (email, otp) => {
       </body>
       
       </html>`,
-		};
+    };
 
-		transporter.sendMail(mail_config, (err, info) => {
-			if (err) {
-				console.log(err);
-				return reject({ message: "Something wrong in mailer!" });
-			}
-			return resolve({ message: "Email sent succesfully!" });
-		});
-	});
+    transporter.sendMail(mail_config, (err, info) => {
+      if (err) {
+        console.log(err);
+        return reject({ message: "Something wrong in mailer!" });
+      }
+      return resolve({ message: "Email sent succesfully!" });
+    });
+  });
 };
 
 export default otpEmail;
