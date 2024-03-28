@@ -15,7 +15,7 @@ model User {
   email      String   @unique
   password   String
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime? @updatedAt
   image      Avatar?
 }
 
@@ -33,7 +33,7 @@ model ChannelMembers {
   channel_members_id String   @unique
   channel            Channel  @relation(fields: [channel_members_id], references: [channel_id])
   createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+updatedAt  DateTime? @updatedAt
 }
 
 model Message {
@@ -45,7 +45,7 @@ model Message {
   type       String
   channel    Channel  @relation(fields: [channel_id], references: [channel_id])
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime? @updatedAt
 }
 
 model Otp {
