@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  web:
+    depends_on:
+      - server
+    build: ./front_end
+    ports:
+     - 5173:5173
+    develop:
+      watch: 
+        - path: ./front_end/package*.json
+          action: rebuild
+        - path: ./front_end
+          target: ./home/app
+          action: sync
+
+  server:
+    depends_on:
+      - postgres
+    build: ./back_end
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+      - path: ./back_end
+        target: ./home/app
+        action: sync
+      - path: ./back_end/package*.json
+        action: rebuild
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    volumes:
+     - webchat:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: webchat
+
+
+  pgadmin: 
+    image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
+    ports:
+      - "5050:5050"
+    environment:
+      PGADMIN_LISTEN_PORT: 5050
+      PGADMIN_DEFAULT_EMAIL: jrpogiyanyow@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      SECURE_PROXY_SSL_HEADER : None
+      SESSION_COOKIE_SECURE : False
+      CSRF_COOKIE_SECURE : False
+      SERVER_MODE : False
+
+
+volumes:
+  webchat:
+     name: webchat
+     driver: local
+  
