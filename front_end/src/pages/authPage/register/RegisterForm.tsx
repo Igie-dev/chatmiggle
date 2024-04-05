@@ -84,7 +84,7 @@ export default function RegisterForm() {
         </p>
       </header>
 
-      <div className="flex flex-col items-center w-full gap-5">
+      <div className="flex flex-col items-center w-full gap-7">
         <div className="w-[90%] flex flex-col gap-1 relative">
           <label htmlFor="firstName" className="text-sm font-semibold">
             First Name
