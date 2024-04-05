@@ -6,7 +6,7 @@ export default function GroupList({ handleAside }: Props) {
   return (
     <div onClick={handleAside} className="flex flex-col w-full h-[87%] gap-2">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
-        <h1 className="text-sm font-semibold">Channel</h1>
+        <h1 className="text-sm font-semibold">Group</h1>
         <Input
           type="text"
           placeholder="Search..."

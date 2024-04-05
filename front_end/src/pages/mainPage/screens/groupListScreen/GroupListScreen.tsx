@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AsideNav from "./aside/Aside";
 import { useRef } from "react";
-
+import Container from "../../../../components/shared/Container";
 export default function GroupListScreen() {
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
@@ -12,11 +12,13 @@ export default function GroupListScreen() {
     }
   };
   return (
-    <section className="relative flex w-screen h-screen">
-      <AsideNav handleAside={handleAside} asideRef={asideRef} />
-      <main className="w-full h-full border lg:flex-1 bg-primary-foreground">
-        <Outlet />
-      </main>
-    </section>
+    <Container>
+      <>
+        <AsideNav handleAside={handleAside} asideRef={asideRef} />
+        <main className="w-full h-full lg:flex-1 bg-primary-foreground/50">
+          <Outlet />
+        </main>
+      </>
+    </Container>
   );
 }
