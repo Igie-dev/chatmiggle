@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AsideNav from "./aside/Aside";
 import { useRef } from "react";
+import Container from "../../../../components/shared/Container";
 export default function ChannelListScreen() {
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
@@ -12,11 +13,13 @@ export default function ChannelListScreen() {
   };
 
   return (
-    <section className="relative flex w-screen h-screen">
-      <AsideNav asideRef={asideRef} handleAside={handleAside} />
-      <main className="w-full h-full border lg:flex-1 bg-primary-foreground">
-        <Outlet />
-      </main>
-    </section>
+    <Container>
+      <>
+        <AsideNav asideRef={asideRef} handleAside={handleAside} />
+        <main className="w-full h-full lg:flex-1 bg-primary-foreground/50">
+          <Outlet />
+        </main>
+      </>
+    </Container>
   );
 }
