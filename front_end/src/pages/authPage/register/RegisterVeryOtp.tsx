@@ -76,7 +76,7 @@ export default function VerifyOtp() {
           placeholder="Enter your Otp"
           value={inputOtp || ""}
           onChange={(e) => setInputOtp(e.target.value)}
-          className="w-[14rem] h-11 outline-none pl-2 pr-10 text-center  text-sm  rounded-lg  border-2 bg-secondary focus:border-primary/70"
+          className="w-[14rem] h-11 outline-none   text-center  text-sm  rounded-lg  border-2 bg-secondary focus:border-primary/70"
         />
         <ResendOtp email={email as string} />
         <Button
