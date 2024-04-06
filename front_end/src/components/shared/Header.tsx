@@ -20,7 +20,7 @@ export default function Header() {
     navigator.clipboard.writeText(`${user_id}`);
   };
   return (
-    <header className="flex flex-col w-full h-[12%] gap-4">
+    <header className="flex flex-col w-full h-[12%] gap-4 relative">
       <div className="flex items-center justify-between w-full h-fit">
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
