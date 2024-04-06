@@ -21,18 +21,6 @@ export default function Router() {
     () => import("@/pages/authPage/register/RegisterVeryOtp")
   );
 
-  const ChatBox = lazy(
-    () => import("@/pages/mainPage/screens/chatBox/ChatBox")
-  );
-
-  const ChannelListScrren = lazy(
-    () => import("@/pages/mainPage/screens/channelListScreen/ChannelListScreen")
-  );
-
-  const GroupListScreen = lazy(
-    () => import("@/pages/mainPage/screens/groupListScreen/GroupListScreen")
-  );
-
   const AvatarScreen = lazy(
     () => import("@/pages/mainPage/screens/avatarScreen/AvatarScreen")
   );
@@ -44,6 +32,19 @@ export default function Router() {
   const RemovedAvatar = lazy(
     () => import("@/pages/mainPage/screens/avatarScreen/forms/RemoveAvatar")
   );
+
+  const ChatBoxContainer = lazy(
+    () => import("@/pages/mainPage/screens/chatBox/ChatBoxContainer")
+  );
+
+  const ChannelListScrren = lazy(
+    () => import("@/pages/mainPage/screens/channelListScreen/ChannelListScreen")
+  );
+
+  const GroupListScreen = lazy(
+    () => import("@/pages/mainPage/screens/groupListScreen/GroupListScreen")
+  );
+
   return (
     <Suspense fallback={<LoaderSpinner />}>
       <BrowserRouter>
@@ -64,11 +65,11 @@ export default function Router() {
             <Route element={<RouteGuard />}>
               {/* Channel */}
               <Route path="/chat" element={<ChannelListScrren />}>
-                <Route path="/chat/:channelid" element={<ChatBox />} />
+                <Route path="/chat/:channelid" element={<ChatBoxContainer />} />
               </Route>
               {/* Group List */}
               <Route path="/g" element={<GroupListScreen />}>
-                <Route path="/g/:channelid" element={<ChatBox />} />
+                <Route path="/g/:channelid" element={<ChatBoxContainer />} />
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>
                 <Route path="/avatar/upload" element={<UploadAvatar />} />
