@@ -41,11 +41,11 @@ const otpEmail = (email, otp) => {
       
                   <h2 style="font-size:1em;font-weight:300">Your Otp code:</h2>
                   <h2 style="background: #00466a;margin: 0;width: max-content;padding: 1rem 3rem;color: #fff;border-radius: 4px;">${otp}</h2>
-                  <p style="font-size:0.9em; margin-top: 2rem; font-weight:300;">This code will expire in 5 minutes.</p>
-                  <p style="font-size:0.7em;">Regards,<br />Faculty</p>
+                  <p style="font-size:1em; margin-top: 2rem; font-weight:300;">This code will expire in 5 minutes.</p>
+                  <p style="font-size:1em;">Regards,<br />Faculty</p>
                   <hr style="border:none;border-top:1px solid #eee" />
       
-                  <div style="float:left;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                  <div style="float:left;padding:8px 0;color:#aaa;font-size:1em;line-height:1;font-weight:300">
                       <p>${appName}</p>
                       <p>Manila </p>
                       <p>Philippines</p>
