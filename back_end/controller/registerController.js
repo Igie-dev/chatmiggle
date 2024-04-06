@@ -91,14 +91,15 @@ const register = asyncHandler(async (req, res) => {
       .slice(0, 2)
       .toUpperCase()}${Math.floor(Math.random() * 100000)}`;
 
+    const data = {
+      user_id: generatedRandomId,
+      first_name,
+      last_name,
+      email,
+      password: decriptPass,
+    };
     const createUser = await prisma.user.create({
-      data: {
-        user_id: generatedRandomId,
-        first_name,
-        last_name,
-        email,
-        password: decriptPass,
-      },
+      data,
     });
 
     if (!createUser?.id) {
