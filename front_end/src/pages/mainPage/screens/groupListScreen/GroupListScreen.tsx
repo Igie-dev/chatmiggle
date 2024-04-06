@@ -15,7 +15,7 @@ export default function GroupListScreen() {
     <Container>
       <>
         <AsideNav handleAside={handleAside} asideRef={asideRef} />
-        <main className="w-full h-full lg:flex-1 bg-primary-foreground/50">
+        <main className="w-full h-full lg:flex-1 ">
           <Outlet />
         </main>
       </>

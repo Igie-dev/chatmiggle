@@ -16,7 +16,7 @@ export default function ChannelListScreen() {
     <Container>
       <>
         <AsideNav asideRef={asideRef} handleAside={handleAside} />
-        <main className="w-full h-full lg:flex-1 bg-primary-foreground/50">
+        <main className="w-full h-full lg:flex-1">
           <Outlet />
         </main>
       </>
