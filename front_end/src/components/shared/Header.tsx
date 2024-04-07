@@ -4,6 +4,7 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Link, NavLink } from "react-router-dom";
 import { LayoutList, MessageCircleMore } from "lucide-react";
 import UserAvatar from "@/components/shared/UserAvatar";
+import { useParams } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +15,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SignOutBtn from "@/components/shared/SignOutBtn";
 export default function Header() {
+  const { channelId } = useParams();
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
 
+  console.log(channelId);
   const handleCopyId = () => {
     navigator.clipboard.writeText(`${user_id}`);
   };
@@ -29,22 +32,26 @@ export default function Header() {
                 <UserAvatar userId={user_id} />
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="min-w-[12rem] p-2">
+            <DropdownMenuContent className="min-w-[12rem] p-2 text-xs">
               <DropdownMenuLabel className="opacity-70">
                 My Account
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link to="" className="w-full h-10 hover:bg-primary-foreground">
-                  Profile
+                  <span className="text-sm opacity-70">Profile</span>
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <ModeToggle />
+              </DropdownMenuItem>
+
               <DropdownMenuItem asChild>
                 <Link
                   to="/avatar/upload"
                   className="w-full h-10 hover:bg-primary-foreground"
                 >
-                  Change avatar
+                  <span className="text-sm opacity-70">Chane avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -52,7 +59,7 @@ export default function Header() {
                   to="/avatar/remove"
                   className="w-full h-10 hover:bg-primary-foreground"
                 >
-                  Remove avatar
+                  <span className="text-sm opacity-70">Remve avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="mt-5" />
@@ -78,11 +85,11 @@ export default function Header() {
             </span>
           </div>
         </div>
-        <ModeToggle />
+        {/* <ModeToggle /> */}
       </div>
       <nav className="flex items-center w-full h-10 gap-1 justify-evenly">
         <NavLink
-          to="/chat"
+          to={`${channelId?.length ? `/chat/${channelId}` : "/chat"}`}
           className={({ isActive }) =>
             `flex items-center justify-center border flex-1 h-full rounded-md ${
               isActive
@@ -94,7 +101,7 @@ export default function Header() {
           <MessageCircleMore size={20} className="opacity-70" />
         </NavLink>
         <NavLink
-          to="/g"
+          to={`${channelId?.length ? `/g/${channelId}` : "/g"}`}
           className={({ isActive }) =>
             `flex items-center justify-center  border flex-1 h-full rounded-md ${
               isActive
