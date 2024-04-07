@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import AsideNav from "./aside/Aside";
 import { useRef } from "react";
 import Container from "../../../../components/shared/Container";
-export default function ChannelListScreen() {
+export default function ChannelScreen() {
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
     if (asideRef?.current?.classList.contains("-translate-x-full")) {
