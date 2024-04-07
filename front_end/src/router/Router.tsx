@@ -37,12 +37,12 @@ export default function Router() {
     () => import("@/pages/mainPage/screens/chatBox/ChatBoxContainer")
   );
 
-  const ChannelListScrren = lazy(
-    () => import("@/pages/mainPage/screens/channelListScreen/ChannelListScreen")
+  const ChannelScreen = lazy(
+    () => import("@/pages/mainPage/screens/channelScreen/ChannelScreen")
   );
 
-  const GroupListScreen = lazy(
-    () => import("@/pages/mainPage/screens/groupListScreen/GroupListScreen")
+  const GroupScreen = lazy(
+    () => import("@/pages/mainPage/screens/groupScreen/GroupScreen")
   );
 
   return (
@@ -64,12 +64,12 @@ export default function Router() {
           <Route element={<Persist />}>
             <Route element={<RouteGuard />}>
               {/* Channel */}
-              <Route path="/chat" element={<ChannelListScrren />}>
-                <Route path="/chat/:channelid" element={<ChatBoxContainer />} />
+              <Route path="/chat" element={<ChannelScreen />}>
+                <Route path="/chat/:channelId" element={<ChatBoxContainer />} />
               </Route>
               {/* Group List */}
-              <Route path="/g" element={<GroupListScreen />}>
-                <Route path="/g/:channelid" element={<ChatBoxContainer />} />
+              <Route path="/g" element={<GroupScreen />}>
+                <Route path="/g/:channelId" element={<ChatBoxContainer />} />
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>
                 <Route path="/avatar/upload" element={<UploadAvatar />} />
