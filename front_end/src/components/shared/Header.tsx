@@ -1,10 +1,10 @@
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { LayoutList, MessageCircleMore } from "lucide-react";
 import UserAvatar from "@/components/shared/UserAvatar";
-import { useParams } from "react-router-dom";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SignOutBtn from "@/components/shared/SignOutBtn";
 export default function Header() {
-  const { channelId } = useParams();
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
+  const location = useLocation();
 
-  console.log(channelId);
   const handleCopyId = () => {
     navigator.clipboard.writeText(`${user_id}`);
   };
@@ -89,7 +88,7 @@ export default function Header() {
       </div>
       <nav className="flex items-center w-full h-10 gap-1 justify-evenly">
         <NavLink
-          to={`${channelId?.length ? `/chat/${channelId}` : "/chat"}`}
+          to={`${location.pathname.replace("g", "c")}`}
           className={({ isActive }) =>
             `flex items-center justify-center border flex-1 h-full rounded-md ${
               isActive
@@ -101,7 +100,7 @@ export default function Header() {
           <MessageCircleMore size={20} className="opacity-70" />
         </NavLink>
         <NavLink
-          to={`${channelId?.length ? `/g/${channelId}` : "/g"}`}
+          to={`${location.pathname.replace("c", "g")}`}
           className={({ isActive }) =>
             `flex items-center justify-center  border flex-1 h-full rounded-md ${
               isActive

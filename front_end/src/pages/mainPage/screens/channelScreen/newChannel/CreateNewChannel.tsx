@@ -12,10 +12,13 @@ import { FormEvent, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 import UserAvatar from "@/components/shared/UserAvatar";
+import { useAppSelector } from "@/service/store";
+import { getCurrentUser } from "@/service/slices/user/userSlice";
 export default function CreateNewChannel() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
+  const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError, refetch } = useGetUserByIdQuery(id);
 
   const handleSeachUser = () => {
@@ -45,8 +48,8 @@ export default function CreateNewChannel() {
         <DialogHeader>
           <DialogTitle>Private message</DialogTitle>
           <DialogDescription>
-            You can send a private message to another user, provided that there
-            is a message included.
+            You can send a private message to another user, provided that a
+            message is included.
           </DialogDescription>
           <form
             onSubmit={handleSubmit}
@@ -77,6 +80,10 @@ export default function CreateNewChannel() {
                   <div className=" font-semibold h-4 opacity-70 w-[40%] ">
                     <Skeleton className="w-full h-full" />
                   </div>
+                </div>
+              ) : !isError && data?.user_id === user_id ? (
+                <div className="flex items-center w-full h-12 px-2">
+                  <p className="text-sm ">Please provide other ID</p>
                 </div>
               ) : !isError && data && data?.user_id ? (
                 <div className="flex items-center w-full gap-4 p-2 border rounded-md h-fit">

@@ -37,7 +37,7 @@ export default function LoginPage() {
         });
 
         if (res?.data?.accessToken) {
-          navigate("/chat");
+          navigate("/c");
         }
       } catch (error) {
         console.log(error);

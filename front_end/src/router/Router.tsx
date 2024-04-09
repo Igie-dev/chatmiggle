@@ -64,8 +64,8 @@ export default function Router() {
           <Route element={<Persist />}>
             <Route element={<RouteGuard />}>
               {/* Channel */}
-              <Route path="/chat" element={<ChannelScreen />}>
-                <Route path="/chat/:channelId" element={<ChatBoxContainer />} />
+              <Route path="/c" element={<ChannelScreen />}>
+                <Route path="/c/:channelId" element={<ChatBoxContainer />} />
               </Route>
               {/* Group List */}
               <Route path="/g" element={<GroupScreen />}>
