@@ -18,7 +18,7 @@ export function ModeToggle() {
           size="icon"
           className="flex items-center justify-start w-full h-10 px-2 hover:bg-primary-foreground"
         >
-          <span className="text-sm opacity-70">Theme</span>
+          <span className="text-sm font-normal opacity-70">Theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
