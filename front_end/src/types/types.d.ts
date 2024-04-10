@@ -18,7 +18,7 @@ declare global {
 		otp: string;
 	};
 	type TUser = {
-		id?: string;
+		id?: number;
 		user_id: string;
 		first_name: string;
 		last_name: string;
@@ -32,6 +32,34 @@ declare global {
 		first_name: string;
 		last_name: string;
 	};
+
+	type TMessageData = {
+		id?: number,
+		channel_id:string,
+		message_id:string
+		sender_id:string,
+		message:string,
+		type:string,
+		createdAt:Date,
+		updatedAt?:Date,
+	}
+	
+	type TChannelData = {
+		id?:number,
+		channel_id:string,
+		messages: TMessageData[],
+		members: {id?:number, user_id:string,channel_id:string}[],
+		createdAt:string,
+		updatedAt?:string,
+	}
+
+	type TMessageSend = {
+		sender_id:string,
+		message:string,
+		type:string,
+		members:{user_id:string}[]
+		
+	}
 }
 
 export {};
