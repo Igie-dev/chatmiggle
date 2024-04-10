@@ -1,10 +1,10 @@
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { LayoutList, MessageCircleMore } from "lucide-react";
 import UserAvatar from "@/components/shared/UserAvatar";
-
+import { socket } from "@/socket";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,13 +14,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SignOutBtn from "@/components/shared/SignOutBtn";
+import { useEffect } from "react";
 export default function Header() {
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
-  const location = useLocation();
+  const { channelId } = useParams();
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(`${user_id}`);
   };
+
+  useEffect(() => {
+    socket.on("connection", () => {
+      console.log("socket connected");
+    });
+    if (user_id) {
+      socket.emit("user_join", user_id);
+    }
+    return () => {
+      socket.off("user_join");
+    };
+  }, [user_id]);
+
   return (
     <header className="flex flex-col w-full h-[12%] gap-4 relative">
       <div className="flex items-center justify-between w-full h-fit">
@@ -50,7 +64,7 @@ export default function Header() {
                   to="/avatar/upload"
                   className="w-full h-10 hover:bg-primary-foreground"
                 >
-                  <span className="text-sm opacity-70">Chane avatar</span>
+                  <span className="text-sm opacity-70">Change avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
@@ -58,7 +72,7 @@ export default function Header() {
                   to="/avatar/remove"
                   className="w-full h-10 hover:bg-primary-foreground"
                 >
-                  <span className="text-sm opacity-70">Remve avatar</span>
+                  <span className="text-sm opacity-70">Remove avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="mt-5" />
@@ -88,7 +102,7 @@ export default function Header() {
       </div>
       <nav className="flex items-center w-full h-10 gap-1 justify-evenly">
         <NavLink
-          to={`${location.pathname.replace("g", "c")}`}
+          to={`${channelId?.length ? `/c/${channelId}` : "/c"}`}
           className={({ isActive }) =>
             `flex items-center justify-center border flex-1 h-full rounded-md ${
               isActive
@@ -100,7 +114,7 @@ export default function Header() {
           <MessageCircleMore size={20} className="opacity-70" />
         </NavLink>
         <NavLink
-          to={`${location.pathname.replace("c", "g")}`}
+          to={`${channelId?.length ? `/g/${channelId}` : "/g"}`}
           className={({ isActive }) =>
             `flex items-center justify-center  border flex-1 h-full rounded-md ${
               isActive
