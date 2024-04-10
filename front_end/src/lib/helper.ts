@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-
+import store from "@/service/store"
 export const decryptText = (text: string): string => {
 	const decData = CryptoJS.enc.Base64.parse(text).toString(CryptoJS.enc.Utf8);
 	const bytes = CryptoJS.AES.decrypt(
@@ -19,3 +19,8 @@ export const encryptText = (text: string): string => {
 	);
 	return encData;
 };
+
+export async function getToken() {
+	const token =  store.getState().auth.token;
+	return token;
+}
