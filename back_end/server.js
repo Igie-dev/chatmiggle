@@ -12,6 +12,7 @@ import authRoutes from "./routes/authRoutes.js";
 import registerRoutes from "./routes/registerRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import imageRoutes from "./routes/imageRoutes.js";
+import channelRoutes from "./routes/channelRoutes.js";
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT;
@@ -36,19 +37,21 @@ app.use("/user", userRoutes);
 
 app.use("/image", imageRoutes);
 
+app.use("/channel", channelRoutes);
+
 app.all("*", (req, res) => {
-	res.status(404);
-	if (req.accepts("html")) {
-		res.sendFile(path.join(__dirname, "views", "error.html"));
-	} else if (req.accepts("json")) {
-		res.json({ message: "404 Not Found" });
-	} else {
-		res.type("txt").send("404 Not Found");
-	}
+  res.status(404);
+  if (req.accepts("html")) {
+    res.sendFile(path.join(__dirname, "views", "error.html"));
+  } else if (req.accepts("json")) {
+    res.json({ message: "404 Not Found" });
+  } else {
+    res.type("txt").send("404 Not Found");
+  }
 });
 
 httpServer.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
 
 //Socket

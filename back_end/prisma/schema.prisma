@@ -32,21 +32,23 @@ model Channel {
 
 model  UserChannelMember {
 id          Int         @id @default(autoincrement())
-user_id String? @unique
-channe_id String? @unique
-users User? @relation(fields: [user_id], references: [user_id])
-channels Channel? @relation(fields: [channe_id], references: [channel_id])
+user_id String
+channel_id String
+user User? @relation(fields: [user_id], references: [user_id])
+channel Channel? @relation(fields: [channel_id], references: [channel_id])
+
+@@index([user_id,channel_id])
 }
 
 
 model Message {
   id         Int      @id @default(autoincrement())
-  channel_id String   @unique
   message_id String   @unique
-  sender_id  String   @unique
+  sender_id  String   
   message    String
   type       String
   channel    Channel  @relation(fields: [channel_id], references: [channel_id])
+  channel_id String  
   createdAt  DateTime @default(now())
   updatedAt  DateTime? @updatedAt
   @@index([message_id])
