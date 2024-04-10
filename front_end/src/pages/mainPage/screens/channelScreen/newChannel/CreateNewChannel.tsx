@@ -14,6 +14,7 @@ import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import { asycnEmit } from "@/socket";
 export default function CreateNewChannel() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [id, setId] = useState("");
@@ -30,9 +31,35 @@ export default function CreateNewChannel() {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log("submitted");
+    try {
+      const messageData: TMessageSend = {
+        message,
+        sender_id: user_id,
+        type: "text",
+        members: [
+          {
+            user_id: data?.user_id,
+          },
+          {
+            user_id: user_id,
+          },
+        ],
+      };
+      asycnEmit("createNewChannel", messageData)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
