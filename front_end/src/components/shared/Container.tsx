@@ -3,8 +3,8 @@ type Props = {
 };
 function Container({ children }: Props) {
   return (
-    <section className="w-screen h-screen p-2 md:p-5 lg:px-16 bg-background/50">
-      <div className="relative flex w-full h-full overflow-hidden border rounded-2xl bg-background/50">
+    <section className="flex items-center justify-center w-screen h-screen border lg:px-10 lg:py-5 xl:px-16 bg-background/50">
+      <div className="relative flex w-full h-full overflow-hidden border lg:border lg:rounded-2xl lg:p-2 xl:p-4 bg-background/50">
         {children}
       </div>
     </section>

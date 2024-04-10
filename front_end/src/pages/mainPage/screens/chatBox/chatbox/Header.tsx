@@ -5,9 +5,8 @@ type Props = {
 };
 export default function Header({ handleAside }: Props) {
   return (
-    <header className="flex items-center justify-between w-full h-20 px-2 border rounded-lg">
+    <header className="flex items-center justify-between w-full h-20 px-2 ">
       <div>Header</div>
-
       <div>
         <Button
           onClick={handleAside}
