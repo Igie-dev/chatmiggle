@@ -2,7 +2,8 @@ import asyncHandler from "express-async-handler";
 import prisma from "../lib/prisma.js";
 
 const getUserChannels = asyncHandler(async (req, res) => {
-  const user_id = req.params.id;
+  const user_id = req.params.userId;
+
   try {
     const foundUser = await prisma.user.findUnique({
       where: { user_id },
@@ -74,10 +75,70 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
       return res.status(401).json({ message: "Unauthorized!" });
     }
 
-    return res.status(200).json({ c: channel_id });
+    return res.status(200).json({ channel_id: channel_id });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
-export { getUserChannels, verifyUserInChannel };
+
+const getChannelMessages = asyncHandler(async (req, res) => {
+  const channelId = req.params.channelId;
+  const take = JSON.parse(req.query.take);
+  const cursor = req.query.cursor;
+
+  // console.log(take);
+  // console.log(cursor);
+
+  try {
+    const query = {
+      where: { channel_id: channelId },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          take,
+        },
+      },
+    };
+
+    if (cursor) {
+      query.include.messages.cursor = cursor;
+    }
+
+    const foundChannel = await prisma.channel.findUnique(query);
+
+    if (!foundChannel?.id) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    return res.status(200).json({ messages: foundChannel.messages });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
+const getChannel = asyncHandler(async (req, res) => {
+  const channel_id = req.params.channelId;
+
+  try {
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id },
+      include: {
+        members: true,
+      },
+    });
+
+    if (!foundChannel?.id) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    return res.status(200).json(foundChannel);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+export { getUserChannels, verifyUserInChannel, getChannelMessages, getChannel };
