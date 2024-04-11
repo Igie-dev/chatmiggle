@@ -41,7 +41,6 @@ const socketConnection = (httpServer) => {
     });
 
     socket.on("createNewChannel", ({ members, message, sender_id, type }) => {
-      console.log(members, message, sender_id, type);
       createNewChannel({ members, message, sender_id, type })
         .then((res) => {
           if (res?.data) {
@@ -54,10 +53,12 @@ const socketConnection = (httpServer) => {
             io.to(res?.data?.channel_id).emit("new_channel_message", {
               data: res.data,
             });
+            io.emit("createNewChannel", { data: res?.data?.channel_id });
           }
         })
         .catch((err) => {
           console.log(err);
+          io.emit("createNewChannel", { error: "Somthing went wrong" });
         });
     });
   });
