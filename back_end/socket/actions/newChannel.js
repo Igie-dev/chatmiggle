@@ -2,23 +2,34 @@ import prisma from "../../lib/prisma.js";
 import { v4 as uuid } from "uuid";
 const createNewChannel = ({ members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
-    if (members.lenght <= 1 || !message || !sender_id || !type) {
-      return reject({ message: "All field are required!" });
-    }
     try {
+      if (members.lenght <= 1 || !message || !sender_id || !type) {
+        return reject({ message: "All field are required!" });
+      }
+
       const existMembersChannel = await prisma.channel.findMany({
         where: {
-          members: {
-            some: {
-              AND: [
-                {
+          AND: [
+            {
+              members: {
+                some: {
                   user_id: members[0].user_id,
                 },
-                {
+              },
+            },
+            {
+              members: {
+                some: {
                   user_id: members[1].user_id,
                 },
-              ],
+              },
             },
+          ],
+        },
+        select: {
+          channel_id: true,
+          members: {
+            take: 1,
           },
         },
       });
@@ -29,22 +40,23 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         message_id: uuid(),
         type: type,
       };
+      if (existMembersChannel[0]?.members?.length === 2) {
+        throw new Error("Something went wrong!");
+      }
 
-      if (existMembersChannel?.channel_id) {
-        console.log("Did exist");
-        data.channel_id = existMembersChannel?.channel_id;
+      if (existMembersChannel?.length >= 1) {
+        data.channel_id = existMembersChannel[0]?.channel_id;
         const newmessage = await prisma.message.create({ data });
         if (!newmessage?.id) {
           throw new Error("Something went wrong!");
         }
       }
-
-      if (!existMembersChannel?.channel_id) {
-        console.log("Not exist");
+      if (existMembersChannel?.length <= 0) {
         data.channel_id = uuid();
         const createChannel = await prisma.channel.create({
           data: {
             channel_id: data.channel_id,
+            isPrivate: true,
           },
         });
         if (!createChannel?.id) {
