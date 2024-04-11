@@ -47,6 +47,8 @@ declare global {
 	type TChannelData = {
 		id?:number,
 		channel_id:string,
+		group_name?: string,
+		isPrivate:boolean,
 		messages: TMessageData[],
 		members: {id?:number, user_id:string,channel_id:string}[],
 		createdAt:string,
