@@ -11,19 +11,21 @@ export default function MessageList() {
     channelId: channelId as string,
   });
   return (
-    <ul className="w-full h-[80%] flex flex-col py-2 gap-5 px-4 overflow-auto pb-20">
-      {isFetching ? (
-        <LoaderSpinner />
-      ) : data?.messages?.length >= 1 && !isError ? (
-        data.messages.map((message: TMessageData) => {
-          return <MessageCard key={message.message_id} message={message} />;
-        })
-      ) : (
-        <div className="flex flex-col items-center w-full gap-2 pt-10">
-          <MessageSquare size={40} className="opacity-70" />
-          <p className="text-sm font-semibold opacity-70">Empty chat</p>
-        </div>
-      )}
-    </ul>
+    <div className="w-full h-[80%] overflow-auto ">
+      <ul className="flex flex-col w-full gap-5 px-4 py-2 pb-20 h-fit">
+        {isFetching ? (
+          <LoaderSpinner />
+        ) : data?.messages?.length >= 1 && !isError ? (
+          data.messages.map((message: TMessageData) => {
+            return <MessageCard key={message.message_id} message={message} />;
+          })
+        ) : (
+          <div className="flex flex-col items-center w-full gap-2 pt-10">
+            <MessageSquare size={40} className="opacity-70" />
+            <p className="text-sm font-semibold opacity-70">Empty chat</p>
+          </div>
+        )}
+      </ul>
+    </div>
   );
 }
