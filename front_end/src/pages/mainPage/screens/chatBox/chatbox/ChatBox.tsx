@@ -1,15 +1,16 @@
+import ChatInput from "./ChatInput";
 import Header from "./Header";
+import MessageList from "./MessageList";
 type Props = {
   handleAside: () => void;
-  channelId: string;
 };
 
-export default function ChatBox({ handleAside, channelId }: Props) {
+export default function ChatBox({ handleAside }: Props) {
   return (
     <section className="flex flex-col flex-1 h-full p-1 lg:border lg:rounded-lg">
       <Header handleAside={handleAside} />
-      <div className="w-full h-[80%] ">{channelId}</div>
-      <div className="w-full h-[10%] ">Input</div>
+      <MessageList />
+      <ChatInput />
     </section>
   );
 }

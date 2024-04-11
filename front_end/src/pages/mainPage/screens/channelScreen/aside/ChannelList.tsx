@@ -4,13 +4,13 @@ import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Library } from "lucide-react";
 type Props = {
   handleAside: () => void;
 };
 export default function ChannelList({ handleAside }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching } = useGetUserChannelsQuery(user_id);
-
   return (
     <div onClick={handleAside} className="flex flex-col h-[87%] w-full gap-2 ">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
@@ -21,7 +21,7 @@ export default function ChannelList({ handleAside }: Props) {
           className="bg-primary-foreground h-11"
         />
       </header>
-      <ul className="flex flex-col w-full h-[92%] overflow-y-auto py-2 px-0 gap-1">
+      <ul className="flex flex-col w-full h-[92%] overflow-y-auto py-2 px-0">
         {isFetching ? (
           <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
             <div className="overflow-hidden rounded-full w-11 h-11">
@@ -41,7 +41,10 @@ export default function ChannelList({ handleAside }: Props) {
             return <ChannelCard key={Math.random()} channel={c} />;
           })
         ) : (
-          <p>Empty</p>
+          <div className="flex flex-col items-center w-full mt-5">
+            <Library size={30} className="opacity-70" />
+            <p className="text-sm font-semibold opacity-70">Empty</p>
+          </div>
         )}
       </ul>
     </div>

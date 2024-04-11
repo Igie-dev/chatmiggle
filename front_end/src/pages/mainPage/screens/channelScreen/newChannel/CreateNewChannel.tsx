@@ -16,7 +16,9 @@ import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { asycnEmit } from "@/socket";
 export default function CreateNewChannel() {
+  const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [error, setError] = useState("");
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
   const { user_id } = useAppSelector(getCurrentUser);
@@ -33,7 +35,6 @@ export default function CreateNewChannel() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log("submitted");
     try {
       const messageData: TMessageSend = {
         message,
@@ -49,10 +50,20 @@ export default function CreateNewChannel() {
         ],
       };
       asycnEmit("createNewChannel", messageData)
-        .then((res) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((res: any) => {
           console.log(res);
+          if (res?.data) {
+            setMessage("");
+            setId("");
+            setTimeout(() => {
+              setIsOpen(false);
+            }, 500);
+          }
         })
-        .catch((error) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .catch((error: any) => {
+          setError(error);
           console.log(error);
         });
     } catch (error) {
@@ -61,7 +72,7 @@ export default function CreateNewChannel() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
           variant="secondary"
@@ -82,7 +93,12 @@ export default function CreateNewChannel() {
             onSubmit={handleSubmit}
             className="flex flex-col w-full gap-2 !mt-5"
           >
-            <div className="flex flex-col gap-1">
+            {error ? (
+              <div className="w-full text-lg text-center text-destructive">
+                {error}
+              </div>
+            ) : null}
+            <div className="flex flex-col items-start w-full gap-1">
               <label htmlFor="id" className="text-sm font-semibold">
                 Search user by ID
               </label>
