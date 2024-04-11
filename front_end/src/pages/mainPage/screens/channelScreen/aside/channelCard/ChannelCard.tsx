@@ -24,7 +24,7 @@ export default function ChannelCard({ channel }: Props) {
   return (
     <li
       onClick={handleClick}
-      className={`flex items-start w-full gap-3 p-2 transition-all border rounded-md cursor-pointer h-fit  ${
+      className={`flex items-start w-full gap-3 p-2 transition-all border rounded-md cursor-pointer h-fit ${
         channelId === channel.channel_id
           ? "bg-primary-foreground border-border/70"
           : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
@@ -44,19 +44,18 @@ export default function ChannelCard({ channel }: Props) {
           </p>
         )}
 
-        <div className="flex items-end w-full gap-2">
-          <p className="text-xs truncate opacity-80 max-h-6">
-            {channel.messages[0].sender_id === user_id ? "You:" : ""}
-          </p>
+        <div className="flex items-end w-full ">
           <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
-            {channel.messages[0].message}
+            {channel.messages[0].sender_id === user_id
+              ? `You: ${channel.messages[0].message}`
+              : `${channel.messages[0].message}`}
           </p>
-          <p className="text-xs opacity-40">
+          <p className="ml-2 text-xs opacity-40">
             {today
               ? `${formatTime(channel.messages[0].createdAt)}`
-              : `${formatTime(channel.messages[0].createdAt)} ${formatDate(
+              : `${formatDate(channel.messages[0].createdAt)} ${formatTime(
                   channel.messages[0].createdAt
-                )}`}
+                )} `}
           </p>
         </div>
       </div>
