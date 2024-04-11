@@ -17,7 +17,7 @@ const channelApiSlice = apiSlice.injectEndpoints({
         }),
         getChannelMessages: builder.query({
             query: ({channelId,cursor}:{channelId:string,cursor?:string}) => ({
-                url: `/channel/messages/${channelId}?take=50${cursor ? `&cursor=${cursor}` : ""}`,
+                url: `/channel/messages/${channelId}?take=100${cursor ? `&cursor=${cursor}` : ""}`,
                 method: "GET"
             })
         }),
