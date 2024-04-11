@@ -20,14 +20,12 @@ const months = [
 	"Dec",
 ];
 const formatDate = (date: Date | null | undefined) => {
-	const dateNow = getDateFrom(new Date());
-    const yearNow = dateNow.year
 	if (date) {
 		const dateCur = getDateFrom(date);
 		const month = dateCur.month;
 		const day = dateCur.day;
 		const year = dateCur.year;
-		return `${months[month - 1]} ${day} ${yearNow === year ? "" : year}`;
+		return `${months[month - 1]} ${day} ${year}`;
 	} else {
 		return "";
 	}
