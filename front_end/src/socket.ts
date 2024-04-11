@@ -24,9 +24,8 @@ export const asycnEmit = (emitName: string, emitData: any) => {
     socket.emit(emitName, emitData);
     socket.on(emitName, (res: any) => {
       if (res.error) {
-        reject("Error");
+        reject(res.error);
       }
-
       resolve(res);
       socket.off(emitName);
     });
@@ -37,7 +36,7 @@ export const asyncOn = (listener: string) => {
   return new Promise((resolve, reject) => {
     socket.on(listener, (res: any) => {
       if (res.error) {
-        reject("Error");
+        reject(res.error);
       }
       resolve(res);
       socket.off(listener);
