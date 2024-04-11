@@ -7,7 +7,7 @@ type Props = {
 
 export default function ChatBox({ handleAside }: Props) {
   return (
-    <section className="flex flex-col flex-1 h-full p-1 lg:border lg:rounded-lg">
+    <section className="flex flex-col items-center flex-1 h-full p-1 lg:border lg:rounded-lg">
       <Header handleAside={handleAside} />
       <MessageList />
       <ChatInput />

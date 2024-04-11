@@ -21,7 +21,7 @@ export default function Header({ handleAside }: Props) {
       ? data?.members[0].user_id
       : data?.members[1].user_id;
   return (
-    <header className="flex items-center justify-between w-full h-20 px-2 ">
+    <header className="flex items-center justify-between w-full h-20 px-2 border-b lg:w-[98%]">
       <div className="flex items-center flex-1 gap-2 ml-10 lg:ml-0">
         <div className="w-11 h-11">
           {data?.isPrivate ? (
