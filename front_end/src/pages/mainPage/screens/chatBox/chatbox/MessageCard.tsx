@@ -9,7 +9,7 @@ export default function MessageCard({ message }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const senderMe = user_id === message.sender_id;
   return (
-    <li className="flex justify-start w-full h-fit ">
+    <li id={message.message_id} className="flex justify-start w-full h-fit ">
       {!senderMe ? (
         <div className="mr-1 w-9 h-9">
           <UserAvatar userId={message.sender_id} />
@@ -21,7 +21,7 @@ export default function MessageCard({ message }: Props) {
         }`}
       >
         <pre
-          className={`flex flex-wrap max-w-[50%] mt-2 border p-2 rounded-md  font-sans text-sm whitespace-pre-wrap w-fit break-all ${
+          className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
             senderMe ? "bg-transparent" : "bg-primary-foreground/70"
           }`}
         >
@@ -29,7 +29,7 @@ export default function MessageCard({ message }: Props) {
         </pre>
         <p className="absolute text-[10px] top-full opacity-40">
           {isToday(message.createdAt)
-            ? `Today ${formatTime(message.createdAt)}`
+            ? `${formatTime(message.createdAt)}`
             : `${formatDate(message.createdAt)} ${formatTime(
                 message.createdAt
               )}`}
