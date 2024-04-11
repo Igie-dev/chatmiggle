@@ -1,3 +1,3 @@
 export default function ChatInput() {
-  return <div>ChatInput</div>;
+  return <div className="h-[10%] w-full border">ChatInput</div>;
 }
