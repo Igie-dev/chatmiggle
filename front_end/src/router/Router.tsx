@@ -4,6 +4,7 @@ import Persist from "@/pages/authPage/login/Persist";
 import RouteGuard from "./RouteGuard";
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
 import Redirect from "./Redirect";
+import ChatBoxGuard from "./ChatBoxGuard";
 export default function Router() {
   const LandingPage = lazy(() => import("@/pages/landingPage/LandingPage"));
 
@@ -65,11 +66,15 @@ export default function Router() {
             <Route element={<RouteGuard />}>
               {/* Channel */}
               <Route path="/c" element={<ChannelScreen />}>
-                <Route path="/c/:channelId" element={<ChatBoxContainer />} />
+                <Route element={<ChatBoxGuard />}>
+                  <Route path="/c/:channelId" element={<ChatBoxContainer />} />
+                </Route>
               </Route>
               {/* Group List */}
               <Route path="/g" element={<GroupScreen />}>
-                <Route path="/g/:channelId" element={<ChatBoxContainer />} />
+                <Route element={<ChatBoxGuard />}>
+                  <Route path="/g/:channelId" element={<ChatBoxContainer />} />
+                </Route>
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>
                 <Route path="/avatar/upload" element={<UploadAvatar />} />
