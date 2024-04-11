@@ -86,10 +86,6 @@ const getChannelMessages = asyncHandler(async (req, res) => {
   const channelId = req.params.channelId;
   const take = JSON.parse(req.query.take);
   const cursor = req.query.cursor;
-
-  // console.log(take);
-  // console.log(cursor);
-
   try {
     const query = {
       where: { channel_id: channelId },
@@ -104,7 +100,9 @@ const getChannelMessages = asyncHandler(async (req, res) => {
     };
 
     if (cursor) {
-      query.include.messages.cursor = cursor;
+      query.include.messages.cursor = {
+        id: Number(cursor),
+      };
     }
 
     const foundChannel = await prisma.channel.findUnique(query);
