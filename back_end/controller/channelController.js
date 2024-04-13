@@ -84,6 +84,7 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
 
 const getChannelMessages = asyncHandler(async (req, res) => {
   const channelId = req.params.channelId;
+  console.log(channelId);
   const take = JSON.parse(req.query.take);
   const cursor = req.query.cursor;
   try {
