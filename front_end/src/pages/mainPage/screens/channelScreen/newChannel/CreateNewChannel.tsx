@@ -49,7 +49,7 @@ export default function CreateNewChannel() {
           },
         ],
       };
-      asycnEmit("createNewChannel", messageData)
+      asycnEmit("create_new_channel", messageData)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .then((res: any) => {
           console.log(res);
