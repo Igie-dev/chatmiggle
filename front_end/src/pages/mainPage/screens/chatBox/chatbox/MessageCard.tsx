@@ -22,7 +22,7 @@ export default function MessageCard({ message }: Props) {
       >
         <pre
           className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
-            senderMe ? "bg-transparent" : "bg-primary-foreground/70"
+            senderMe ? "bg-primary-foreground/70" : "bg-transparent"
           }`}
         >
           {message.message}
