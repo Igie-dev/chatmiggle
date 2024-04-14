@@ -34,33 +34,40 @@ declare global {
 	};
 
 	type TMessageData = {
-		id?: number,
-		channel_id:string,
-		message_id:string
-		sender_id:string,
-		message:string,
-		type:string,
-		createdAt:Date,
-		updatedAt?:Date,
+		id?: number;
+		channel_id:string;
+		message_id:string;
+		sender_id:string;
+		message:string;
+		type:string;
+		createdAt:Date;
+		updatedAt?:Date;
 	}
 	
 	type TChannelData = {
-		id?:number,
-		channel_id:string,
-		group_name?: string,
-		isPrivate:boolean,
-		messages: TMessageData[],
-		members: {id?:number, user_id:string,channel_id:string}[],
-		createdAt:string,
-		updatedAt?:string,
+		id?:number;
+		channel_id:string;
+		group_name?: string;
+		isPrivate:boolean;
+		messages: TMessageData[];
+		members: {id?:number, user_id:string,channel_id:string}[];
+		createdAt:string;
+		updatedAt?:string;
 	}
 
-	type TMessageSend = {
-		sender_id:string,
-		message:string,
-		type:string,
+	type TCreateNewPrivateChannel = {
+		sender_id:string;
+		message:string;
+		type:string;
 		members:{user_id:string}[]
 		
+	}
+
+	type TSendMessage = {
+		channel_id:string;
+		sender_id:string;
+		message:string;
+		type:string;
 	}
 }
 
