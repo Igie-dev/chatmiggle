@@ -6,7 +6,7 @@ const audience = process.env.CLIENT_URL;
 const issuer = process.env.SERVER_URL;
 
 import createNewChannel from "./actions/newChannel.js";
-
+import newChat from "./actions/newChat.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -63,7 +63,10 @@ const socketConnection = (httpServer) => {
                 });
               });
               //Send an emit to client where the channel id was listened
-              socket.to(res?.data?.channel_id).emit("new_channel_message", {
+              io.to(res?.data?.channel_id).emit("new_channel_message", {
+                data: res.data,
+              });
+              io.to(res?.data?.channel_id).emit("new_message", {
                 data: res.data,
               });
               //Return to sender
@@ -81,6 +84,33 @@ const socketConnection = (httpServer) => {
           });
       }
     );
+
+    //New chat
+    socket.on("new_chat", async ({ channel_id, sender_id, message, type }) => {
+      newChat({ channel_id, sender_id, message, type })
+        .then((res) => {
+          if (res?.data) {
+            console.log(res?.data.channel_id);
+            //Send an emit to client where the channel id was listened
+            io.to(res?.data?.channel_id).emit("new_channel_message", {
+              data: res.data,
+            });
+            io.to(res?.data?.channel_id).emit("new_message", {
+              data: res.data,
+            });
+            io.to(socket.id).emit("new_chat", {
+              data: res?.data?.channel_id,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(err);
+          //Return to sender
+          io.to(socket.id).emit("new_chat", {
+            error: "Somthing went wrong",
+          });
+        });
+    });
   });
 };
 
