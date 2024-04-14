@@ -4,7 +4,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (members.lenght <= 1 || !message || !sender_id || !type) {
-        return reject({ message: "All field are required!" });
+        return reject({ error: "All field are required!" });
       }
 
       const existMembersChannel = await prisma.channel.findMany({
@@ -41,14 +41,14 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         type: type,
       };
       if (existMembersChannel[0]?.members?.length === 2) {
-        throw new Error("Something went wrong!");
+        return reject({ error: "Something went wrong!" });
       }
 
       if (existMembersChannel?.length >= 1) {
         data.channel_id = existMembersChannel[0]?.channel_id;
         const newmessage = await prisma.message.create({ data });
         if (!newmessage?.id) {
-          throw new Error("Something went wrong!");
+          return reject({ error: "Something went wrong!" });
         }
       }
       if (existMembersChannel?.length <= 0) {
@@ -60,7 +60,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
           },
         });
         if (!createChannel?.id) {
-          throw new Error("Something went wrong!");
+          return reject({ error: "Something went wrong!" });
         }
 
         for (const user of members) {
@@ -74,7 +74,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
 
         const createMessage = await prisma.message.create({ data });
         if (!createMessage?.id || !createUserChannelMember?.id) {
-          throw new Error("Something went wrong!");
+          return reject({ error: "Something went wrong!" });
         }
       }
 
