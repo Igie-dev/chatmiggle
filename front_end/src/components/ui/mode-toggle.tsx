@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,14 +11,8 @@ export function ModeToggle() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="flex items-center justify-start w-full h-10 px-2 hover:bg-primary-foreground"
-        >
-          <span className="text-sm font-normal opacity-70">Theme</span>
-        </Button>
+      <DropdownMenuTrigger className="flex items-center justify-start w-full h-10 px-2 hover:bg-primary-foreground">
+        <span className="text-sm font-normal">Theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>

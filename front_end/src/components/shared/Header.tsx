@@ -51,31 +51,34 @@ export default function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link to="" className="w-full h-10 hover:bg-primary-foreground">
-                  <span className="text-sm opacity-70">Profile</span>
+                <Link
+                  to=""
+                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
+                >
+                  <span className="text-sm">Profile</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              <DropdownMenuItem className="p-0 ">
                 <ModeToggle />
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
                 <Link
                   to="/avatar/upload"
-                  className="w-full h-10 hover:bg-primary-foreground"
+                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
                 >
-                  <span className="text-sm opacity-70">Change avatar</span>
+                  <span className="text-sm ">Change avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
                   to="/avatar/remove"
-                  className="w-full h-10 hover:bg-primary-foreground"
+                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
                 >
-                  <span className="text-sm opacity-70">Remove avatar</span>
+                  <span className="text-sm ">Remove avatar</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="mt-5" />
+              <DropdownMenuSeparator />
               <DropdownMenuItem className="p-0 mt-5 hover:bg-transparent h-fit">
                 <SignOutBtn />
               </DropdownMenuItem>

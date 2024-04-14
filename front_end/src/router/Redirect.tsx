@@ -13,7 +13,6 @@ export default function Redirect() {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res: any = await refresh(null);
-        console.log(res);
         if (res?.data) {
           navigate("/c");
         }

@@ -18,17 +18,19 @@ export const socket: Socket = io(URL, {
     }
   },
 });
-
-export const asycnEmit = (emitName: string, emitData: any) => {
+export const asyncEmit = (emitName: string, emitData: any) => {
   return new Promise((resolve, reject) => {
-    socket.emit(emitName, emitData);
-    socket.on(emitName, (res: any) => {
+    const onResponse = (res: any) => {
       if (res.error) {
         reject(res.error);
+      } else {
+        resolve(res);
       }
-      resolve(res);
-      socket.off(emitName);
-    });
+      socket.off(emitName, onResponse); // Remove the listener after handling the response
+    };
+
+    socket.on(emitName, onResponse);
+    socket.emit(emitName, emitData);
   });
 };
 

@@ -14,7 +14,7 @@ import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
-import { asycnEmit } from "@/socket";
+import { asyncEmit } from "@/socket";
 export default function CreateNewChannel() {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -35,38 +35,28 @@ export default function CreateNewChannel() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const newChannelData: TCreateNewPrivateChannel = {
+      message: message,
+      sender_id: user_id,
+      type: "text",
+      members: [{ user_id: data?.user_id }, { user_id: user_id }],
+    };
+
     try {
-      const messageData: TMessageSend = {
-        message,
-        sender_id: user_id,
-        type: "text",
-        members: [
-          {
-            user_id: data?.user_id,
-          },
-          {
-            user_id: user_id,
-          },
-        ],
-      };
-      asycnEmit("create_new_channel", messageData)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .then((res: any) => {
-          console.log(res);
-          if (res?.data) {
-            setMessage("");
-            setId("");
-            setTimeout(() => {
-              setIsOpen(false);
-            }, 500);
-          }
-        })
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .catch((error: any) => {
-          setError(error);
-          console.log(error);
-        });
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const res: any = await asyncEmit("create_new_channel", newChannelData);
+      console.log(res?.data);
+      if (res?.data) {
+        setMessage("");
+        setId("");
+        setTimeout(() => {
+          setIsOpen(false);
+        }, 500);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setError(error);
       console.log(error);
     }
   };
