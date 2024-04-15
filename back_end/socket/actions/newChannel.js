@@ -73,16 +73,26 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         }
 
         const createMessage = await prisma.message.create({ data });
+
         if (!createMessage?.id || !createUserChannelMember?.id) {
           return reject({ error: "Something went wrong!" });
         }
       }
 
-      const foundMessage = await prisma.message.findUnique({
-        where: { message_id: data.message_id },
+      const foundChannel = await prisma.channel.findUnique({
+        where: { channel_id: data.channel_id },
+        include: {
+          messages: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+          },
+          members: true,
+        },
       });
 
-      return resolve({ data: foundMessage });
+      return resolve({ data: foundChannel });
     } catch (error) {
       console.log(error);
       return reject({ error: "Something went wrong!" });
