@@ -23,7 +23,7 @@ export default function Header({ handleAside }: Props) {
   return (
     <header className="flex items-center justify-between w-full h-20 px-2 border-b lg:w-[98%]">
       <div className="flex items-center flex-1 gap-2 ml-10 lg:ml-0">
-        <div className="w-11 h-11">
+        <div className="w-9 h-9">
           {data?.isPrivate ? (
             <UserAvatar userId={mateId} />
           ) : (
@@ -32,11 +32,11 @@ export default function Header({ handleAside }: Props) {
         </div>
         <div className="w-[12rem] lg:w-[15rem]">
           {data?.isPrivate ? (
-            <span className="w-full text-sm font-semibold truncate opacity-90 max-h-6">
+            <span className="w-full text-sm font-medium truncate opacity-90 max-h-6">
               <DisplayUserName userId={mateId} />
             </span>
           ) : (
-            <p className="w-full text-sm font-semibold truncate opacity-90 max-h-6">
+            <p className="w-full text-sm font-medium truncate opacity-90 max-h-6">
               {data?.group_name}
             </p>
           )}
