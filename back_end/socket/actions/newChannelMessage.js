@@ -1,6 +1,6 @@
 import prisma from "../../lib/prisma.js";
 import { v4 as uuid } from "uuid";
-const newChat = ({ channel_id, sender_id, message, type }) => {
+const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
   return new Promise(async (resolve, reject) => {
     if (!channel_id || !message || !sender_id || !type) {
       return reject({ error: "All field are required!" });
@@ -35,4 +35,4 @@ const newChat = ({ channel_id, sender_id, message, type }) => {
   });
 };
 
-export default newChat;
+export default newChannelMessage;
