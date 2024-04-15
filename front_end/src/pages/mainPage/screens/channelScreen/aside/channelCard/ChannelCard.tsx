@@ -12,10 +12,10 @@ export default function ChannelCard({ channel }: Props) {
   const navigate = useNavigate();
   const { channelId } = useParams();
   const mate_id =
-    channel?.members[0].user_id === user_id
-      ? channel?.members[1].user_id
-      : channel?.members[0].user_id;
-  const today = isToday(channel.messages[0].createdAt);
+    channel?.members[0]?.user_id === user_id
+      ? channel?.members[1]?.user_id
+      : channel?.members[0]?.user_id;
+  const today = isToday(channel.messages[0]?.createdAt);
 
   const handleClick = () => {
     navigate(`/c/${channel.channel_id}`);
@@ -30,7 +30,7 @@ export default function ChannelCard({ channel }: Props) {
           : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
       }`}
     >
-      <div className="w-11 h-11">
+      <div className="w-9 h-9">
         <UserAvatar userId={mate_id} />
       </div>
       <div className="flex flex-col w-[80%] h-full justify-center">
@@ -46,15 +46,15 @@ export default function ChannelCard({ channel }: Props) {
 
         <div className="flex items-end w-full ">
           <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
-            {channel.messages[0].sender_id === user_id
-              ? `You: ${channel.messages[0].message}`
-              : `${channel.messages[0].message}`}
+            {channel.messages[0]?.sender_id === user_id
+              ? `You: ${channel.messages[0]?.message}`
+              : `${channel.messages[0]?.message}`}
           </p>
           <p className="ml-2 text-xs opacity-40">
             {today
-              ? `${formatTime(channel.messages[0].createdAt)}`
-              : `${formatDate(channel.messages[0].createdAt)} ${formatTime(
-                  channel.messages[0].createdAt
+              ? `${formatTime(channel.messages[0]?.createdAt)}`
+              : `${formatDate(channel.messages[0]?.createdAt)} ${formatTime(
+                  channel.messages[0]?.createdAt
                 )} `}
           </p>
         </div>
