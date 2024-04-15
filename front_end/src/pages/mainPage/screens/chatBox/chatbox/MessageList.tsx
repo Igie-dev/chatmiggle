@@ -7,11 +7,11 @@ import { useEffect } from "react";
 
 export default function MessageList() {
   const { channelId } = useParams();
-  const { messages, isFetching, isError, refetch, setCursor } =
+  const { messages, isFetching, isError, setCursor, dataCursor } =
     useChannelMessages(channelId as string);
   //handle scroll to bottom
   useEffect(() => {
-    if (messages?.length >= 5) {
+    if (messages?.length && !dataCursor) {
       const targetEl = document.getElementById(
         `${messages[messages.length - 1]?.message_id}`
       ) as HTMLElement;
@@ -20,9 +20,8 @@ export default function MessageList() {
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  }, [messages, dataCursor]);
 
-  //*TODO Fix this handle refetch
   //Handle refetch when view on top
   useEffect(() => {
     if (messages?.length <= 99) return;
@@ -34,14 +33,10 @@ export default function MessageList() {
       ([entry]) => {
         if (entry.isIntersecting) {
           timeout = setTimeout(() => {
-            if (messages?.length >= 100) {
-              const lastMessage = messages[0]?.id;
-              console.log(lastMessage);
-              setCursor(`${lastMessage}`);
+            if (dataCursor) {
+              setCursor(dataCursor);
             }
-            refetch();
           }, 500);
-          console.log("Show");
         }
       },
       {
@@ -58,7 +53,7 @@ export default function MessageList() {
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [messages, refetch, setCursor]);
+  }, [messages, dataCursor, setCursor]);
 
   return (
     <div className="relative flex-1 w-full overflow-auto">
@@ -76,19 +71,14 @@ export default function MessageList() {
           <LoaderSpinner />
         ) : messages?.length >= 1 && !isError ? (
           messages.map((message: TMessageData) => {
-            return (
-              <MessageCard
-                key={message.message_id + Math.random()}
-                message={message}
-              />
-            );
+            return <MessageCard key={message.id} message={message} />;
           })
-        ) : (
+        ) : (messages?.length <= 0 || isError) && !isFetching ? (
           <div className="flex flex-col items-center w-full gap-2 pt-10">
             <MessageSquare size={40} className="opacity-70" />
             <p className="text-sm font-semibold opacity-70">Empty chat</p>
           </div>
-        )}
+        ) : null}
       </ul>
     </div>
   );
