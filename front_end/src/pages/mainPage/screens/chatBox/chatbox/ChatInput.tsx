@@ -12,7 +12,7 @@ export default function ChatInput() {
   const { channelId } = useParams();
   const { user_id } = useAppSelector(getCurrentUser);
   const handleFocus = () => {
-    textAreaRef?.current?.classList.add("h-[15rem]");
+    textAreaRef?.current?.classList.add("h-[10rem]");
     textAreaRef?.current?.classList.remove("h-[3rem]");
     moreRef?.current?.classList.add("hidden");
     moreRef?.current?.classList.remove("visible");
@@ -20,7 +20,7 @@ export default function ChatInput() {
 
   const handleBlur = () => {
     textAreaRef?.current?.classList.add("h-[3rem]");
-    textAreaRef?.current?.classList.remove("h-[15rem]");
+    textAreaRef?.current?.classList.remove("h-[10rem]");
     moreRef?.current?.classList.add("visible");
     moreRef?.current?.classList.remove("hidden");
   };
@@ -37,7 +37,7 @@ export default function ChatInput() {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("new_chat", data);
+      const res: any = await asyncEmit("send_new_message", data);
       if (res?.data) {
         setTimeout(() => {
           setMessageText("");
