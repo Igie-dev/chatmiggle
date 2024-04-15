@@ -18,17 +18,17 @@ export default function AsideNav({ handleAside, asideRef }: Props) {
       <Button
         onClick={handleAside}
         size="icon"
-        variant="outline"
+        variant="ghost"
         className="absolute -right-12 top-5 lg:hidden"
       >
         <ChevronRight size={20} />
       </Button>
-      <div className="flex flex-col h-full w-[22rem] py-5 px-2 gap-2 bg-background/50 border-r lg:w-full lg:border-none relative">
+      <div className="flex flex-col h-full w-[22rem] py-5 px-2 gap-2 bg-background/90 border-r lg:w-full lg:border-none relative">
         {/* Open nav button */}
         <Button
           onClick={handleAside}
           size="icon"
-          variant="outline"
+          variant="ghost"
           className="absolute z-50 right-1 top-5 lg:hidden"
         >
           <ChevronLeft size={20} />
