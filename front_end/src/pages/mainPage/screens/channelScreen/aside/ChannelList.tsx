@@ -15,39 +15,58 @@ export default function ChannelList({ handleAside }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserChannelsQuery(user_id);
 
+  //Handle data from api request
   useEffect(() => {
     if (data?.length >= 1) {
       setChannels(data);
     }
   }, [data]);
 
+  //Handle data from socket when new private channel was created with user as a member
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("new_channel_message", (res) => {
-      if (res?.data) {
-        const updatedChannels = channels.map((c) => {
-          if (c.channel_id === res.data?.channel_id) {
-            // Create a new array with the updated message
-            const updatedMessages = [res.data];
-            // Update the channel with the new messages array
-            return { ...c, messages: updatedMessages };
-          }
-          return c;
-        });
-
-        const channelLatestMessage = updatedChannels.filter(
-          (c) => c.channel_id === res.data?.channel_id
-        );
-        const channelsOldMessage = updatedChannels.filter(
-          (c) => c.channel_id !== res.data?.channel_id
-        );
-
-        setChannels([...channelLatestMessage, ...channelsOldMessage]);
+    socket.on("new_channel", (res) => {
+      if (!res?.data || !res.data?.channel_id) {
+        return;
       }
+      const resData = res.data as TChannelData;
+      setChannels((prev) => [resData, ...prev]);
     });
 
     return () => {
-      socket.off("new_channel_message");
+      socket.off("new_channel");
+    };
+  }, [channels]);
+
+  //Handle data from socket when new message was sent
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    socket.on("channel_message", (res) => {
+      if (!res?.data || !res.data?.channel_id) {
+        return;
+      }
+      const updatedChannels = channels.map((c) => {
+        if (c.channel_id === res.data?.channel_id) {
+          // Create a new array with the updated message
+          const updatedMessages = [res.data];
+          // Update the channel with the new messages array
+          return { ...c, messages: updatedMessages };
+        }
+        return c;
+      });
+
+      const channelLatestMessage = updatedChannels.filter(
+        (c) => c.channel_id === res.data?.channel_id
+      );
+      const channelsOldMessage = updatedChannels.filter(
+        (c) => c.channel_id !== res.data?.channel_id
+      );
+
+      setChannels([...channelLatestMessage, ...channelsOldMessage]);
+    });
+
+    return () => {
+      socket.off("channel_message");
     };
   }, [channels]);
   return (
@@ -60,24 +79,12 @@ export default function ChannelList({ handleAside }: Props) {
           className="bg-primary-foreground h-11"
         />
       </header>
-      <ul className="flex flex-col w-full h-[92%] overflow-y-auto py-2 px-0">
+      <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">
         {isFetching ? (
-          <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
-            <div className="overflow-hidden rounded-full w-11 h-11">
-              <Skeleton className="w-full h-full" />
-            </div>
-            <div className="flex flex-col w-[80%] h-full justify-center gap-2">
-              <div className="w-full h-6">
-                <Skeleton className="w-full h-full" />
-              </div>
-              <div className="flex-1 w-full">
-                <Skeleton className="w-full h-full" />
-              </div>
-            </div>
-          </li>
+          <LoaderUi />
         ) : channels?.length >= 1 && !isError ? (
           channels.map((c: TChannelData) => {
-            return <ChannelCard key={Math.random()} channel={c} />;
+            return <ChannelCard key={c.id} channel={c} />;
           })
         ) : (
           <div className="flex flex-col items-center w-full mt-5">
@@ -89,3 +96,28 @@ export default function ChannelList({ handleAside }: Props) {
     </div>
   );
 }
+
+const LoaderUi = () => {
+  const loader = [];
+  for (let i = 0; i < 3; i++) {
+    loader.push(
+      <li
+        key={i}
+        className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70"
+      >
+        <div className="overflow-hidden rounded-full w-11 h-11">
+          <Skeleton className="w-full h-full" />
+        </div>
+        <div className="flex flex-col w-[80%] h-full justify-center gap-2">
+          <div className="w-full h-6">
+            <Skeleton className="w-full h-full" />
+          </div>
+          <div className="flex-1 w-full">
+            <Skeleton className="w-full h-full" />
+          </div>
+        </div>
+      </li>
+    );
+  }
+  return loader;
+};
