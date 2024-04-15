@@ -84,7 +84,6 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
 
 const getChannelMessages = asyncHandler(async (req, res) => {
   const channelId = req.params.channelId;
-  console.log(channelId);
   const take = JSON.parse(req.query.take);
   const cursor = req.query.cursor;
   try {
@@ -95,7 +94,7 @@ const getChannelMessages = asyncHandler(async (req, res) => {
           orderBy: {
             createdAt: "asc",
           },
-          take,
+          take: -Number(take),
         },
       },
     };
@@ -104,6 +103,7 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       query.include.messages.cursor = {
         id: Number(cursor),
       };
+      query.include.messages.skip = 1;
     }
 
     const foundChannel = await prisma.channel.findUnique(query);
@@ -112,7 +112,11 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    return res.status(200).json({ messages: foundChannel.messages });
+    const nextCursorId =
+      foundChannel.messages.length >= 100 ? foundChannel.messages[0].id : null;
+    return res
+      .status(200)
+      .json({ messages: foundChannel.messages, cursor: nextCursorId });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
