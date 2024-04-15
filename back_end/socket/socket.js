@@ -6,7 +6,7 @@ const audience = process.env.CLIENT_URL;
 const issuer = process.env.SERVER_URL;
 
 import createNewChannel from "./actions/newChannel.js";
-import newChat from "./actions/newChat.js";
+import newChannelMessage from "./actions/newChannelMessage.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -45,7 +45,7 @@ const socketConnection = (httpServer) => {
       socket.join(channe_id);
     });
 
-    //Listen for create new message on client
+    //Listen for create new private channel
     //The event on front end when using the create private message
     socket.on(
       "create_new_channel",
@@ -56,18 +56,12 @@ const socketConnection = (httpServer) => {
         createNewChannel({ members, message, sender_id, type })
           .then((res) => {
             if (res?.data) {
-              //Emit all the members of the created private message
+              //The data is a whole channel with latest message
+              //Emit all the members of the created private channel
               members.forEach((m) => {
                 io.to(m.user_id).emit("new_channel", {
                   data: res.data,
                 });
-              });
-              //Send an emit to client where the channel id was listened
-              io.to(res?.data?.channel_id).emit("new_channel_message", {
-                data: res.data,
-              });
-              io.to(res?.data?.channel_id).emit("new_message", {
-                data: res.data,
               });
               //Return to sender
               io.to(socket.id).emit("create_new_channel", {
@@ -86,31 +80,36 @@ const socketConnection = (httpServer) => {
     );
 
     //New chat
-    socket.on("new_chat", async ({ channel_id, sender_id, message, type }) => {
-      newChat({ channel_id, sender_id, message, type })
-        .then((res) => {
-          if (res?.data) {
-            console.log(res?.data.channel_id);
-            //Send an emit to client where the channel id was listened
-            io.to(res?.data?.channel_id).emit("new_channel_message", {
-              data: res.data,
-            });
-            io.to(res?.data?.channel_id).emit("new_message", {
-              data: res.data,
-            });
+    socket.on(
+      "send_new_message",
+      async ({ channel_id, sender_id, message, type }) => {
+        newChannelMessage({ channel_id, sender_id, message, type })
+          .then((res) => {
+            if (res?.data) {
+              //The data is a whole channel with latest message
+              //Send an emit to client where the channel id was listened
+              io.to(res?.data?.channel_id).emit("channel_message", {
+                data: res.data,
+              });
+
+              io.to(res?.data?.channel_id).emit("new_message", {
+                data: res.data,
+              });
+
+              io.to(socket.id).emit("send_new_message", {
+                data: res?.data?.channel_id,
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(err);
+            //Return to sender
             io.to(socket.id).emit("new_chat", {
-              data: res?.data?.channel_id,
+              error: "Somthing went wrong",
             });
-          }
-        })
-        .catch((error) => {
-          console.log(err);
-          //Return to sender
-          io.to(socket.id).emit("new_chat", {
-            error: "Somthing went wrong",
           });
-        });
-    });
+      }
+    );
   });
 };
 
