@@ -41,7 +41,7 @@ export default function Header() {
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="w-11 h-11">
+              <div className="w-9 h-9">
                 <UserAvatar userId={user_id} />
               </div>
             </DropdownMenuTrigger>
@@ -88,13 +88,13 @@ export default function Header() {
             <p className="w-full text-sm font-semibold truncate">
               {first_name + " " + last_name}
             </p>
-            <span className="flex items-center max-w-full gap-1 w-fit ">
+            <span className="flex items-center max-w-full gap-1 w-fit">
               <p className="text-[10px] truncate opacity-70 w-[80%]">
                 {"ID: " + user_id}
               </p>
               <button
                 onClick={handleCopyId}
-                className="text-[10px] border p-[2px] rounded-lg opacity-50 hover:opacity-100"
+                className="text-[10px] border py-[1px] px-[5px] rounded-lg opacity-50 hover:opacity-100"
               >
                 Copy
               </button>
