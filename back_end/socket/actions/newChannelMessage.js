@@ -27,7 +27,30 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
         return reject({ error: "Something went wrong!" });
       }
 
-      return resolve({ data: saveMessage });
+      const channel = await prisma.channel.findUnique({
+        where: { channel_id: saveMessage.channel_id },
+        include: {
+          messages: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+            include: {
+              channel: {
+                include: {
+                  members: true,
+                },
+              },
+            },
+          },
+          members: true,
+        },
+      });
+
+      if (!channel?.id) {
+        return reject({ error: "Something went wrong!" });
+      }
+      return resolve({ data: channel });
     } catch (error) {
       console.log(error);
       return reject({ error: "Something went wrong!" });

@@ -87,6 +87,13 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
               createdAt: "desc",
             },
             take: 1,
+            include: {
+              channel: {
+                include: {
+                  members: true,
+                },
+              },
+            },
           },
           members: true,
         },
