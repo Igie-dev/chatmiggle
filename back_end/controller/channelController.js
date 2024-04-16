@@ -30,6 +30,13 @@ const getUserChannels = asyncHandler(async (req, res) => {
               createdAt: "desc",
             },
             take: 1,
+            include: {
+              channel: {
+                include: {
+                  members: true,
+                },
+              },
+            },
           },
           members: true,
         },
@@ -95,6 +102,13 @@ const getChannelMessages = asyncHandler(async (req, res) => {
             createdAt: "asc",
           },
           take: -Number(take),
+          include: {
+            channel: {
+              include: {
+                members: true,
+              },
+            },
+          },
         },
       },
     };
@@ -112,6 +126,7 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Channel not found" });
     }
 
+    console.log(foundChannel);
     const nextCursorId =
       foundChannel.messages.length >= 100 ? foundChannel.messages[0].id : null;
     return res
