@@ -9,7 +9,6 @@ export default function useChannelMessages(channelId: string) {
     cursor,
   });
 
-  //TODO Fix here data not change when changing channel
   //Join to socket
   useEffect(() => {
     if (channelId) {
@@ -24,7 +23,7 @@ export default function useChannelMessages(channelId: string) {
   useEffect(() => {
     if (data?.messages && data?.messages?.length >= 1) {
       const messages = data?.messages as TMessageData[];
-      if (data?.messages[0].channel_id !== channelId) {
+      if (data?.messages[0]?.channel_id !== channelId) {
         setMessages([]);
       } else {
         setMessages((prev) => [...messages, ...prev]);
@@ -32,28 +31,24 @@ export default function useChannelMessages(channelId: string) {
     } else {
       setMessages([]);
     }
+    return () => {
+      setMessages([]);
+      setCursor(null);
+    };
   }, [data, channelId]);
 
   //Handle data from socket
   useEffect(() => {
-    socket.on("new_message", (res) => {
+    socket.on("new_message", (res: { data: TChannelData }) => {
+      const newMessage = res?.data.messages[0] as TMessageData;
       if (res?.data?.channel_id === channelId) {
-        setMessages((prev: TMessageData[]) => [...prev, res.data]);
+        setMessages((prev: TMessageData[]) => [...prev, newMessage]);
       }
     });
     return () => {
       socket.off("new_message");
     };
   }, [channelId]);
-
-  //Clear messages and cursor when closing or changing channel
-  useEffect(() => {
-    // Clear messages when the component unmounts or when the channelId changes
-    return () => {
-      setMessages([]);
-      setCursor(null);
-    };
-  }, []);
 
   return {
     messages,
