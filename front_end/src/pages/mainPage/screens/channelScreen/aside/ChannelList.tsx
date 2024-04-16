@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { socket } from "@/socket";
+import { useNavigate, useParams } from "react-router-dom";
 type Props = {
   handleAside: () => void;
 };
@@ -14,7 +15,8 @@ export default function ChannelList({ handleAside }: Props) {
   const [channels, setChannels] = useState<TChannelData[]>([]);
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserChannelsQuery(user_id);
-
+  const { channelId } = useParams();
+  const navigate = useNavigate();
   //Handle data from api request
   useEffect(() => {
     if (data?.length >= 1) {
@@ -22,53 +24,63 @@ export default function ChannelList({ handleAside }: Props) {
     }
   }, [data]);
 
-  //Handle data from socket when new private channel was created with user as a member
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("new_channel", (res) => {
-      if (!res?.data || !res.data?.channel_id) {
-        return;
-      }
-      const resData = res.data as TChannelData;
-      setChannels((prev) => [resData, ...prev]);
-    });
-
-    return () => {
-      socket.off("new_channel");
-    };
-  }, [channels]);
-
   //Handle data from socket when new message was sent
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("channel_message", (res) => {
+    socket.on("channel_message", (res: { data: TChannelData }) => {
       if (!res?.data || !res.data?.channel_id) {
         return;
       }
-      const updatedChannels = channels.map((c) => {
-        if (c.channel_id === res.data?.channel_id) {
-          // Create a new array with the updated message
-          const updatedMessages = [res.data];
-          // Update the channel with the new messages array
-          return { ...c, messages: updatedMessages };
-        }
-        return c;
-      });
-
-      const channelLatestMessage = updatedChannels.filter(
+      //Check if channel is exist on the list
+      const foundExistChannel = channels.filter(
         (c) => c.channel_id === res.data?.channel_id
       );
-      const channelsOldMessage = updatedChannels.filter(
-        (c) => c.channel_id !== res.data?.channel_id
-      );
 
-      setChannels([...channelLatestMessage, ...channelsOldMessage]);
+      // console.log(foundExistChannel);
+      //if is exist
+      //Modified current list to update message
+      if (foundExistChannel.length >= 1) {
+        const updatedChannels: TChannelData[] = channels.map(
+          (c: TChannelData) => {
+            if (c.channel_id === res.data?.channel_id) {
+              // Create a new array with the updated message
+              const updatedMessages = res.data.messages;
+              // Update the channel with the new messages array
+
+              return { ...c, messages: updatedMessages };
+            }
+            return c;
+          }
+        );
+        const channelLatestMessage = updatedChannels.filter(
+          (c) => c.channel_id === res.data?.channel_id
+        );
+        const channelsOldMessage = updatedChannels.filter(
+          (c) => c.channel_id !== res.data?.channel_id
+        );
+
+        setChannels([...channelLatestMessage, ...channelsOldMessage]);
+      } else {
+        //Not exist
+        //Unshift channel to list
+        //Or add the new channel to top
+        const newChannel = [res?.data] as TChannelData[];
+        setChannels((prev) => [...newChannel, ...prev]);
+      }
     });
 
     return () => {
       socket.off("channel_message");
     };
   }, [channels]);
+
+  //Handle auto select channel when first visit
+  useEffect(() => {
+    if (!channelId && channels?.length && channels[0]?.channel_id) {
+      navigate(`/c/${channels[0].channel_id}`);
+    }
+  }, [channelId, channels, navigate]);
+
   return (
     <div onClick={handleAside} className="flex flex-col h-[87%] w-full gap-2 ">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
