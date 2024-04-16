@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { FormEvent, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
@@ -15,7 +15,13 @@ import UserAvatar from "@/components/shared/UserAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { asyncEmit } from "@/socket";
-export default function CreateNewChannel() {
+
+//*This component accept children as a Dialog trigger
+//*children props must be button trigger
+type Props = {
+  children: React.ReactNode;
+};
+export default function CreateNewChannel({ children }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState("");
@@ -63,15 +69,7 @@ export default function CreateNewChannel() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="secondary"
-          title="New chat"
-          className="absolute w-12 h-12 p-2 transition-all border rounded-full bg-secondary/50 hover:bg-secondary bottom-4 right-2 hover:scale-105"
-        >
-          <Plus size={20} />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Private message</DialogTitle>
