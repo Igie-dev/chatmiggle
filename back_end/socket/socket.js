@@ -59,7 +59,7 @@ const socketConnection = (httpServer) => {
               //The data is a whole channel with latest message
               //Emit all the members of the created private channel
               members.forEach((m) => {
-                io.to(m.user_id).emit("new_channel", {
+                io.to(m.user_id).emit("channel_message", {
                   data: res.data,
                 });
               });
