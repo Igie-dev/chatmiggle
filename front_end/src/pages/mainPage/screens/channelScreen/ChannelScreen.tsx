@@ -1,8 +1,10 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import AsideNav from "./aside/Aside";
 import { useRef } from "react";
 import Container from "../../../../components/shared/Container";
+import NoSelectedChannelUi from "@/components/shared/NoSelectedChannelUi";
 export default function ChannelScreen() {
+  const { channelId } = useParams();
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
     if (asideRef?.current?.classList.contains("-translate-x-full")) {
@@ -17,7 +19,7 @@ export default function ChannelScreen() {
       <>
         <AsideNav asideRef={asideRef} handleAside={handleAside} />
         <main className="w-full h-full lg:flex-1">
-          <Outlet />
+          {!channelId ? <NoSelectedChannelUi /> : <Outlet />}
         </main>
       </>
     </Container>
