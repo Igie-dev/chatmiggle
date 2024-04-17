@@ -2,78 +2,129 @@ import { useParams } from "react-router-dom";
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
 import MessageCard from "./MessageCard";
 import { MessageSquare } from "lucide-react";
-import useChannelMessages from "@/hooks/useChannelMessages";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { socket } from "@/socket";
+import { useGetChannelMessagesMutation } from "@/service/slices/channel/channelApiSlice";
 export default function MessageList() {
   const { channelId } = useParams();
-  const { messages, isFetching, isError, setCursor, dataCursor } =
-    useChannelMessages(channelId as string);
-  //handle scroll to bottom
+  const [messages, setMessages] = useState<TMessageData[]>([]);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [getMessages, { isError, isLoading }] = useGetChannelMessagesMutation();
+  const [targetScroll, setTargetScroll] = useState("");
+  //Join to socket
   useEffect(() => {
-    if (messages?.length && !dataCursor) {
-      const targetEl = document.getElementById(
-        `${messages[messages.length - 1]?.message_id}`
-      ) as HTMLElement;
+    if (channelId) {
+      socket.emit("active_channel", channelId);
+    }
+    return () => {
+      socket.off("active_channel");
+    };
+  }, [channelId]);
 
+  //Handle data from api request
+  useEffect(() => {
+    (async () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res: any = await getMessages({ channelId: channelId as string });
+        if (res?.data && res?.data?.messages?.length >= 1) {
+          if (res?.data?.messages[0]?.channel_id === channelId) {
+            const messages = res?.data?.messages as TMessageData[];
+            setMessages(messages);
+            if (res?.data?.cursor) {
+              setCursor(res?.data?.cursor);
+              setTargetScroll(messages[messages.length - 1]?.message_id);
+            }
+          } else {
+            setMessages([]);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    return () => {
+      setMessages([]);
+      setCursor(null);
+      setTargetScroll("");
+    };
+  }, [getMessages, channelId]);
+
+  useEffect(() => {
+    //handle scroll to bottom
+    if (targetScroll) {
+      const targetEl = document.getElementById(targetScroll) as HTMLElement;
       targetEl?.lastElementChild?.scrollIntoView({
         behavior: "smooth",
       });
     }
-  }, [messages, dataCursor]);
+  }, [targetScroll]);
 
-  //Handle refetch when view on top
+  //Handle data from socket
   useEffect(() => {
-    if (messages?.length <= 99) return;
-    let timeout: NodeJS.Timeout;
-    const el = document.getElementById(
-      `${messages[0]?.message_id}`
-    ) as HTMLElement;
-    const observer = new window.IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          timeout = setTimeout(() => {
-            if (dataCursor) {
-              setCursor(dataCursor);
-            }
-          }, 500);
-        }
-      },
-      {
-        root: null,
-        threshold: 0,
+    socket.on("new_message", (res: { data: TChannelData }) => {
+      const newMessage = res?.data.messages[0] as TMessageData;
+      if (res?.data?.channel_id === channelId) {
+        setMessages((prev: TMessageData[]) => [...prev, newMessage]);
       }
-    );
-
-    const interval = setInterval(() => {
-      observer.observe(el);
-    }, 1000);
-
+    });
     return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
+      socket.off("new_message");
     };
-  }, [messages, dataCursor, setCursor]);
+  }, [channelId]);
+
+  const handleGetMoreMessage = () => {
+    (async () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res: any = await getMessages({
+          channelId: channelId as string,
+          cursor,
+        });
+        if (res?.data && res?.data?.messages?.length >= 1) {
+          if (res?.data?.messages[0]?.channel_id === channelId) {
+            const messages = res?.data?.messages as TMessageData[];
+            setTargetScroll(messages[messages.length - 1]?.message_id);
+            setMessages((prev) => [...messages, ...prev]);
+            if (res?.data?.cursor) {
+              setCursor(res?.data?.cursor);
+            }
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
 
   return (
     <div className="relative flex-1 w-full overflow-auto">
-      <div
-        className={`sticky top-0 left-0 z-40 flex justify-center w-full py-2  transition-all ${
-          messages?.length >= 1 && isFetching ? "visible" : "hidden"
-        }`}
-      >
-        <p className="px-4 py-2 text-sm border rounded-full bg-background/80">
-          Please wait...
-        </p>
-      </div>
+      {messages.length >= 100 ? (
+        <div className="flex items-center justify-center w-full py-1">
+          <button
+            type="button"
+            onClick={handleGetMoreMessage}
+            className="px-4 py-1 text-xs font-normal transition-all border rounded-md opacity-40 bg-background/80 hover:opacity-85"
+          >
+            {isLoading ? "Loading..." : "More"}
+          </button>
+        </div>
+      ) : null}
       <ul className="flex flex-col w-full gap-5 px-4 py-2 pb-20 h-fit">
-        {messages?.length <= 0 && isFetching ? (
+        {messages?.length <= 0 && isLoading ? (
           <LoaderSpinner />
         ) : messages?.length >= 1 && !isError ? (
-          messages.map((message: TMessageData) => {
-            return <MessageCard key={message.id} message={message} />;
+          messages.map((message: TMessageData, i: number) => {
+            return (
+              <MessageCard
+                key={message.id}
+                lastMessage={i === messages.length - 1}
+                message={message}
+              />
+            );
           })
-        ) : (messages?.length <= 0 || isError) && !isFetching ? (
+        ) : (messages?.length <= 0 || isError) && !isLoading ? (
           <div className="flex flex-col items-center w-full gap-2 pt-10">
             <MessageSquare size={40} className="opacity-70" />
             <p className="text-sm font-semibold opacity-70">Empty chat</p>
