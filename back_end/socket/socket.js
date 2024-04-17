@@ -7,6 +7,7 @@ const issuer = process.env.SERVER_URL;
 
 import createNewChannel from "./actions/newChannel.js";
 import newChannelMessage from "./actions/newChannelMessage.js";
+import seenControl from "./actions/seenControl.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -41,9 +42,13 @@ const socketConnection = (httpServer) => {
     });
 
     /// Active channel
-    socket.on("active_channel", (channe_id) => {
-      socket.join(channe_id);
+    socket.on("active_channel", (channel_id) => {
+      socket.join(channel_id);
     });
+
+    // socket.on("listen_seen_channel", (channel_id) => {
+    //   socket.join(channel_id);
+    // });
 
     //Listen for create new private channel
     //The event on front end when using the create private message
@@ -69,8 +74,8 @@ const socketConnection = (httpServer) => {
               });
             }
           })
-          .catch((err) => {
-            console.log(err);
+          .catch((error) => {
+            console.log(error);
             //Return to sender
             io.to(socket.id).emit("create_new_channel", {
               error: "Somthing went wrong",
@@ -88,8 +93,10 @@ const socketConnection = (httpServer) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Send an emit to client where the channel id was listened
-              io.to(res?.data?.channel_id).emit("channel_message", {
-                data: res.data,
+              res.data?.members.forEach((m) => {
+                io.to(m.user_id).emit("channel_message", {
+                  data: res.data,
+                });
               });
 
               io.to(res?.data?.channel_id).emit("new_message", {
@@ -102,7 +109,7 @@ const socketConnection = (httpServer) => {
             }
           })
           .catch((error) => {
-            console.log(err);
+            console.log(error);
             //Return to sender
             io.to(socket.id).emit("new_chat", {
               error: "Somthing went wrong",
@@ -110,6 +117,33 @@ const socketConnection = (httpServer) => {
           });
       }
     );
+
+    //Handle seen event
+
+    socket.on("seen", async ({ channel_id, user_id }) => {
+      seenControl({ channel_id, user_id })
+        .then((res) => {
+          if (res?.data) {
+            io.to(socket.id).emit("seen", {
+              data: res?.data,
+            });
+            res.data?.members.forEach((m) => {
+              io.to(m.user_id).emit("message_seen", {
+                data: res.data,
+              });
+            });
+            io.to(res.data?.channel_id).emit("seen_channel", {
+              data: res.data,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          io.to(socket.id).emit("seen", {
+            error: "Somthing went wrong",
+          });
+        });
+    });
   });
 };
 
