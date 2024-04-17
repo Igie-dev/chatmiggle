@@ -67,6 +67,7 @@ export default function MessageList() {
       const newMessage = res?.data.messages[0] as TMessageData;
       if (res?.data?.channel_id === channelId) {
         setMessages((prev: TMessageData[]) => [...prev, newMessage]);
+        setTargetScroll(newMessage?.message_id);
       }
     });
     return () => {
