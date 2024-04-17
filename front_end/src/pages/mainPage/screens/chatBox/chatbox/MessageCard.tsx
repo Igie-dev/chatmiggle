@@ -2,12 +2,15 @@ import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import { isToday, formatDate, formatTime } from "@/lib/dateFormat";
 import UserAvatar from "@/components/shared/UserAvatar";
+import SeenMessage from "@/components/shared/SeenMessage";
 type Props = {
   message: TMessageData;
+  lastMessage?: boolean;
 };
-export default function MessageCard({ message }: Props) {
+export default function MessageCard({ message, lastMessage }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const senderMe = user_id === message.sender_id;
+
   return (
     <li id={message.message_id} className="flex justify-start w-full h-fit ">
       {!senderMe ? (
@@ -27,10 +30,11 @@ export default function MessageCard({ message }: Props) {
         >
           {message.message}
         </pre>
-        <p className="absolute text-[10px] top-full opacity-40">
+        <p className="absolute font-thin text-[10px] top-[105%] opacity-70">
+          {lastMessage ? <SeenMessage message={message} /> : null}
           {isToday(message.createdAt)
-            ? `${formatTime(message.createdAt)}`
-            : `${formatDate(message.createdAt)} ${formatTime(
+            ? `Sent ${formatTime(message.createdAt)}`
+            : `Sent ${formatDate(message.createdAt)} ${formatTime(
                 message.createdAt
               )}`}
         </p>
