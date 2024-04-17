@@ -126,7 +126,6 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Channel not found" });
     }
 
-    console.log(foundChannel);
     const nextCursorId =
       foundChannel.messages.length >= 100 ? foundChannel.messages[0].id : null;
     return res
