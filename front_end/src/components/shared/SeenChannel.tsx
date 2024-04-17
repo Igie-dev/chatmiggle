@@ -23,7 +23,6 @@ export default function SeenChannel({ channel }: Props) {
   useEffect(() => {
     socket.emit("listen_seen_channel", channel.channel_id);
     socket.on("seen_channel", (res: { data: TChannelData }) => {
-      console.log(res?.data);
       if (res?.data.channel_id === channel.channel_id && !isSeen) {
         setIsSeen(true);
       }
