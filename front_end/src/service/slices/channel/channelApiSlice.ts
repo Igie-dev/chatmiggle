@@ -21,7 +21,7 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    getChannelMessages: builder.query({
+    getChannelMessages: builder.mutation({
       query: ({
         channelId,
         cursor,
@@ -47,6 +47,6 @@ const channelApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetUserChannelsQuery,
   useVerifyUserInChannelQuery,
-  useGetChannelMessagesQuery,
+  useGetChannelMessagesMutation,
   useGetChannelQuery,
 } = channelApiSlice;
