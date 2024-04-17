@@ -78,6 +78,25 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
           return reject({ error: "Something went wrong!" });
         }
       }
+      const foundChannelMember = await prisma.userChannelMember.findMany({
+        where: {
+          channel_id: data.channel_id,
+        },
+      });
+
+      if (foundChannelMember?.length >= 1) {
+        for (const member of foundChannelMember) {
+          await prisma.userChannelMember.update({
+            where: {
+              id: member.id,
+            },
+            data: {
+              ...member,
+              is_seen: false,
+            },
+          });
+        }
+      }
 
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id: data.channel_id },
