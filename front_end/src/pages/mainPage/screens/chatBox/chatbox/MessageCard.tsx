@@ -13,9 +13,14 @@ export default function MessageCard({ message, lastMessage }: Props) {
 
   return (
     <li id={message.message_id} className="flex justify-start w-full h-fit ">
-      {!senderMe ? (
+      {!senderMe && message.channel.is_private ? (
         <div className="mr-1 w-9 h-9">
           <UserAvatar userId={message.sender_id} />
+        </div>
+      ) : null}
+      {!senderMe && !message.channel.is_private ? (
+        <div className="mr-1 border rounded-full w-9 h-9">
+          {/* <UserAvatar userId={message.sender_id} /> */}
         </div>
       ) : null}
       <div
@@ -33,9 +38,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
           </pre>
         ) : null}
         <p className="absolute font-thin text-[10px] top-[105%] opacity-80">
-          {lastMessage && message.channel.isPrivate ? (
-            <SeenMessage message={message} />
-          ) : null}
+          {lastMessage ? <SeenMessage message={message} /> : null}
           {isToday(message.createdAt)
             ? `Sent ${formatTime(message.createdAt)}`
             : `Sent ${formatDate(message.createdAt)} ${formatTime(
