@@ -35,7 +35,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
 
       if (foundChannelMember?.length >= 1) {
         for (const member of foundChannelMember) {
-          await prisma.userChannelMember.update({
+          const updateMemebers = await prisma.userChannelMember.update({
             where: {
               id: member.id,
             },
@@ -44,6 +44,9 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
               is_seen: member.user_id === sender_id,
             },
           });
+          if (!updateMemebers?.id) {
+            return reject({ error: "Something went wrong!" });
+          }
         }
       }
 
