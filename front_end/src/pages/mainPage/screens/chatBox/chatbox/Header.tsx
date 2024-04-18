@@ -14,7 +14,7 @@ export default function Header({ handleAside }: Props) {
   const { channelId } = useParams();
   const { data } = useGetChannelQuery(channelId as string);
   const { user_id } = useAppSelector(getCurrentUser);
-  const mateId =
+  const mate_id =
     data?.members?.length >= 3
       ? ""
       : data?.members[0].user_id !== user_id
@@ -25,7 +25,7 @@ export default function Header({ handleAside }: Props) {
       <div className="flex items-center flex-1 gap-2 ml-10 lg:ml-0">
         <div className="w-9 h-9">
           {data?.is_private ? (
-            <UserAvatar userId={mateId} />
+            <UserAvatar userId={mate_id} />
           ) : (
             <GroupAvatar channelId={data?.channel_id} />
           )}
@@ -33,7 +33,7 @@ export default function Header({ handleAside }: Props) {
         <div className="w-[12rem] lg:w-[15rem]">
           {data?.is_private ? (
             <span className="w-full text-sm font-medium truncate opacity-90 max-h-6">
-              <DisplayUserName userId={mateId} />
+              <DisplayUserName userId={mate_id} />
             </span>
           ) : (
             <p className="w-full text-sm font-medium truncate opacity-90 max-h-6">

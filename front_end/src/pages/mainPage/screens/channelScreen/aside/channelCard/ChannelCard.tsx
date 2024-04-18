@@ -7,6 +7,7 @@ import DisplayUserName from "./DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
+import GroupAvatar from "@/components/shared/GroupAvatar";
 type Props = {
   channel: TChannelData;
 };
@@ -33,15 +34,14 @@ export default function ChannelCard({ channel }: Props) {
           : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
       }`}
     >
-      {channel.is_private ? (
-        <div className="w-9 h-9">
+      <div className="w-9 h-9">
+        {channel.is_private ? (
           <UserAvatar userId={mate_id} />
-        </div>
-      ) : (
-        <div className="border rounded-full w-9 h-9">
-          {/* <UserAvatar userId={mate_id} /> */}
-        </div>
-      )}
+        ) : (
+          <GroupAvatar channelId={channel?.channel_id} />
+        )}
+      </div>
+
       <div className={`flex flex-col w-[70%] h-full justify-center `}>
         {channel?.is_private ? (
           <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">

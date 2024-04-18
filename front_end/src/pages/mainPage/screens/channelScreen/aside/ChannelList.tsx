@@ -100,7 +100,7 @@ export default function ChannelList({ handleAside }: Props) {
       <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">
         {isFetching ? (
           <LoaderUi />
-        ) : channels?.length >= 1 && !isError ? (
+        ) : channels?.length >= 0 && !isError ? (
           channels.map((c: TChannelData) => {
             return <ChannelCard key={c.id} channel={c} />;
           })
