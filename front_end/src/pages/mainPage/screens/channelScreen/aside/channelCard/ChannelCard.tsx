@@ -33,11 +33,17 @@ export default function ChannelCard({ channel }: Props) {
           : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
       }`}
     >
-      <div className="w-9 h-9">
-        <UserAvatar userId={mate_id} />
-      </div>
+      {channel.is_private ? (
+        <div className="w-9 h-9">
+          <UserAvatar userId={mate_id} />
+        </div>
+      ) : (
+        <div className="border rounded-full w-9 h-9">
+          {/* <UserAvatar userId={mate_id} /> */}
+        </div>
+      )}
       <div className={`flex flex-col w-[70%] h-full justify-center `}>
-        {channel?.isPrivate ? (
+        {channel?.is_private ? (
           <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
             <DisplayUserName userId={mate_id} />
           </span>
