@@ -16,7 +16,12 @@ import { useAppSelector } from "@/service/store";
 import { asyncEmit } from "@/socket";
 import { Plus, Search, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-export default function CreateNewGroup() {
+//*This component accept children as a Dialog trigger
+//*children props must be button trigger
+type Props = {
+  children: React.ReactNode;
+};
+export default function CreateNewGroup({ children }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
   const [searchError, setSearchError] = useState("");
@@ -119,7 +124,8 @@ export default function CreateNewGroup() {
   };
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      {/* <DialogTrigger asChild>
         <Button
           variant="secondary"
           title="New chat"
@@ -127,7 +133,7 @@ export default function CreateNewGroup() {
         >
           <Plus size={20} />
         </Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create new group</DialogTitle>
