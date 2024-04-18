@@ -1,6 +1,6 @@
 import CreateNewChannel from "@/pages/mainPage/screens/channelScreen/newChannel/CreateNewChannel";
 import { Button } from "../ui/button";
-
+import CreateNewGroup from "@/pages/mainPage/screens/groupScreen/newGroup/CreateNewGroup";
 export default function NoSelectedChannelUi() {
   return (
     <div className="flex items-center justify-start w-full h-full px-2 pt-[20%] lg:pt-[15%] flex-col gap-2 ">
@@ -17,9 +17,11 @@ export default function NoSelectedChannelUi() {
           <Button size="sm">Send private message</Button>
         </CreateNewChannel>
         <p className="my-1 text-sm opacity-50">Or</p>
-        <Button size="sm" variant="outline" className="w-full">
-          Create group chat
-        </Button>
+        <CreateNewGroup>
+          <Button size="sm" variant="outline" className="w-full">
+            Create group chat
+          </Button>
+        </CreateNewGroup>
       </div>
     </div>
   );
