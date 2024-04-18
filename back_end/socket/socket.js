@@ -8,6 +8,7 @@ const issuer = process.env.SERVER_URL;
 import createNewChannel from "./actions/newChannel.js";
 import newChannelMessage from "./actions/newChannelMessage.js";
 import seenControl from "./actions/seenControl.js";
+import createNewGroup from "./actions/newGroup.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -117,9 +118,30 @@ const socketConnection = (httpServer) => {
           });
       }
     );
+    ///Handle Create group
+    socket.on("create_group", async ({ message, sender_id, type, members }) => {
+      createNewGroup({ message, sender_id, type, members })
+        .then((res) => {
+          if (res?.data) {
+            io.to(socket.id).emit("create_group", {
+              data: res.data,
+            });
+            members.forEach((m) => {
+              io.to(m.user_id).emit("channel_message", {
+                data: res.data,
+              });
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          io.to(socket.id).emit("create_group", {
+            error: "Somthing went wrong",
+          });
+        });
+    });
 
     //Handle seen event
-
     socket.on("seen", async ({ channel_id, user_id }) => {
       seenControl({ channel_id, user_id })
         .then((res) => {
