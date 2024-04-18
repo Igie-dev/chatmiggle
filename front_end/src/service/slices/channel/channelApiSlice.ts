@@ -41,6 +41,12 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+    getUserGroups: builder.query({
+      query: (user_id: string) => ({
+        url: `/channel/usergroup/${user_id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -49,4 +55,5 @@ export const {
   useVerifyUserInChannelQuery,
   useGetChannelMessagesMutation,
   useGetChannelQuery,
+  useGetUserGroupsQuery,
 } = channelApiSlice;
