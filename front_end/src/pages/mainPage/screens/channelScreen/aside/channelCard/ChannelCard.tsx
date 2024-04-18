@@ -5,6 +5,8 @@ import { isToday, formatTime, formatDate } from "@/lib/dateFormat";
 import { useNavigate, useParams } from "react-router-dom";
 import DisplayUserName from "./DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
+import { Button } from "@/components/ui/button";
+import { EllipsisVertical } from "lucide-react";
 type Props = {
   channel: TChannelData;
 };
@@ -22,11 +24,10 @@ export default function ChannelCard({ channel }: Props) {
   const handleClick = () => {
     navigate(`/c/${channel.channel_id}`);
   };
-
   return (
     <li
       onClick={handleClick}
-      className={`flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
+      className={`group flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
         channelId === channel.channel_id
           ? "bg-primary-foreground border-border/70"
           : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
@@ -35,7 +36,7 @@ export default function ChannelCard({ channel }: Props) {
       <div className="w-9 h-9">
         <UserAvatar userId={mate_id} />
       </div>
-      <div className={`flex flex-col w-[80%] h-full justify-center `}>
+      <div className={`flex flex-col w-[70%] h-full justify-center `}>
         {channel?.isPrivate ? (
           <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
             <DisplayUserName userId={mate_id} />
@@ -61,7 +62,18 @@ export default function ChannelCard({ channel }: Props) {
           </p>
         </div>
       </div>
-      <SeenChannel channel={channel} />
+      <Button
+        size="icon"
+        variant="outline"
+        className="transition-all border-transparent rounded-full opacity-0 bg-primary-foreground group-hover:opacity-100 group-hover:border-border"
+      >
+        <EllipsisVertical size={16} />
+      </Button>
+      <SeenChannel
+        members={channel.members}
+        senderId={channel.messages[0]?.sender_id}
+        messageId={channel.messages[0]?.message_id}
+      />
     </li>
   );
 }

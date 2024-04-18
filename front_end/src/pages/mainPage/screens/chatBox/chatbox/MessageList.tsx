@@ -32,9 +32,9 @@ export default function MessageList() {
             const messages = res?.data?.messages as TMessageData[];
             setMessages(messages);
             if (res?.data?.cursor) {
-              setCursor(res?.data?.cursor);
-              setTargetScroll(messages[messages.length - 1]?.message_id);
+              setCursor(res?.data.cursor);
             }
+            setTargetScroll(messages[messages.length - 1]?.message_id);
           } else {
             setMessages([]);
           }
@@ -53,6 +53,7 @@ export default function MessageList() {
 
   useEffect(() => {
     //handle scroll to bottom
+    // console.log(targetScroll);
     if (targetScroll) {
       const targetEl = document.getElementById(targetScroll) as HTMLElement;
       targetEl?.lastElementChild?.scrollIntoView({
@@ -65,10 +66,10 @@ export default function MessageList() {
   useEffect(() => {
     socket.on("new_message", (res: { data: TChannelData }) => {
       const newMessage = res?.data.messages[0] as TMessageData;
-      if (res?.data?.channel_id === channelId) {
-        setMessages((prev: TMessageData[]) => [...prev, newMessage]);
-        setTargetScroll(newMessage?.message_id);
-      }
+
+      if (res?.data?.channel_id != channelId) return;
+      setMessages((prev: TMessageData[]) => [...prev, newMessage]);
+      setTargetScroll(newMessage?.message_id);
     });
     return () => {
       socket.off("new_message");

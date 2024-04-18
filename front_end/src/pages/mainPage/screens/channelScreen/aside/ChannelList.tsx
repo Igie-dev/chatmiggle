@@ -28,26 +28,32 @@ export default function ChannelList({ handleAside }: Props) {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on("channel_message", (res: { data: TChannelData }) => {
-      if (!res?.data || !res.data?.channel_id) {
+      const user = res?.data?.members.filter((m) => m.user_id === user_id);
+
+      if (!res?.data || !res.data?.channel_id || user.length <= 0) return;
+      //If channels empty, add to latest new channel
+      if (channels.length <= 0) {
+        const firstChannel = [res.data];
+        setChannels(firstChannel);
         return;
       }
+      //If channels not empty
       //Check if channel is exist on the list
       const foundExistChannel = channels.filter(
         (c) => c.channel_id === res.data?.channel_id
       );
-
-      // console.log(foundExistChannel);
       //if is exist
       //Modified current list to update message
       if (foundExistChannel.length >= 1) {
         const updatedChannels: TChannelData[] = channels.map(
           (c: TChannelData) => {
             if (c.channel_id === res.data?.channel_id) {
-              // Create a new array with the updated message
-              const updatedMessages = res.data.messages;
+              //Update messages data of channel
+              const newMessages = res.data?.messages;
+              //Update members data of channel to desplay channel seen
+              const newMembers = res.data?.members;
               // Update the channel with the new messages array
-
-              return { ...c, messages: updatedMessages };
+              return { ...c, members: newMembers, messages: newMessages };
             }
             return c;
           }
@@ -72,7 +78,7 @@ export default function ChannelList({ handleAside }: Props) {
     return () => {
       socket.off("channel_message");
     };
-  }, [channels]);
+  }, [channels, user_id]);
 
   //Handle auto select channel when first visit
   useEffect(() => {

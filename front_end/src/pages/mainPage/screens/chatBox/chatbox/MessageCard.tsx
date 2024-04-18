@@ -23,15 +23,19 @@ export default function MessageCard({ message, lastMessage }: Props) {
           senderMe ? "flex-row-reverse " : ""
         }`}
       >
-        <pre
-          className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
-            senderMe ? "bg-primary-foreground/70" : "bg-transparent"
-          }`}
-        >
-          {message.message}
-        </pre>
-        <p className="absolute font-thin text-[10px] top-[105%] opacity-70">
-          {lastMessage ? <SeenMessage message={message} /> : null}
+        {message.type === "text" ? (
+          <pre
+            className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
+              senderMe ? "bg-primary-foreground/70" : "bg-transparent"
+            }`}
+          >
+            {message.message}
+          </pre>
+        ) : null}
+        <p className="absolute font-thin text-[10px] top-[105%] opacity-80">
+          {lastMessage && message.channel.isPrivate ? (
+            <SeenMessage message={message} />
+          ) : null}
           {isToday(message.createdAt)
             ? `Sent ${formatTime(message.createdAt)}`
             : `Sent ${formatDate(message.createdAt)} ${formatTime(

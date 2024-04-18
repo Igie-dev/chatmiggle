@@ -54,7 +54,7 @@ export default function LoginPage() {
         <h3 className="text-lg font-semibold">Log In</h3>
         <p className="my-2 text-sm text-destructive">{error?.data?.message}</p>
         <main className="flex flex-col items-start w-full gap-2">
-          <div className="relative w-[95%] flex flex-col pb-4  pl-4 gap-1">
+          <div className="relative w-[95%] flex flex-col pb-4  pl-4 ">
             <label htmlFor="email" className="text-sm font-semibold">
               Email
             </label>
@@ -76,13 +76,13 @@ export default function LoginPage() {
             <span className="absolute p-2 right-1 bottom-5">
               <AtSign className="w-5 h-5" />
             </span>
-            <p className="absolute left-4 bottom-0 text-[10px] lg:text-xs text-destructive">
+            <p className="absolute bottom-0 text-xs left-4 text-destructive">
               {formik.touched.email && formik.errors.email
                 ? formik.errors.email
                 : null}
             </p>
           </div>
-          <div className="relative w-[95%] flex flex-col  pb-4  pl-4 gap-1">
+          <div className="relative w-[95%] flex flex-col  pb-4  pl-4 ">
             <label htmlFor="password" className="text-sm font-semibold">
               Password
             </label>
@@ -111,7 +111,7 @@ export default function LoginPage() {
                 <EyeOff className="w-5 h-5 pointer-events-none" />
               )}
             </button>
-            <p className="absolute left-4 bottom-0 text-[10px] lg:text-xs text-destructive">
+            <p className="absolute bottom-0 text-xs left-4 text-destructive">
               {formik.touched.password && formik.errors.password
                 ? formik.errors.password
                 : null}
