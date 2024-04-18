@@ -56,7 +56,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         const createChannel = await prisma.channel.create({
           data: {
             channel_id: data.channel_id,
-            isPrivate: true,
+            is_private: true,
           },
         });
         if (!createChannel?.id) {
@@ -64,17 +64,22 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         }
 
         for (const user of members) {
-          var createUserChannelMember = await prisma.userChannelMember.create({
-            data: {
-              user_id: user.user_id,
-              channel_id: createChannel?.channel_id,
-            },
-          });
+          const createUserChannelMember = await prisma.userChannelMember.create(
+            {
+              data: {
+                user_id: user.user_id,
+                channel_id: createChannel?.channel_id,
+              },
+            }
+          );
+          if (!createUserChannelMember?.id) {
+            return reject({ error: "Something went wrong!" });
+          }
         }
 
         const createMessage = await prisma.message.create({ data });
 
-        if (!createMessage?.id || !createUserChannelMember?.id) {
+        if (!createMessage?.id) {
           return reject({ error: "Something went wrong!" });
         }
       }
@@ -117,6 +122,9 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
           members: true,
         },
       });
+      if (!foundChannel?.id) {
+        return reject({ error: "Something went wrong!" });
+      }
 
       return resolve({ data: foundChannel });
     } catch (error) {
