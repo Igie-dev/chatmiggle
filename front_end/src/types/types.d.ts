@@ -55,7 +55,7 @@ declare global {
     id?: number;
     channel_id: string;
     group_name?: string;
-    isPrivate: boolean;
+    is_private: boolean;
     messages: TMessageData[];
     members: TChannelMemberData[];
     createdAt: string;
