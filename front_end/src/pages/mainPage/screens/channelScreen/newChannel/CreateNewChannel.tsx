@@ -8,9 +8,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Search } from "lucide-react";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
+import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
@@ -23,20 +23,28 @@ type Props = {
 };
 export default function CreateNewChannel({ children }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState("");
   const [id, setId] = useState("");
   const [message, setMessage] = useState("");
   const { user_id } = useAppSelector(getCurrentUser);
-  const { data, isFetching, isError, refetch } = useGetUserByIdQuery(id);
+  const [getUser, { isLoading }] = useGetUserByIdMutMutation();
+  const [mate, setMate] = useState<TUser | null>(null);
 
   const handleSeachUser = () => {
-    if (inputRef?.current?.value) {
-      setId(inputRef?.current?.value);
-      setTimeout(() => {
-        refetch();
-      }, 1000);
-    }
+    if (!id) return;
+    (async () => {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res: any = await getUser(id);
+        if (res?.data) {
+          const user = res.data as TUser;
+          setMate(user);
+          console.log(res);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -46,7 +54,7 @@ export default function CreateNewChannel({ children }: Props) {
       message: message,
       sender_id: user_id,
       type: "text",
-      members: [{ user_id: data?.user_id }, { user_id: user_id }],
+      members: [{ user_id: mate?.user_id }, { user_id: user_id }],
     };
 
     try {
@@ -92,7 +100,8 @@ export default function CreateNewChannel({ children }: Props) {
               </label>
               <div className="flex items-center w-full h-12 gap-2 p-1 overflow-hidden border rounded-md">
                 <input
-                  ref={inputRef}
+                  value={id}
+                  onChange={(e) => setId(e.target.value)}
                   type="text"
                   className="flex-1 w-full h-full px-2 text-sm bg-transparent outline-none"
                   placeholder="Enter User ID"
@@ -103,7 +112,7 @@ export default function CreateNewChannel({ children }: Props) {
               </div>
             </div>
             <div className="flex items-center w-full h-fit">
-              {isFetching ? (
+              {isLoading ? (
                 <div className="flex items-center w-full gap-2 p-2 border rounded-md h-fit">
                   <div className="w-10 h-10 overflow-hidden rounded-full">
                     <Skeleton className="w-full h-full" />
@@ -112,20 +121,20 @@ export default function CreateNewChannel({ children }: Props) {
                     <Skeleton className="w-full h-full" />
                   </div>
                 </div>
-              ) : !isError && data?.user_id === user_id ? (
+              ) : !error && mate?.user_id === user_id ? (
                 <div className="flex items-center w-full h-12 px-2">
                   <p className="text-sm ">Please provide other ID</p>
                 </div>
-              ) : !isError && data && data?.user_id ? (
+              ) : !error && mate?.user_id ? (
                 <div className="flex items-center w-full gap-4 p-2 border rounded-md h-fit">
                   <div className="w-10 h-10 overflow-hidden rounded-full">
-                    <UserAvatar userId={data?.user_id} />
+                    <UserAvatar userId={mate?.user_id} />
                   </div>
-                  <p className="text-sm opacity-70 max-w-[70%] truncate">
-                    {data?.first_name + " " + data?.last_name}
+                  <p className="text-sm  max-w-[70%] truncate">
+                    {mate?.first_name + " " + mate?.last_name}
                   </p>
                 </div>
-              ) : isError ? (
+              ) : error ? (
                 <div className="flex items-center w-full h-12 px-2">
                   <p className="text-sm ">User not found</p>
                 </div>
@@ -144,7 +153,7 @@ export default function CreateNewChannel({ children }: Props) {
                   type="button"
                   variant="secondary"
                   size="lg"
-                  disabled={isFetching}
+                  disabled={isLoading}
                 >
                   Cancel
                 </Button>
@@ -152,7 +161,7 @@ export default function CreateNewChannel({ children }: Props) {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isFetching || !id || !data?.user_id || !message}
+                disabled={isLoading || !id || !mate?.user_id || !message}
               >
                 Send
               </Button>
