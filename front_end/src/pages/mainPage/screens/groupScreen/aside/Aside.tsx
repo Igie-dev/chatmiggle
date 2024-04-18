@@ -2,7 +2,7 @@ import { ForwardedRef } from "react";
 import Header from "../../../../../components/shared/Header";
 import GroupList from "./GroupList";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import CreateNewGroup from "../newGroup/CreateNewGroup";
 type Props = {
   handleAside: () => void;
@@ -35,7 +35,15 @@ export default function AsideNav({ handleAside, asideRef }: Props) {
         </Button>
         <Header />
         <GroupList handleAside={handleAside} />
-        <CreateNewGroup />
+        <CreateNewGroup>
+          <Button
+            variant="secondary"
+            title="New group"
+            className="absolute w-12 h-12 p-2 transition-all border rounded-full bg-secondary/50 hover:bg-secondary bottom-4 right-2 hover:scale-105"
+          >
+            <Plus size={20} />
+          </Button>
+        </CreateNewGroup>
       </div>
     </aside>
   );
