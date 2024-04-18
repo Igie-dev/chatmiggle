@@ -24,14 +24,14 @@ export default function Header({ handleAside }: Props) {
     <header className="flex items-center justify-between w-full h-20 px-2 border-b lg:w-[98%]">
       <div className="flex items-center flex-1 gap-2 ml-10 lg:ml-0">
         <div className="w-9 h-9">
-          {data?.isPrivate ? (
+          {data?.is_private ? (
             <UserAvatar userId={mateId} />
           ) : (
             <GroupAvatar channelId={data?.channel_id} />
           )}
         </div>
         <div className="w-[12rem] lg:w-[15rem]">
-          {data?.isPrivate ? (
+          {data?.is_private ? (
             <span className="w-full text-sm font-medium truncate opacity-90 max-h-6">
               <DisplayUserName userId={mateId} />
             </span>
