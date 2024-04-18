@@ -23,7 +23,7 @@ model User {
 model Channel {
   id              Int             @id @default(autoincrement())
   channel_id      String          @unique
-  isPrivate       Boolean
+  is_private       Boolean
   group_name      String?
   messages        Message[]
   createdAt       DateTime        @default(now())
