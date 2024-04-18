@@ -5,11 +5,14 @@ import {
   verifyUserInChannel,
   getChannelMessages,
   getChannel,
+  getUserGroups,
 } from "../controller/channelController.js";
 const router = express.Router();
 router.use(verifyJWT);
 
 router.route("/userchannel/:userId").get(getUserChannels);
+
+router.route("/usergroup/:userId").get(getUserGroups);
 
 router.route("/:channelId").get(getChannel);
 
