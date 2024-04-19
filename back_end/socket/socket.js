@@ -119,27 +119,30 @@ const socketConnection = (httpServer) => {
       }
     );
     ///Handle Create group
-    socket.on("create_group", async ({ message, sender_id, type, members }) => {
-      createNewGroup({ message, sender_id, type, members })
-        .then((res) => {
-          if (res?.data) {
-            io.to(socket.id).emit("create_group", {
-              data: res.data,
-            });
-            members.forEach((m) => {
-              io.to(m.user_id).emit("channel_message", {
+    socket.on(
+      "create_group",
+      async ({ group_name, message, sender_id, type, members }) => {
+        createNewGroup({ group_name, message, sender_id, type, members })
+          .then((res) => {
+            if (res?.data) {
+              io.to(socket.id).emit("create_group", {
                 data: res.data,
               });
+              members.forEach((m) => {
+                io.to(m.user_id).emit("channel_message", {
+                  data: res.data,
+                });
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            io.to(socket.id).emit("create_group", {
+              error: "Somthing went wrong",
             });
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          io.to(socket.id).emit("create_group", {
-            error: "Somthing went wrong",
           });
-        });
-    });
+      }
+    );
 
     //Handle seen event
     socket.on("seen", async ({ channel_id, user_id }) => {
