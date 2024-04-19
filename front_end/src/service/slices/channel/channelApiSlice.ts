@@ -47,6 +47,14 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    getMembersChannel: builder.mutation({
+      query: (members: { user_id: string }[]) => ({
+        url: `/channel/memberschannel`,
+        method: "POST",
+        body: { members },
+      }),
+    }),
   }),
 });
 
@@ -56,4 +64,5 @@ export const {
   useGetChannelMessagesMutation,
   useGetChannelQuery,
   useGetUserGroupsQuery,
+  useGetMembersChannelMutation,
 } = channelApiSlice;
