@@ -24,10 +24,14 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
                 },
               },
             },
+            {
+              is_private: true,
+            },
           ],
         },
         select: {
           channel_id: true,
+          is_private: true,
           members: {
             take: 1,
           },
@@ -40,18 +44,19 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         message_id: uuid(),
         type: type,
       };
-      if (existMembersChannel[0]?.members?.length === 2) {
-        return reject({ error: "Something went wrong!" });
-      }
 
-      if (existMembersChannel?.length >= 1) {
+      //Channel exist and its private
+      if (
+        existMembersChannel[0]?.is_private ||
+        existMembersChannel?.length >= 1
+      ) {
         data.channel_id = existMembersChannel[0]?.channel_id;
         const newmessage = await prisma.message.create({ data });
         if (!newmessage?.id) {
           return reject({ error: "Something went wrong!" });
         }
-      }
-      if (existMembersChannel?.length <= 0) {
+      } else {
+        //If channel not exist or channel is not private
         data.channel_id = uuid();
         const createChannel = await prisma.channel.create({
           data: {
@@ -59,6 +64,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
             is_private: true,
           },
         });
+
         if (!createChannel?.id) {
           return reject({ error: "Something went wrong!" });
         }
@@ -83,6 +89,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
           return reject({ error: "Something went wrong!" });
         }
       }
+
       const foundChannelMember = await prisma.userChannelMember.findMany({
         where: {
           channel_id: data.channel_id,
