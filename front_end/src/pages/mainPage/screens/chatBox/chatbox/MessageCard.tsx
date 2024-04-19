@@ -32,14 +32,16 @@ export default function MessageCard({ message, lastMessage }: Props) {
             {message.message}
           </pre>
         ) : null}
-        <p className="absolute font-thin text-[10px] top-[105%] opacity-80">
+        <div className="absolute  top-[105%] w-fit flex opacity-80">
           {lastMessage ? <SeenMessage message={message} /> : null}
-          {isToday(message.createdAt)
-            ? `Sent ${formatTime(message.createdAt)}`
-            : `Sent ${formatDate(message.createdAt)} ${formatTime(
-                message.createdAt
-              )}`}
-        </p>
+          <p className="font-thin text-[10px]">
+            {isToday(message.createdAt)
+              ? `Sent ${formatTime(message.createdAt)}`
+              : `Sent ${formatDate(message.createdAt)} ${formatTime(
+                  message.createdAt
+                )}`}
+          </p>
+        </div>
       </div>
     </li>
   );
