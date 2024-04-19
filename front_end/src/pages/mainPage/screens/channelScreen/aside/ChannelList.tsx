@@ -100,15 +100,19 @@ export default function ChannelList({ handleAside }: Props) {
       <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">
         {isFetching ? (
           <LoaderUi />
-        ) : channels?.length >= 0 && !isError ? (
-          channels.map((c: TChannelData) => {
-            return <ChannelCard key={c.id} channel={c} />;
-          })
         ) : (
-          <div className="flex flex-col items-center w-full mt-5">
-            <Library size={30} className="opacity-70" />
-            <p className="text-sm font-semibold opacity-70">Empty</p>
-          </div>
+          <>
+            {isError && channels.length <= 0 ? (
+              <div className="flex flex-col items-center w-full mt-5 opacity-60">
+                <Library size={30} />
+                <p className="text-sm font-semibold">Empty</p>
+              </div>
+            ) : (
+              channels.map((c: TChannelData) => {
+                return <ChannelCard key={c.id} channel={c} />;
+              })
+            )}
+          </>
         )}
       </ul>
     </div>
@@ -117,7 +121,7 @@ export default function ChannelList({ handleAside }: Props) {
 
 const LoaderUi = () => {
   const loader = [];
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     loader.push(
       <li
         key={i}
