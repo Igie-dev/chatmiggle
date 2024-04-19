@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Search } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import UserAvatar from "@/components/shared/UserAvatar";
@@ -75,6 +75,14 @@ export default function CreateNewChannel({ children }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      setMessage("");
+      setId("");
+      setMate(null);
+      setError("");
+    }
+  }, [isOpen]);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
