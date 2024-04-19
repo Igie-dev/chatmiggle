@@ -117,7 +117,7 @@ export default function Header() {
           <MessageCircleMore size={20} className="opacity-70" />
         </NavLink>
         <NavLink
-          to={`${channelId?.length ? `/g/${channelId}` : "/g"}`}
+          to={`${channelId?.length ? `/f/${channelId}` : "/f"}`}
           className={({ isActive }) =>
             `flex items-center justify-center  border flex-1 h-full rounded-md ${
               isActive

@@ -42,8 +42,8 @@ export default function Router() {
     () => import("@/pages/mainPage/screens/channelScreen/ChannelScreen")
   );
 
-  const GroupScreen = lazy(
-    () => import("@/pages/mainPage/screens/groupScreen/GroupScreen")
+  const FriendsScreen = lazy(
+    () => import("@/pages/mainPage/screens/friendsScreen/FriendsScreen")
   );
 
   return (
@@ -71,9 +71,9 @@ export default function Router() {
                 </Route>
               </Route>
               {/* Group List */}
-              <Route path="/g" element={<GroupScreen />}>
+              <Route path="/f" element={<FriendsScreen />}>
                 <Route element={<ChatBoxGuard />}>
-                  <Route path="/g/:channelId" element={<ChatBoxContainer />} />
+                  <Route path="/f/:channelId" element={<ChatBoxContainer />} />
                 </Route>
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>
