@@ -216,10 +216,82 @@ const getUserGroups = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
+
+const getMembersChannel = asyncHandler(async (req, res) => {
+  const { members } = req.body;
+  if (members?.length < 2) {
+    return res.status(400).json({ message: "Members atleast has 2 users" });
+  }
+  try {
+    const existMembersChannel = await prisma.channel.findMany({
+      where: {
+        AND: [
+          {
+            members: {
+              some: {
+                user_id: members[0].user_id,
+              },
+            },
+          },
+          {
+            members: {
+              some: {
+                user_id: members[1].user_id,
+              },
+            },
+          },
+          {
+            is_private: true,
+          },
+        ],
+      },
+      select: {
+        channel_id: true,
+        is_private: true,
+        members: {
+          take: 1,
+        },
+      },
+    });
+
+    if (existMembersChannel?.length <= 0) {
+      return res.status(404).json({ message: "No channel found" });
+    }
+
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id: existMembersChannel[0]?.channel_id },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          include: {
+            channel: {
+              include: {
+                members: true,
+              },
+            },
+          },
+        },
+        members: true,
+      },
+    });
+    if (!foundChannel?.id) {
+      return reject({ error: "Something went wrong!" });
+    }
+
+    return res.status(200).json(foundChannel);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
 export {
   getUserChannels,
   verifyUserInChannel,
   getChannelMessages,
   getChannel,
   getUserGroups,
+  getMembersChannel,
 };
