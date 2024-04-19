@@ -113,4 +113,80 @@ const deleteUser = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
-export { getUsers, updateUser, deleteUser, getUser };
+
+const getUserFriends = asyncHandler(async (req, res) => {
+  const user_id = req.params.id;
+  try {
+    const foundUser = await prisma.user.findUnique({
+      where: { user_id },
+      include: {
+        membered_channel: {
+          include: {
+            channel: true,
+          },
+        },
+      },
+    });
+
+    if (!foundUser?.id || foundUser?.membered_channel?.length <= 0) {
+      return res.status(404).json({ message: "No friends found" });
+    }
+    const userChannels = [];
+    for (const channel of foundUser?.membered_channel) {
+      const existChannel = userChannels.filter(
+        (c) => c.channel_id === channel.channel_id
+      );
+      if (existChannel.length <= 0) {
+        const foundChannel = await prisma.channel.findUnique({
+          where: { channel_id: channel.channel_id, is_private: true },
+          include: {
+            messages: {
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: 1,
+              include: {
+                channel: {
+                  include: {
+                    members: true,
+                  },
+                },
+              },
+            },
+            members: true,
+          },
+        });
+
+        if (foundChannel?.messages?.length >= 1) {
+          userChannels.push(foundChannel);
+        }
+      }
+    }
+
+    if (userChannels?.length <= 0) {
+      return res.status(404).json({ message: "No friends found" });
+    }
+
+    userChannels?.sort(
+      (a, b) => b.messages[0].createdAt - a.messages[0].createdAt
+    );
+    const mates = [];
+    for (const channel of userChannels) {
+      for (const channelMembers of channel.members) {
+        if (channelMembers.user_id !== user_id) {
+          mates.push(channelMembers);
+        }
+      }
+    }
+
+    if (mates?.length <= 0) {
+      return res.status(404).json({ message: "No friends found" });
+    }
+
+    return res.status(200).json(mates);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+export { getUsers, updateUser, deleteUser, getUser, getUserFriends };
