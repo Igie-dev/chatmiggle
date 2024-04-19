@@ -11,6 +11,7 @@ export default function ChatInput() {
   const [messageText, setMessageText] = useState("");
   const { channelId } = useParams();
   const { user_id } = useAppSelector(getCurrentUser);
+  const [isLoading, setIsLoading] = useState(false);
   const handleFocus = () => {
     textAreaRef?.current?.classList.add("h-[10rem]");
     textAreaRef?.current?.classList.remove("h-[3rem]");
@@ -27,7 +28,7 @@ export default function ChatInput() {
 
   const handleSubmit = async () => {
     if (!channelId || !messageText) return;
-
+    setIsLoading(true);
     const data: TSendMessage = {
       channel_id: channelId,
       sender_id: user_id,
@@ -45,6 +46,8 @@ export default function ChatInput() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,6 +61,7 @@ export default function ChatInput() {
         ref={textAreaRef}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        disabled={isLoading}
         placeholder="Message"
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
@@ -66,8 +70,11 @@ export default function ChatInput() {
       <Button
         size="lg"
         variant="default"
+        disabled={isLoading}
         onClick={handleSubmit}
-        className="flex items-center h-[3rem] px-5 md:px-8 text-white border rounded-lg bg-primary"
+        className={`flex items-center h-[3rem] px-5 md:px-8 text-white border rounded-lg bg-primary ${
+          isLoading ? "cursor-wait" : "cursor-pointer"
+        }`}
       >
         <SendHorizontal size={25} />
       </Button>
