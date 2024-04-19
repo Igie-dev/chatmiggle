@@ -114,24 +114,28 @@ export default function MessageList() {
         </div>
       ) : null}
       <ul className="flex flex-col w-full gap-5 px-4 py-2 pb-20 h-fit">
-        {messages?.length <= 0 && isLoading ? (
+        {isLoading ? (
           <LoaderSpinner />
-        ) : messages?.length >= 1 && !isError ? (
-          messages.map((message: TMessageData, i: number) => {
-            return (
-              <MessageCard
-                key={message.id}
-                lastMessage={i === messages.length - 1}
-                message={message}
-              />
-            );
-          })
-        ) : (messages?.length <= 0 || isError) && !isLoading ? (
-          <div className="flex flex-col items-center w-full gap-2 pt-10">
-            <MessageSquare size={40} className="opacity-70" />
-            <p className="text-sm font-semibold opacity-70">Empty chat</p>
-          </div>
-        ) : null}
+        ) : (
+          <>
+            {isError && messages?.length <= 0 ? (
+              <div className="flex flex-col items-center w-full gap-2 pt-10">
+                <MessageSquare size={40} className="opacity-70" />
+                <p className="text-sm font-semibold opacity-70">Empty chat</p>
+              </div>
+            ) : (
+              messages.map((message: TMessageData, i: number) => {
+                return (
+                  <MessageCard
+                    key={message.id}
+                    lastMessage={i === messages.length - 1}
+                    message={message}
+                  />
+                );
+              })
+            )}
+          </>
+        )}
       </ul>
     </div>
   );
