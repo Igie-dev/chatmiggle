@@ -2,18 +2,21 @@ import { useEffect, useState } from "react";
 import { asyncEmit, socket } from "@/socket";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import DisplayGroupMemberSeen from "./DisplayGroupMemberSeen";
 type Props = {
   message: TMessageData;
 };
 export default function SeenMessage({ message }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [isSeen, setIsSeen] = useState(false);
+  const [membersSeen, setMembersSeen] = useState<TChannelMemberData[]>([]);
 
   useEffect(() => {
     if (message.channel.members.length >= 0 && message.message_id) {
       const mates = message.channel.members.filter(
         (m) => m.user_id !== user_id && m.is_seen
       );
+      setMembersSeen(mates);
       const isSeenByMate = mates.length >= 2;
       setIsSeen(isSeenByMate);
     }
@@ -44,9 +47,13 @@ export default function SeenMessage({ message }: Props) {
 
   return user_id === message.sender_id ? (
     <>
-      {isSeen ? (
-        <span className="mr-2 border py-[2px]  px-[4px]  rounded-lg">Seen</span>
+      {isSeen && message.channel.is_private ? (
+        <p className="mr-2  font-semibold text-[10px] opacity-50   rounded-lg">
+          Seen
+        </p>
       ) : null}
     </>
+  ) : !message.channel.is_private && membersSeen.length >= 1 ? (
+    <DisplayGroupMemberSeen members={membersSeen} />
   ) : null;
 }
