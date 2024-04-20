@@ -102,13 +102,13 @@ export default function ChannelList({ handleAside }: Props) {
           <LoaderUi />
         ) : (
           <>
-            {isError && channels.length <= 0 ? (
+            {isError || channels?.length <= 0 ? (
               <div className="flex flex-col items-center w-full mt-5 opacity-60">
                 <Library size={30} />
                 <p className="text-sm font-semibold">Empty</p>
               </div>
             ) : (
-              channels.map((c: TChannelData) => {
+              channels?.map((c: TChannelData) => {
                 return <ChannelCard key={c.id} channel={c} />;
               })
             )}

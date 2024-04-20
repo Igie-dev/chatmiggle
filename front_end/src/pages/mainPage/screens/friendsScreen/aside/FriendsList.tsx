@@ -31,13 +31,13 @@ export default function FriendsList({ handleAside }: Props) {
           <LoaderUi />
         ) : (
           <>
-            {isError && friends.length <= 0 ? (
+            {isError || friends?.length <= 0 ? (
               <div className="flex flex-col items-center w-full mt-5 opacity-60">
                 <Library size={30} />
                 <p className="text-sm font-semibold">Empty</p>
               </div>
             ) : (
-              friends.map((m: TChannelMemberData) => {
+              friends?.map((m: TChannelMemberData) => {
                 return <FriendCard key={m.id} user={m} />;
               })
             )}
