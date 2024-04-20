@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  web:
+  webchat:
     depends_on:
       - server
     build: ./front_end
@@ -11,7 +11,7 @@ services:
         - path: ./front_end/package*.json
           action: rebuild
         - path: ./front_end
-          target: ./home/app
+          target: ./usr/src/app
           action: sync
 
   server:
@@ -23,7 +23,7 @@ services:
     develop:
       watch:
       - path: ./back_end
-        target: ./home/app
+        target: ./usr/src/app
         action: sync
       - path: ./back_end/package*.json
         action: rebuild
