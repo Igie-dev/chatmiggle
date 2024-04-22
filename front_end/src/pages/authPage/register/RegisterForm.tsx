@@ -104,7 +104,7 @@ export default function RegisterForm() {
                 : "border-border"
             } `}
           />
-          <p className="absolute left-0 text-xs -bottom-5 text-destructive">
+          <p className="absolute text-xs left-2 -bottom-5 text-destructive">
             {formik.touched.firstName && formik.errors.firstName
               ? formik.errors.firstName
               : null}
@@ -128,7 +128,7 @@ export default function RegisterForm() {
                 : "border-border"
             } `}
           />
-          <p className="absolute left-0 text-xs -bottom-5 text-destructive">
+          <p className="absolute text-xs left-2 -bottom-5 text-destructive">
             {formik.touched.lastName && formik.errors.lastName
               ? formik.errors.lastName
               : null}
@@ -152,7 +152,7 @@ export default function RegisterForm() {
                 : "border-border"
             }  `}
           />
-          <p className="absolute left-0 text-xs -bottom-5 text-destructive">
+          <p className="absolute text-xs left-2 -bottom-5 text-destructive">
             {formik.touched.email && formik.errors.email
               ? formik.errors.email
               : null}
@@ -176,7 +176,7 @@ export default function RegisterForm() {
                 : "border-border"
             } `}
           />
-          <p className="absolute left-0 text-xs -bottom-5 text-destructive">
+          <p className="absolute text-xs left-2 -bottom-5 text-destructive">
             {formik.touched.password && formik.errors.password
               ? formik.errors.password
               : null}
@@ -200,7 +200,7 @@ export default function RegisterForm() {
                 : "border-border"
             } `}
           />
-          <p className="absolute left-0 text-xs -bottom-5 text-destructive">
+          <p className="absolute text-xs left-2 -bottom-5 text-destructive">
             {formik.touched.confirmpass && formik.errors.confirmpass
               ? formik.errors.confirmpass
               : null}
