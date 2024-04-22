@@ -11,8 +11,8 @@ export function ModeToggle() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center justify-start w-full h-10 px-2 hover:bg-primary-foreground">
-        <span className="text-sm font-normal">Theme</span>
+      <DropdownMenuTrigger className="flex items-center justify-start w-full h-10 px-2 rounded-sm hover:bg-accent/70">
+        <span className="text-xs font-normal">Theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>

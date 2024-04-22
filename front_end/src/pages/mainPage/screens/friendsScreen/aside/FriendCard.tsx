@@ -49,7 +49,7 @@ export default function FriendCard({ user }: Props) {
   ) : (
     <li
       onClick={handleClick}
-      className={`flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-primary-foreground ${
+      className={`flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/70 ${
         isLoading ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >

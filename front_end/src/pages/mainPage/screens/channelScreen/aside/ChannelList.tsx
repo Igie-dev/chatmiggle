@@ -94,7 +94,7 @@ export default function ChannelList({ handleAside }: Props) {
         <Input
           type="text"
           placeholder="Search..."
-          className="bg-primary-foreground h-11"
+          className="bg-accent/70 h-11"
         />
       </header>
       <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">

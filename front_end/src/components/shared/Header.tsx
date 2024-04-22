@@ -53,9 +53,9 @@ export default function Header() {
               <DropdownMenuItem asChild>
                 <Link
                   to=""
-                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
+                  className="w-full h-10 cursor-pointer hover:bg-accent/70"
                 >
-                  <span className="text-sm">Profile</span>
+                  <span className="text-xs">Profile</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="p-0 ">
@@ -64,18 +64,18 @@ export default function Header() {
 
               <DropdownMenuItem asChild>
                 <Link
-                  to={`/displayAvatar/upload/${user_id}`}
-                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
+                  to={`/avatar/upload/${user_id}`}
+                  className="w-full h-10 cursor-pointer hover:bg-accent/70"
                 >
-                  <span className="text-sm ">Change displayAvatar</span>
+                  <span className="text-xs">Change Avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  to={`/displayAvatar/remove/${user_id}`}
-                  className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
+                  to={`/avatar/remove/${user_id}`}
+                  className="w-full h-10 cursor-pointer hover:bg-accent/70"
                 >
-                  <span className="text-sm ">Remove displayAvatar</span>
+                  <span className="text-xs">Remove Avatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -101,7 +101,6 @@ export default function Header() {
             </span>
           </div>
         </div>
-        {/* <ModeToggle /> */}
       </div>
       <nav className="flex items-center w-full h-10 gap-1 justify-evenly">
         <NavLink
@@ -109,8 +108,8 @@ export default function Header() {
           className={({ isActive }) =>
             `flex items-center justify-center border flex-1 h-full rounded-md ${
               isActive
-                ? "bg-primary-foreground border-border"
-                : "hover:bg-primary-foreground transition-all border-transparent"
+                ? "bg-accent/70 border-border"
+                : "hover:bg-accent/70 transition-all border-transparent"
             }`
           }
         >
@@ -121,8 +120,8 @@ export default function Header() {
           className={({ isActive }) =>
             `flex items-center justify-center  border flex-1 h-full rounded-md ${
               isActive
-                ? "bg-primary-foreground border-border"
-                : "hover:bg-primary-foreground transition-all border-transparent"
+                ? "bg-accent/70 border-border"
+                : "hover:bg-accent/70 transition-all border-transparent"
             }`
           }
         >

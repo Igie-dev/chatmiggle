@@ -29,8 +29,8 @@ export default function ChannelCard({ channel }: Props) {
       onClick={handleClick}
       className={`group flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
         channelId === channel.channel_id
-          ? "bg-primary-foreground border-border/70"
-          : "bg-transparent border-transparent hover:shadow-md hover:bg-primary-foreground"
+          ? "bg-accent/70 border-border/70"
+          : "bg-transparent border-transparent hover:shadow-md hover:bg-accent/70"
       }`}
     >
       <div className="w-9 h-9">
@@ -70,7 +70,7 @@ export default function ChannelCard({ channel }: Props) {
       <Button
         size="icon"
         variant="outline"
-        className="transition-all border-transparent rounded-full opacity-0 bg-primary-foreground group-hover:opacity-100 group-hover:border-border"
+        className="transition-all border-transparent rounded-full opacity-0 bg-accent/70 group-hover:opacity-100 group-hover:border-border"
       >
         <EllipsisVertical size={16} />
       </Button>

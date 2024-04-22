@@ -26,7 +26,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
         {message.type === "text" ? (
           <pre
             className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
-              senderMe ? "bg-primary-foreground/70" : "bg-transparent"
+              senderMe ? "bg-accent/70" : "bg-transparent"
             }`}
           >
             {message.message}

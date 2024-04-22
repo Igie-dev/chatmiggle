@@ -12,7 +12,7 @@ export default function SignOutBtn() {
       size="sm"
       variant="ghost"
       onClick={handleSignout}
-      className="flex justify-start w-full"
+      className="flex justify-start w-full text-xs"
     >
       {isLoading ? <BtnsLoaderSpinner /> : "SignOut"}
     </Button>
