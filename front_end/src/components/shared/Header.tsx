@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { LayoutList, MessageCircleMore } from "lucide-react";
-import UserAvatar from "@/components/shared/UserAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { socket } from "@/socket";
 import {
   DropdownMenu,
@@ -42,7 +42,7 @@ export default function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger>
               <div className="w-9 h-9">
-                <UserAvatar userId={user_id} />
+                <DisplayAvatar id={user_id} />
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[12rem] p-2 text-xs">
@@ -64,18 +64,18 @@ export default function Header() {
 
               <DropdownMenuItem asChild>
                 <Link
-                  to="/avatar/upload"
+                  to={`/displayAvatar/upload/${user_id}`}
                   className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
                 >
-                  <span className="text-sm ">Change avatar</span>
+                  <span className="text-sm ">Change displayAvatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  to="/avatar/remove"
+                  to={`/displayAvatar/remove/${user_id}`}
                   className="w-full h-10 cursor-pointer hover:bg-primary-foreground"
                 >
-                  <span className="text-sm ">Remove avatar</span>
+                  <span className="text-sm ">Remove displayAvatar</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

@@ -77,8 +77,8 @@ export default function Router() {
                 </Route>
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>
-                <Route path="/avatar/upload" element={<UploadAvatar />} />
-                <Route path="/avatar/remove" element={<RemovedAvatar />} />
+                <Route path="/avatar/upload/:id" element={<UploadAvatar />} />
+                <Route path="/avatar/remove/:id" element={<RemovedAvatar />} />
               </Route>
             </Route>
           </Route>
