@@ -1,5 +1,5 @@
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
-import UserAvatar from "@/components/shared/UserAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -172,7 +172,7 @@ export default function CreateNewGroup({ children }: Props) {
                       >
                         <div className="flex items-center flex-1 gap-2 ">
                           <div className="w-10 h-10">
-                            <UserAvatar userId={u.user_id} />
+                            <DisplayAvatar id={u.user_id} />
                           </div>
                           <p className="text-sm truncate w-[80%]  text-start">
                             {u.first_name + " " + u.last_name}

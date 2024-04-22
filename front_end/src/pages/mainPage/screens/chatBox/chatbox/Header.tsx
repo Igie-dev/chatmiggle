@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { useGetChannelQuery } from "@/service/slices/channel/channelApiSlice";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
-import UserAvatar from "@/components/shared/UserAvatar";
-import GroupAvatar from "@/components/shared/GroupAvatar";
-import DisplayUserName from "../../channelScreen/aside/channelCard/DisplayUserName";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
+import DisplayUserName from "../../../../../components/shared/DisplayUserName";
 type Props = {
   handleAside: () => void;
 };
@@ -25,9 +24,9 @@ export default function Header({ handleAside }: Props) {
       <div className="flex items-center flex-1 gap-2 ml-10 lg:ml-0">
         <div className="w-9 h-9">
           {data?.is_private ? (
-            <UserAvatar userId={mate_id} />
+            <DisplayAvatar id={mate_id} />
           ) : (
-            <GroupAvatar channelId={data?.channel_id} />
+            <DisplayAvatar id={data?.channel_id} />
           )}
         </div>
         <div className="w-[12rem] lg:w-[15rem]">

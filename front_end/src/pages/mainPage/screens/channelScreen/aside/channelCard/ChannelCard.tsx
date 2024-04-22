@@ -1,13 +1,12 @@
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
-import UserAvatar from "@/components/shared/UserAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { isToday, formatTime, formatDate } from "@/lib/dateFormat";
 import { useNavigate, useParams } from "react-router-dom";
-import DisplayUserName from "./DisplayUserName";
+import DisplayUserName from "../../../../../../components/shared/DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
-import GroupAvatar from "@/components/shared/GroupAvatar";
 type Props = {
   channel: TChannelData;
 };
@@ -36,9 +35,9 @@ export default function ChannelCard({ channel }: Props) {
     >
       <div className="w-9 h-9">
         {channel.is_private ? (
-          <UserAvatar userId={mate_id} />
+          <DisplayAvatar id={mate_id} />
         ) : (
-          <GroupAvatar channelId={channel?.channel_id} />
+          <DisplayAvatar id={channel?.channel_id} />
         )}
       </div>
 

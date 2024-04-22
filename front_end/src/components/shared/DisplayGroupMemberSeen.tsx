@@ -1,4 +1,4 @@
-import UserAvatar from "./UserAvatar";
+import Avatar from "./DisplayAvatar";
 type Props = {
   members: TChannelMemberData[];
 };
@@ -15,7 +15,7 @@ export default function DisplayGroupMemberSeen({ members }: Props) {
               left: i === 0 ? `${i}px` : `${i + 8}px`,
             }}
           >
-            <UserAvatar userId={m.user_id} />
+            <Avatar id={m.user_id} />
           </div>
         );
       })}

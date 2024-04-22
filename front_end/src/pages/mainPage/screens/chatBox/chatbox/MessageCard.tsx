@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import { isToday, formatDate, formatTime } from "@/lib/dateFormat";
-import UserAvatar from "@/components/shared/UserAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import SeenMessage from "@/components/shared/SeenMessage";
 type Props = {
   message: TMessageData;
@@ -15,7 +15,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
     <li id={message.message_id} className="flex justify-start w-full h-fit ">
       {!senderMe ? (
         <div className="mr-1 w-9 h-9">
-          <UserAvatar userId={message.sender_id} />
+          <DisplayAvatar id={message.sender_id} />
         </div>
       ) : null}
       <div
