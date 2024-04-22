@@ -1,5 +1,5 @@
 // import { useNavigate, useParams } from "react-router-dom";
-import UserAvatar from "@/components/shared/UserAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 import { useGetMembersChannelMutation } from "@/service/slices/channel/channelApiSlice";
@@ -49,12 +49,12 @@ export default function FriendCard({ user }: Props) {
   ) : (
     <li
       onClick={handleClick}
-      className={`flex items-center w-full gap-3 p-2 bg-transparent border rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-primary-foreground ${
+      className={`flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-primary-foreground ${
         isLoading ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
       <div className="w-9 h-9">
-        <UserAvatar userId={data?.user_id} />
+        <DisplayAvatar id={data?.user_id} />
       </div>
       <div className="h-full flex items-center w-[70%]">
         <p className="w-full max-w-full text-sm truncate max-h-6">
