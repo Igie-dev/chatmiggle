@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  webchat:
+  web:
     depends_on:
       - server
     build: ./front_end
