@@ -7,6 +7,7 @@ import { useSignInMutation } from "@/service/slices/auth/authApiSlice";
 import { Button } from "@/components/ui/button";
 import BtnLoader from "@/components/loader/BtnLoader";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 export default function LoginPage() {
   const navigate = useNavigate();
   const [isOpenEye, setIsOpenEye] = useState(false);
@@ -55,9 +56,9 @@ export default function LoginPage() {
         <p className="my-2 text-sm text-destructive">{error?.data?.message}</p>
         <main className="flex flex-col items-start w-full gap-2">
           <div className="relative w-[95%] flex flex-col pb-4  pl-4 ">
-            <label htmlFor="email" className="text-sm font-semibold">
+            <Label htmlFor="email" className="text-sm font-semibold">
               Email
-            </label>
+            </Label>
             <Input
               ref={inputRef}
               type="text"
@@ -83,9 +84,9 @@ export default function LoginPage() {
             </p>
           </div>
           <div className="relative w-[95%] flex flex-col  pb-4  pl-4 ">
-            <label htmlFor="password" className="text-sm font-semibold">
+            <Label htmlFor="password" className="text-sm font-semibold">
               Password
-            </label>
+            </Label>
             <Input
               type={isOpenEye ? "text" : "password"}
               id="password"

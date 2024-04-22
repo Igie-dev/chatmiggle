@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRequestVerifyEmailMutation } from "@/service/slices/auth/authApiSlice";
 import { encryptText } from "@/lib/helper";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -86,9 +87,9 @@ export default function RegisterForm() {
 
       <div className="flex flex-col items-center w-full gap-7">
         <div className="w-[90%] flex flex-col gap-1 relative">
-          <label htmlFor="firstName" className="text-sm font-semibold">
+          <Label htmlFor="firstName" className="text-sm font-semibold">
             First Name
-          </label>
+          </Label>
           <Input
             ref={inputRef}
             type="text"
@@ -111,9 +112,9 @@ export default function RegisterForm() {
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1 relative">
-          <label htmlFor="lastName" className="text-sm font-semibold">
+          <Label htmlFor="lastName" className="text-sm font-semibold">
             Last Name
-          </label>
+          </Label>
           <Input
             type="text"
             id="lastName"
@@ -135,9 +136,9 @@ export default function RegisterForm() {
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1 relative">
-          <label htmlFor="email" className="text-sm font-semibold">
+          <Label htmlFor="email" className="text-sm font-semibold">
             Email
-          </label>
+          </Label>
           <Input
             type="text"
             id="email"
@@ -159,9 +160,9 @@ export default function RegisterForm() {
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1 relative">
-          <label htmlFor="password" className="text-sm font-semibold">
+          <Label htmlFor="password" className="text-sm font-semibold">
             Create password
-          </label>
+          </Label>
           <Input
             type="password"
             id="password"
@@ -183,9 +184,9 @@ export default function RegisterForm() {
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1 relative">
-          <label htmlFor="confirmpass" className="text-sm font-semibold">
+          <Label htmlFor="confirmpass" className="text-sm font-semibold">
             Confirm password
-          </label>
+          </Label>
           <Input
             type="password"
             id="confirmpass"
