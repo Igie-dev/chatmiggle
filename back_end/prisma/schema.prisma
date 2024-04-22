@@ -16,7 +16,6 @@ model User {
   password   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime? @updatedAt
-  image      Avatar?
   membered_channel UserChannelMember[]
 }
 
@@ -69,6 +68,4 @@ model Avatar {
   avatar_id String  @unique
   data     Bytes
   mimetype String
-  user     User   @relation(fields: [avatar_id], references: [user_id], onDelete: Cascade)
-
 }

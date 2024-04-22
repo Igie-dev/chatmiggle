@@ -3,7 +3,7 @@ import verifyJWT from "../middleware/verifyJWT.js";
 import {
   uploadImage,
   uploadAvatar,
-  getUserAvatar,
+  getAvatar,
   deleteAvatar,
 } from "../controller/imageController.js";
 const router = express.Router();
@@ -13,6 +13,6 @@ router
   .route("/uploadavatar/:id")
   .post(uploadImage.single("uploadavatar"), uploadAvatar);
 
-router.route("/avatar/:id").get(getUserAvatar).delete(deleteAvatar);
+router.route("/avatar/:id").get(getAvatar).delete(deleteAvatar);
 
 export default router;

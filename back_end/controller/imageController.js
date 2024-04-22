@@ -87,57 +87,83 @@ const bufferToDataURL = (buffer, mimetype) => {
 };
 
 const uploadAvatar = asyncHandler(async (req, res) => {
-  const userId = req.params.id;
+  const id = req.params.id;
   try {
     const foundUser = await prisma.user.findUnique({
-      where: { user_id: userId },
+      where: { user_id: id },
       select: { id: true, user_id: true },
     });
 
-    if (!foundUser?.id) {
-      return res.status(404).json({ message: "User not found" });
+    if (foundUser?.id) {
+      saveImage(foundUser?.user_id);
     }
 
-    const resizedImage = await resizeImage(imageData.filePath);
-
-    const foundAvatar = await prisma.avatar.findUnique({
-      where: { avatar_id: userId },
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id: id },
+      select: { id: true, channel_id: true },
     });
 
-    if (foundAvatar?.id) {
-      const updateAvatar = await prisma.avatar.update({
-        where: { avatar_id: foundUser?.user_id },
-        data: {
-          data: resizedImage,
-          mimetype: imageData.mimetype,
-        },
-      });
+    if (foundChannel?.id) {
+      saveImage(foundChannel?.channel_id);
+    }
 
-      if (!updateAvatar?.id) {
+    async function saveImage(id) {
+      try {
+        const resizedImage = await resizeImage(imageData.filePath);
+        const foundAvatar = await prisma.avatar.findUnique({
+          where: { avatar_id: id },
+        });
+
+        if (foundAvatar?.id) {
+          const updateAvatar = await prisma.avatar.update({
+            where: { avatar_id: id },
+            data: {
+              data: resizedImage,
+              mimetype: imageData.mimetype,
+            },
+          });
+
+          if (!updateAvatar?.id) {
+            return res.status(500).json({ message: "Something went wrong" });
+          }
+          return res.status(201).json({ message: "Upload success" });
+        }
+
+        const saveImage = await prisma.avatar.create({
+          data: {
+            avatar_id: id,
+            data: resizedImage,
+            mimetype: imageData.mimetype,
+          },
+        });
+
+        if (!saveImage?.id) {
+          return res.status(500).json({ message: "Something went wrong" });
+        }
+        if (fs.existsSync(imageData.filePath)) {
+          fs.unlink(`${imageData.filePath}`, function (err) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        }
+        return res.status(201).json({ message: "Upload success" });
+      } catch (error) {
+        console.log(error);
+        if (fs.existsSync(imageData.filePath)) {
+          fs.unlink(`${imageData.filePath}`, function (err) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        }
         return res.status(500).json({ message: "Something went wrong" });
       }
-      return res.status(201).json({ message: "Upload success" });
     }
 
-    const saveImage = await prisma.avatar.create({
-      data: {
-        avatar_id: foundUser?.user_id,
-        data: resizedImage,
-        mimetype: imageData.mimetype,
-      },
-    });
-
-    if (!saveImage?.id) {
-      return res.status(500).json({ message: "Something went wrong" });
+    if (!foundChannel?.id && !foundUser?.id) {
+      return res.status(404).json({ message: "User or Channel not found" });
     }
-    if (fs.existsSync(imageData.filePath)) {
-      fs.unlink(`${imageData.filePath}`, function (err) {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-    return res.status(201).json({ message: "Upload success" });
   } catch (error) {
     console.log(error);
     if (fs.existsSync(imageData.filePath)) {
@@ -151,10 +177,11 @@ const uploadAvatar = asyncHandler(async (req, res) => {
   }
 });
 
-const getUserAvatar = asyncHandler(async (req, res) => {
+const getAvatar = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   try {
-    const foundImage = await prisma.avatar.findFirst({
+    const foundImage = await prisma.avatar.findUnique({
       where: {
         avatar_id: id,
       },
@@ -163,9 +190,9 @@ const getUserAvatar = asyncHandler(async (req, res) => {
     if (!foundImage?.id) {
       return res.status(404).json({ message: "Avatar not found" });
     }
+
     const buffer = Buffer.from(foundImage?.data, "binary");
     const url = bufferToDataURL(buffer, foundImage?.mimetype);
-
     return res.status(200).json({ url: url });
   } catch (error) {
     console.log(error);
@@ -198,4 +225,4 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
-export { uploadImage, uploadAvatar, getUserAvatar, deleteAvatar };
+export { uploadImage, uploadAvatar, getAvatar, deleteAvatar };
