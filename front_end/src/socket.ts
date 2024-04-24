@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { io, Socket } from "socket.io-client";
-import { getToken } from "@/lib/helper";
+import { getToken } from "@/utils/helper";
 const URL =
   import.meta.env.NODE_ENV === "production"
     ? undefined
