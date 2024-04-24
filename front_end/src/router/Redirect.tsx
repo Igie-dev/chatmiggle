@@ -9,6 +9,7 @@ export default function Redirect() {
   const [refresh] = useRefreshMutation();
   const navigate = useNavigate();
   useEffect(() => {
+    localStorage.clear();
     const refresher = async () => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
