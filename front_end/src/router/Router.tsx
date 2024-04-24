@@ -15,7 +15,17 @@ export default function Router() {
   );
 
   const RegisterForm = lazy(
-    () => import("@/pages/authPage/register/RegisterForm")
+    () => import("@/pages/authPage/register/registerForm/RegisterForm")
+  );
+
+  const FirstStepForm = lazy(
+    () => import("@/pages/authPage/register/registerForm/FirstStepForm")
+  );
+  const SecondStepForm = lazy(
+    () => import("@/pages/authPage/register/registerForm/SecondStepForm")
+  );
+  const SubmitForm = lazy(
+    () => import("@/pages/authPage/register/registerForm/SubmitForm")
   );
 
   const RegisterVerifyOtp = lazy(
@@ -58,7 +68,11 @@ export default function Router() {
           </Route>
 
           <Route path="/register" element={<RegisterPage />}>
-            <Route path="/register/form" element={<RegisterForm />} />
+            <Route path="/register/form" element={<RegisterForm />}>
+              <Route path="/register/form" element={<FirstStepForm />} />
+              <Route path="/register/form/step2" element={<SecondStepForm />} />
+              <Route path="/register/form/final" element={<SubmitForm />} />
+            </Route>
             <Route path="/register/otp" element={<RegisterVerifyOtp />} />
           </Route>
           {/* </Route> */}
