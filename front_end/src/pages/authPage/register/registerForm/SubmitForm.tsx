@@ -22,7 +22,6 @@ export default function SubmitForm() {
         localStorage.removeItem("lastName");
         localStorage.removeItem("email");
         localStorage.removeItem("password");
-        localStorage.removeItem("confirmPassword");
         navigate(
           `/register/otp?firstName=${firstName}&lastName=${lastName}&email=${email}&password=${encodeURIComponent(
             password

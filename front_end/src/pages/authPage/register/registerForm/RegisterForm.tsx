@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Outlet, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import Progress from "./Progress";
 export default function RegisterForm() {
   const navigate = useNavigate();
   const handleCancel = () => {
@@ -24,6 +25,7 @@ export default function RegisterForm() {
         <h5 className="text-lg font-semibold">Create your account</h5>
         <h1 className="text-lg font-black">Sign up</h1>
       </header>
+      <Progress />
       <Outlet />
       <div className="flex items-center justify-center w-full gap-2 px-5 pt-5 pb-5 text-sm">
         <p>Already have an account?</p>

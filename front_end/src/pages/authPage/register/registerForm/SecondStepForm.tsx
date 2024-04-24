@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
-import { decryptText, encryptText } from "@/utils/helper";
+import { encryptText } from "@/utils/helper";
 export default function SecondStepForm() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
@@ -14,17 +14,11 @@ export default function SecondStepForm() {
     }
   }, []);
 
-  const password = decryptText(
-    decodeURIComponent(localStorage.getItem("password")!)
-  );
-  const confirmPassword = decryptText(
-    decodeURIComponent(localStorage.getItem("confirmPassword")!)
-  );
   const formik = useFormik({
     initialValues: {
       email: localStorage.getItem("email") as string,
-      password: password as string,
-      confirmpass: confirmPassword as string,
+      password: "",
+      confirmpass: "",
     },
     validationSchema: new Yup.ObjectSchema({
       email: Yup.string().required("Email is required").email(),
@@ -39,7 +33,6 @@ export default function SecondStepForm() {
       }
       localStorage.setItem("email", values.email);
       localStorage.setItem("password", encryptText(values.password));
-      localStorage.setItem("confirmPassword", encryptText(values.password));
       navigate("/register/form/final");
     },
   });
