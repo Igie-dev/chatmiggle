@@ -5,7 +5,7 @@ import ResendOtp from "./ResendOtp";
 import { Button } from "@/components/ui/button";
 import { useRegisterMutation } from "@/service/slices/auth/authApiSlice";
 import { useSearchParams } from "react-router-dom";
-import { decryptText } from "@/lib/helper";
+import { decryptText } from "@/utils/helper";
 import { Input } from "@/components/ui/input";
 export default function VerifyOtp() {
   const [register, { isLoading, isError, error }] = useRegisterMutation();
@@ -38,7 +38,7 @@ export default function VerifyOtp() {
         email,
         password,
       });
-      console.log(res);
+
       if (res?.data?.email) {
         navigate("/login");
       }

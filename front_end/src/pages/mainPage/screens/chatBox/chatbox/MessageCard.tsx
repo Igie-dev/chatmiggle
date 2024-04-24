@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
-import { isToday, formatDate, formatTime } from "@/lib/dateFormat";
+import { isToday, formatDate, formatTime } from "@/utils/dateFormat";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import SeenMessage from "@/components/shared/SeenMessage";
 type Props = {
