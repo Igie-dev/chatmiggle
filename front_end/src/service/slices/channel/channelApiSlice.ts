@@ -55,6 +55,33 @@ const channelApiSlice = apiSlice.injectEndpoints({
         body: { members },
       }),
     }),
+    addUserToChannel: builder.mutation({
+      query: ({
+        userId,
+        channelId,
+      }: {
+        userId: string;
+        channelId: string;
+      }) => ({
+        url: `/channel/adduserchannel`,
+        method: "POST",
+        body: { userId, channelId },
+      }),
+    }),
+
+    removeUserFromChannel: builder.mutation({
+      query: ({
+        userId,
+        channelId,
+      }: {
+        userId: string;
+        channelId: string;
+      }) => ({
+        url: `/channel/removeuser`,
+        method: "PATCH",
+        body: { userId, channelId },
+      }),
+    }),
   }),
 });
 
@@ -65,4 +92,6 @@ export const {
   useGetChannelQuery,
   useGetUserGroupsQuery,
   useGetMembersChannelMutation,
+  useAddUserToChannelMutation,
+  useRemoveUserFromChannelMutation,
 } = channelApiSlice;
