@@ -12,8 +12,10 @@ export default function SeenChannel({ members, senderId, messageId }: Props) {
   const [isSeen, setIsSeen] = useState(false);
   useEffect(() => {
     if (members.length >= 1) {
-      const users = members.filter((m) => m.user_id === user_id && m.is_seen);
-      const isSeenByUser = users.length >= 1;
+      const usersSeen = members.filter(
+        (m) => m.user_id === user_id && m.is_seen
+      );
+      const isSeenByUser = usersSeen.length >= 1;
       setIsSeen(isSeenByUser);
     }
   }, [user_id, members, messageId, senderId]);
@@ -33,7 +35,7 @@ export default function SeenChannel({ members, senderId, messageId }: Props) {
   return senderId !== user_id ? (
     <>
       {isSeen ? null : (
-        <p className="absolute top-0 right-2 text-[10px] opacity-50">New</p>
+        <p className="absolute top-1 right-2 text-[10px] opacity-50">New</p>
       )}
     </>
   ) : null;
