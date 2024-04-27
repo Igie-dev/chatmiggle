@@ -22,7 +22,9 @@ export default function GroupMembers({ members, setIsOpenMembers }: Props) {
         <ul className="flex flex-col w-full px-4 py-5 h-fit">
           {members?.length >= 1
             ? members.map((member) => {
-                return <MemberCard userId={member.user_id} />;
+                return (
+                  <MemberCard key={member.user_id} userId={member.user_id} />
+                );
               })
             : null}
         </ul>
