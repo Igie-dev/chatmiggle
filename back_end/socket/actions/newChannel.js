@@ -104,7 +104,6 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
             },
             data: {
               ...member,
-              is_seen: false,
             },
           });
         }
@@ -121,7 +120,11 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    where: {
+                      is_deleted: false,
+                    },
+                  },
                 },
               },
             },

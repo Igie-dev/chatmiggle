@@ -61,7 +61,11 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    where: {
+                      is_deleted: false,
+                    },
+                  },
                 },
               },
             },
