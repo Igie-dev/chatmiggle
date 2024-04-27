@@ -9,6 +9,9 @@ const getUserChannels = asyncHandler(async (req, res) => {
       where: { user_id },
       include: {
         membered_channel: {
+          where: {
+            is_deleted: false,
+          },
           include: {
             channel: true,
           },
@@ -33,7 +36,11 @@ const getUserChannels = asyncHandler(async (req, res) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    where: {
+                      is_deleted: false,
+                    },
+                  },
                 },
               },
             },
@@ -69,6 +76,7 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
         members: {
           where: {
             user_id,
+            is_deleted: false,
           },
         },
       },
@@ -105,7 +113,11 @@ const getChannelMessages = asyncHandler(async (req, res) => {
           include: {
             channel: {
               include: {
-                members: true,
+                members: {
+                  where: {
+                    is_deleted: false,
+                  },
+                },
               },
             },
           },
@@ -139,12 +151,15 @@ const getChannelMessages = asyncHandler(async (req, res) => {
 
 const getChannel = asyncHandler(async (req, res) => {
   const channel_id = req.params.channelId;
-
   try {
     const foundChannel = await prisma.channel.findUnique({
       where: { channel_id },
       include: {
-        members: true,
+        members: {
+          where: {
+            is_deleted: false,
+          },
+        },
       },
     });
 
@@ -191,7 +206,11 @@ const getUserGroups = asyncHandler(async (req, res) => {
               include: {
                 channel: {
                   include: {
-                    members: true,
+                    members: {
+                      where: {
+                        is_deleted: false,
+                      },
+                    },
                   },
                 },
               },
@@ -287,6 +306,143 @@ const getMembersChannel = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
+
+const addUserToGroupChanel = asyncHandler(async (req, res) => {
+  const { userId: user_id, channelId: channel_id } = req.body;
+
+  try {
+    const foundUser = await prisma.user.findUnique({ where: { user_id } });
+
+    if (!foundUser?.id) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id },
+    });
+
+    if (!foundChannel?.id) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    const foundUserAsMember = await prisma.userChannelMember.findFirst({
+      where: {
+        user_id,
+        channel_id,
+      },
+    });
+
+    if (foundUserAsMember?.id) {
+      if (foundUserAsMember?.is_deleted) {
+        const updateChannelMember = await prisma.userChannelMember.update({
+          where: {
+            channel_id,
+            user_id,
+          },
+          data: {
+            is_deleted: false,
+          },
+        });
+
+        if (!updateChannelMember?.id) {
+          return res.status(500).json({ message: "Something went wrong" });
+        }
+        return res.status(200).json({ message: "User added to channel" });
+      }
+    }
+
+    const addUserChannel = await prisma.userChannelMember.create({
+      data: {
+        user_id,
+        channel_id,
+      },
+    });
+
+    if (!addUserChannel?.id) {
+      return res.status(500).json({ message: "Something went wrong" });
+    }
+    return res.status(200).json({ message: "User added to channel" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
+const removeUserFromChannel = asyncHandler(async (req, res) => {
+  const { userId: user_id, channelId: channel_id } = req.body;
+  try {
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id },
+      include: {
+        members: {
+          where: {
+            is_deleted: false,
+          },
+        },
+      },
+    });
+
+    if (!foundChannel?.id) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    const foundUser = await prisma.user.findUnique({ where: { user_id } });
+    if (!foundUser?.id) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    //If channel has no member
+    //Delete tha channel
+    if (foundChannel?.members?.length <= 0) {
+      await prisma.channel.delete({ where: { channel_id } });
+      return res
+        .status(200)
+        .json({ message: "User removed to channel and channel deleted" });
+    }
+
+    for (const member of foundChannel?.members) {
+      if (member.user_id === user_id) {
+        const removeUserFromChannel = await prisma.userChannelMember.update({
+          where: {
+            id: member.id,
+          },
+          data: {
+            is_deleted: true,
+          },
+        });
+        if (!removeUserFromChannel?.id) {
+          return res
+            .status(500)
+            .json({ message: "Failed to remove user channel" });
+        }
+        return res.status(200).json({ message: "User removed to channel" });
+      }
+    }
+
+    const foundUpdatedMembersChannel = await prisma.channel.findUnique({
+      where: { channel_id },
+      include: {
+        members: {
+          where: {
+            is_deleted: false,
+          },
+        },
+      },
+    });
+
+    //If channel has no member
+    //Delete tha channel
+    if (foundUpdatedMembersChannel?.members?.length <= 0) {
+      await prisma.channel.delete({ where: { channel_id } });
+      return res
+        .status(200)
+        .json({ message: "User removed to channel and channel deleted" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
 export {
   getUserChannels,
   verifyUserInChannel,
@@ -294,4 +450,6 @@ export {
   getChannel,
   getUserGroups,
   getMembersChannel,
+  addUserToGroupChanel,
+  removeUserFromChannel,
 };
