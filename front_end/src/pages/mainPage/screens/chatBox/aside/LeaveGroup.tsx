@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChevronRight } from "lucide-react";
 import { FormEvent, useState } from "react";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { useAppSelector } from "@/service/store";
@@ -22,17 +21,18 @@ type Props = {
 export default function LeaveGroup({ channelId, groupName }: Props) {
   const [open, setOpen] = useState(false);
   const { user_id } = useAppSelector(getCurrentUser);
-  console.log(user_id);
   const [leave, { isLoading, error }] = useRemoveUserFromChannelMutation();
+  //TODO Send socket to update user channel
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await leave({ userId: user_id, channelId });
-      if (res?.data) {
-        window.location.reload();
-      }
+      console.log(res?.data);
+      // if (res?.data) {
+      //   window.location.reload();
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -40,13 +40,8 @@ export default function LeaveGroup({ channelId, groupName }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="flex justify-between w-full px-4"
-        >
+        <Button variant="secondary" size="sm">
           <p>Leave</p>
-          <ChevronRight size={20} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
