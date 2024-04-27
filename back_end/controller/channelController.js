@@ -307,7 +307,7 @@ const getMembersChannel = asyncHandler(async (req, res) => {
   }
 });
 
-const addUserToGroupChanel = asyncHandler(async (req, res) => {
+const addUserToGroupChannel = asyncHandler(async (req, res) => {
   const { userId: user_id, channelId: channel_id } = req.body;
 
   try {
@@ -336,8 +336,7 @@ const addUserToGroupChanel = asyncHandler(async (req, res) => {
       if (foundUserAsMember?.is_deleted) {
         const updateChannelMember = await prisma.userChannelMember.update({
           where: {
-            channel_id,
-            user_id,
+            id: foundUserAsMember?.id,
           },
           data: {
             is_deleted: false,
@@ -347,7 +346,29 @@ const addUserToGroupChanel = asyncHandler(async (req, res) => {
         if (!updateChannelMember?.id) {
           return res.status(500).json({ message: "Something went wrong" });
         }
-        return res.status(200).json({ message: "User added to channel" });
+        const foundUpdatedChannel = await prisma.channel.findUnique({
+          where: {
+            channel_id,
+          },
+          include: {
+            messages: {
+              orderBy: {
+                createdAt: "desc",
+              },
+              take: 1,
+              include: {
+                channel: {
+                  include: {
+                    members: true,
+                  },
+                },
+              },
+            },
+            members: true,
+          },
+        });
+
+        return res.status(200).json(foundUpdatedChannel);
       }
     }
 
@@ -361,7 +382,30 @@ const addUserToGroupChanel = asyncHandler(async (req, res) => {
     if (!addUserChannel?.id) {
       return res.status(500).json({ message: "Something went wrong" });
     }
-    return res.status(200).json({ message: "User added to channel" });
+
+    const foundUpdatedChannel = await prisma.channel.findUnique({
+      where: {
+        channel_id,
+      },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          include: {
+            channel: {
+              include: {
+                members: true,
+              },
+            },
+          },
+        },
+        members: true,
+      },
+    });
+
+    return res.status(200).json(foundUpdatedChannel);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -415,7 +459,6 @@ const removeUserFromChannel = asyncHandler(async (req, res) => {
             .status(500)
             .json({ message: "Failed to remove user channel" });
         }
-        return res.status(200).json({ message: "User removed to channel" });
       }
     }
 
@@ -434,10 +477,8 @@ const removeUserFromChannel = asyncHandler(async (req, res) => {
     //Delete tha channel
     if (foundUpdatedMembersChannel?.members?.length <= 0) {
       await prisma.channel.delete({ where: { channel_id } });
-      return res
-        .status(200)
-        .json({ message: "User removed to channel and channel deleted" });
     }
+    return res.status(200).json(foundUpdatedMembersChannel);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -450,6 +491,6 @@ export {
   getChannel,
   getUserGroups,
   getMembersChannel,
-  addUserToGroupChanel,
+  addUserToGroupChannel,
   removeUserFromChannel,
 };
