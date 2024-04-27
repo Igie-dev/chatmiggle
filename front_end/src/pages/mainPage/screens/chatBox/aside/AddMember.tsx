@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChevronRight, Search, X } from "lucide-react";
+import { Plus, Search, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Label } from "@/components/ui/label";
@@ -28,8 +28,7 @@ export default function AddMember({ channelId, groupName }: Props) {
     useGetUserByIdMutMutation();
   const [addUserToChannel, { isLoading, error }] =
     useAddUserToChannelMutation();
-  //TODO Add new member
-
+  //TODO Send socket to update user channel
   useEffect(() => {
     if (!open) {
       setUserId("");
@@ -66,13 +65,8 @@ export default function AddMember({ channelId, groupName }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="flex justify-between w-full px-4"
-        >
-          <p>Add member</p>
-          <ChevronRight size={20} />
+        <Button size="icon" title="Add new member">
+          <Plus size={20} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
