@@ -8,7 +8,6 @@ type Props = {
 };
 export default function SeenMessage({ message }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
-  const [isSeen, setIsSeen] = useState(false);
   const [membersSeen, setMembersSeen] = useState<TChannelMemberData[]>([]);
 
   useEffect(() => {
@@ -17,14 +16,12 @@ export default function SeenMessage({ message }: Props) {
         (m) => m.user_id !== user_id && m.is_seen
       );
       setMembersSeen(mates);
-      const isSeenByMate = mates.length >= 2;
-      setIsSeen(isSeenByMate);
     }
   }, [user_id, message.channel.members, message.message_id]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (!isSeen && message.sender_id !== user_id) {
+    if (message.sender_id !== user_id) {
       interval = setInterval(async () => {
         await asyncEmit("seen", {
           channel_id: message.channel_id,
@@ -35,7 +32,10 @@ export default function SeenMessage({ message }: Props) {
 
     socket.on("message_seen", (res) => {
       if (res?.data && res?.data.channel_id === message.channel_id) {
-        setIsSeen(true);
+        if (membersSeen.length === res.data.members.lenth) {
+          return;
+        }
+        setMembersSeen(res.data.members);
       }
     });
 
@@ -43,11 +43,11 @@ export default function SeenMessage({ message }: Props) {
       clearInterval(interval);
       socket.off("message_seen");
     };
-  }, [isSeen, user_id, message.channel_id, message.sender_id]);
+  }, [user_id, message.channel_id, membersSeen.length, message.sender_id]);
 
   return user_id === message.sender_id ? (
     <>
-      {isSeen && message.channel.is_private ? (
+      {membersSeen.length && message.channel.is_private ? (
         <p className="mr-2  font-semibold text-[10px] opacity-50   rounded-lg">
           Seen
         </p>
