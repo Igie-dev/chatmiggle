@@ -6,7 +6,7 @@ type Props = {
   id: string;
 };
 export default function DisplayAvatar({ id }: Props) {
-  const { data, isFetching } = useGetAvatarLinkQuery(id);
+  const { data, isFetching } = useGetAvatarLinkQuery(id, { skip: !id });
 
   return (
     <Avatar className="w-full h-full">
