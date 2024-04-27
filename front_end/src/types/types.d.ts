@@ -50,6 +50,7 @@ declare global {
     user_id: string;
     channel_id: string;
     is_seen: boolean;
+    is_deleted: boolean;
   };
   type TChannelData = {
     id?: number;
