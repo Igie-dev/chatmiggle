@@ -9,6 +9,8 @@ import createNewChannel from "./actions/newChannel.js";
 import newChannelMessage from "./actions/newChannelMessage.js";
 import seenControl from "./actions/seenControl.js";
 import createNewGroup from "./actions/newGroup.js";
+import removeFromGroup from "./actions/removeFromGroup.js";
+import addToGroup from "./actions/addToGroup.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -79,7 +81,7 @@ const socketConnection = (httpServer) => {
             console.log(error);
             //Return to sender
             io.to(socket.id).emit("create_new_channel", {
-              error: "Somthing went wrong",
+              error: error.error,
             });
           });
       }
@@ -94,12 +96,14 @@ const socketConnection = (httpServer) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Send an emit to client where the channel id was listened
-              res.data?.members.forEach((m) => {
-                io.to(m.user_id).emit("channel_message", {
-                  data: res.data,
+              const members = res.data?.members;
+              if (members.length >= 1) {
+                members.forEach((m) => {
+                  io.to(m.user_id).emit("channel_message", {
+                    data: res.data,
+                  });
                 });
-              });
-
+              }
               io.to(res?.data?.channel_id).emit("new_message", {
                 data: res.data,
               });
@@ -113,7 +117,7 @@ const socketConnection = (httpServer) => {
             console.log(error);
             //Return to sender
             io.to(socket.id).emit("new_chat", {
-              error: "Somthing went wrong",
+              error: error.error,
             });
           });
       }
@@ -128,17 +132,19 @@ const socketConnection = (httpServer) => {
               io.to(socket.id).emit("create_group", {
                 data: res.data,
               });
-              members.forEach((m) => {
-                io.to(m.user_id).emit("channel_message", {
-                  data: res.data,
+              const members = res.data?.members;
+              if (members.length >= 1) {
+                members.forEach((m) => {
+                  io.to(m.user_id).emit("channel_message", {
+                    data: res.data,
+                  });
                 });
-              });
+              }
             }
           })
           .catch((error) => {
-            console.log(error);
             io.to(socket.id).emit("create_group", {
-              error: "Somthing went wrong",
+              error: error.error,
             });
           });
       }
@@ -163,9 +169,68 @@ const socketConnection = (httpServer) => {
           }
         })
         .catch((error) => {
-          console.log(error);
           io.to(socket.id).emit("seen", {
-            error: "Somthing went wrong",
+            error: error.error,
+          });
+        });
+    });
+
+    //Handle add user to group
+    socket.on("add_to_group", async ({ user_id, channel_id }) => {
+      addToGroup({ user_id, channel_id })
+        .then((res) => {
+          if (res?.data) {
+            io.to(socket.id).emit("add_to_group", {
+              data: res?.data,
+            });
+            const members = res.data?.members;
+            if (members.length >= 1) {
+              members.forEach((m) => {
+                io.to(m.user_id).emit("channel_message", {
+                  data: res.data,
+                });
+              });
+              members.forEach((m) => {
+                io.to(m.user_id).emit("add_member", {
+                  data: res.data,
+                });
+              });
+            }
+          }
+        })
+        .catch((error) => {
+          io.to(socket.id).emit("add_to_group", {
+            error: error.error,
+          });
+        });
+    });
+
+    //Handle remove member from group
+    socket.on("leave_group", async ({ user_id, channel_id }) => {
+      removeFromGroup({ user_id, channel_id })
+        .then((res) => {
+          if (res?.data) {
+            io.to(socket.id).emit("leave_group", {
+              data: res?.data,
+            });
+            const members = res?.data?.members;
+            if (members.length >= 1) {
+              members.forEach((m) => {
+                io.to(m.user_id).emit("remove_channel", {
+                  data: res.data,
+                });
+              });
+              members.forEach((m) => {
+                io.to(m.user_id).emit("remove_member", {
+                  data: res.data,
+                });
+              });
+            }
+          }
+        })
+        .catch((error) => {
+          io.to(socket.id).emit("leave_group", {
+            error: error.error,
           });
         });
     });
