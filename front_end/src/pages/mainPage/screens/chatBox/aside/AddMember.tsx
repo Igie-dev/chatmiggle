@@ -14,8 +14,8 @@ import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
-import { useAddUserToChannelMutation } from "@/service/slices/channel/channelApiSlice";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
+import { asyncEmit } from "@/socket";
 type Props = {
   channelId: string;
   groupName: string;
@@ -23,11 +23,12 @@ type Props = {
 export default function AddMember({ channelId, groupName }: Props) {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
-  const [newMember, setNewMember] = useState<TUpdateUser | null>(null);
+  const [newMember, setNewMember] = useState<TUser | null>(null);
   const [getUser, { isLoading: isLoadingGetUser, error: errorGetUser }] =
     useGetUserByIdMutMutation();
-  const [addUserToChannel, { isLoading, error }] =
-    useAddUserToChannelMutation();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   //TODO Send socket to update user channel
   useEffect(() => {
     if (!open) {
@@ -50,16 +51,24 @@ export default function AddMember({ channelId, groupName }: Props) {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await addUserToChannel({
-        userId: newMember?.user_id as string,
-        channelId: channelId,
+      const res: any = await asyncEmit("add_to_group", {
+        user_id: newMember?.user_id as string,
+        channel_id: channelId,
       });
-      console.log(res);
-      setOpen(false);
-    } catch (error) {
+
+      if (res?.data?.channel_id === channelId) {
+        setOpen(false);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -85,7 +94,7 @@ export default function AddMember({ channelId, groupName }: Props) {
               {groupName}
             </span>
             <p className="text-sm text-destructive">
-              {error?.data?.message || errorGetUser?.data?.message}
+              {error || errorGetUser?.data?.message}
             </p>
             {newMember ? (
               <div className="flex items-center w-full p-2 border rounded-md bg-accent">

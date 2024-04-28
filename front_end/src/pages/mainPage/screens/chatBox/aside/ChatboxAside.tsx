@@ -39,13 +39,11 @@ export default function ChatboxAside() {
         <X size={20} />
       </Button>
       <Header channel={data} isFetching={isFetching} />
-      <div className="relative flex-1 w-full px-2 pt-5 overflow-auto border rounded-md bg-accent/50">
-        <GroupMembers
-          members={data?.members}
-          channelId={data?.channel_id}
-          groupName={data?.group_name}
-        />
-      </div>
+      {data?.channel_id ? (
+        <div className="relative flex-1 w-full px-2 pt-5 overflow-auto border rounded-md bg-accent/50">
+          <GroupMembers channel={data} />
+        </div>
+      ) : null}
     </aside>
   );
 }

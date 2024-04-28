@@ -12,8 +12,8 @@ import { FormEvent, useState } from "react";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
-import { useRemoveUserFromChannelMutation } from "@/service/slices/channel/channelApiSlice";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
+import { asyncEmit } from "@/socket";
 type Props = {
   channelId: string;
   groupName: string;
@@ -21,20 +21,27 @@ type Props = {
 export default function LeaveGroup({ channelId, groupName }: Props) {
   const [open, setOpen] = useState(false);
   const { user_id } = useAppSelector(getCurrentUser);
-  const [leave, { isLoading, error }] = useRemoveUserFromChannelMutation();
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   //TODO Send socket to update user channel
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await leave({ userId: user_id, channelId });
-      console.log(res?.data);
-      // if (res?.data) {
-      //   window.location.reload();
-      // }
-    } catch (error) {
+      const res: any = await asyncEmit("leave_group", {
+        channel_id: channelId,
+        user_id,
+      });
+      if (res?.data.channel_id === channelId) {
+        setOpen(false);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -59,7 +66,7 @@ export default function LeaveGroup({ channelId, groupName }: Props) {
             <span className="w-full font-normal text-center truncate text-medium">
               {groupName}
             </span>
-            <p className="text-sm text-destructive">{error?.data?.message}</p>
+            <p className="text-sm text-destructive">{error}</p>
           </div>
 
           <DialogFooter>

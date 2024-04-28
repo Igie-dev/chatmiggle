@@ -28,23 +28,25 @@ export default function ChannelList({ handleAside }: Props) {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on("channel_message", (res: { data: TChannelData }) => {
+      if (!res?.data) return;
       const user = res?.data?.members.filter((m) => m.user_id === user_id);
-
-      if (!res?.data || !res.data?.channel_id || user.length <= 0) return;
+      if (user.length === 0) return;
+      const newChannelId = res?.data?.channel_id;
       //If channels empty, add to latest new channel
       if (channels.length <= 0) {
         const firstChannel = [res.data];
         setChannels(firstChannel);
         return;
       }
+
       //If channels not empty
       //Check if channel is exist on the list
-      const foundExistChannel = channels.filter(
-        (c) => c.channel_id === res.data?.channel_id
+      const existChannel = channels.filter(
+        (c) => c.channel_id === newChannelId
       );
       //if is exist
       //Modified current list to update message
-      if (foundExistChannel.length >= 1) {
+      if (existChannel.length >= 1) {
         const updatedChannels: TChannelData[] = channels.map(
           (c: TChannelData) => {
             if (c.channel_id === res.data?.channel_id) {
@@ -75,10 +77,32 @@ export default function ChannelList({ handleAside }: Props) {
       }
     });
 
+    socket.on("remove_channel", (res: { data: TChannelData }) => {
+      if (res?.data) {
+        const members = res.data?.members;
+        const isUserRemove = members.filter(
+          (m) => m.user_id === user_id && m.is_deleted
+        );
+
+        if (isUserRemove.length === 0) return;
+        const channel_id = res.data?.channel_id;
+        const channelExist = channels.filter(
+          (c) => c.channel_id === channel_id
+        );
+        if (channelExist.length >= 1) {
+          const removeChannel = channels.filter(
+            (c) => c.channel_id !== channel_id
+          );
+          setChannels(removeChannel);
+          navigate(`/c/${removeChannel[0].channel_id}`);
+        }
+      }
+    });
     return () => {
       socket.off("channel_message");
+      socket.off("remove_channel");
     };
-  }, [channels, user_id]);
+  }, [channels, user_id, navigate]);
 
   //Handle auto select channel when first visit
   useEffect(() => {

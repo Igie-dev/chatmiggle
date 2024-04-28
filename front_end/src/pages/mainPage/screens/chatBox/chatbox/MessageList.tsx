@@ -127,7 +127,7 @@ export default function MessageList() {
               messages.map((message: TMessageData, i: number) => {
                 return (
                   <MessageCard
-                    key={message.id}
+                    key={message.message_id}
                     lastMessage={i === messages.length - 1}
                     message={message}
                   />

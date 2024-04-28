@@ -1,18 +1,59 @@
 import MemberCard from "./MemberCard";
 import AddMember from "./AddMember";
 import LeaveGroup from "./LeaveGroup";
+import { useEffect, useState } from "react";
+import { socket } from "@/socket";
 type Props = {
-  members: TChannelMemberData[];
-  channelId: string;
-  groupName: string;
+  channel: TChannelData;
 };
-export default function GroupMembers({ members, channelId, groupName }: Props) {
+export default function GroupMembers({ channel }: Props) {
+  const [members, setMembers] = useState<TChannelMemberData[]>([]);
+
+  useEffect(() => {
+    if (members.length === 0) {
+      setMembers(channel?.members);
+    }
+  }, [channel?.members, members.length]);
+
+  useEffect(() => {
+    socket.on("add_member", (res: { data: TChannelData }) => {
+      if (res?.data?.channel_id !== channel?.channel_id) return;
+      const newMembers = res.data?.members;
+      const filterMembers = newMembers.filter((member) => !member.is_deleted);
+      setMembers(filterMembers);
+    });
+
+    socket.on("remove_member", (res: { data: TChannelData }) => {
+      if (res?.data) {
+        if (res?.data?.channel_id !== channel?.channel_id) return;
+        // remove member
+        const newNembers = res.data?.members;
+        const membersNotRemoved = newNembers.filter((m) => !m.is_deleted);
+        if (membersNotRemoved.length === 0) return;
+        setMembers(membersNotRemoved);
+      }
+    });
+
+    return () => {
+      socket.off("add_member");
+      socket.off("remove_member");
+    };
+  }, [channel?.channel_id]);
+
   return (
     <div className="absolute top-0 left-0 flex flex-col w-full h-full gap-2 p-2 bg-background">
-      <div className="flex items-center justify-between pt-2 pb-4 border-b">
-        <AddMember channelId={channelId} groupName={groupName} />
-        <LeaveGroup channelId={channelId} groupName={groupName} />
-      </div>
+      {!channel?.is_private ? (
+        <div className="flex items-center justify-between pt-2 pb-4 border-b">
+          <AddMember
+            channelId={channel?.channel_id}
+            groupName={channel?.group_name as string}
+          />
+          <LeaveGroup
+            channelId={channel?.channel_id}
+            groupName={channel?.group_name as string}
+          />
+        </div>
+      ) : null}
       <div className="w-full h-[95%] overflow-auto">
         <ul className="flex flex-col w-full pb-5 h-fit">
           {members?.length >= 1
@@ -20,8 +61,9 @@ export default function GroupMembers({ members, channelId, groupName }: Props) {
                 return (
                   <MemberCard
                     key={member.user_id}
-                    channelId={channelId}
-                    groupName={groupName}
+                    channelId={channel?.channel_id}
+                    groupName={channel?.group_name as string}
+                    isPrivate={channel?.is_private}
                     userId={member.user_id}
                   />
                 );

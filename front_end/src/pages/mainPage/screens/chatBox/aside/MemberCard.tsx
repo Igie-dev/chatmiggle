@@ -13,33 +13,51 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FormEvent, useState } from "react";
-import { useRemoveUserFromChannelMutation } from "@/service/slices/channel/channelApiSlice";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import { asyncEmit } from "@/socket";
 type Props = {
   userId: string;
   channelId: string;
   groupName: string;
+  isPrivate: boolean;
 };
-export default function MemberCard({ userId, channelId, groupName }: Props) {
+export default function MemberCard({
+  userId,
+  channelId,
+  groupName,
+  isPrivate,
+}: Props) {
   const [open, setOpen] = useState(false);
   const { user_id } = useAppSelector(getCurrentUser);
-  const { data, isFetching, isError } = useGetUserByIdQuery(userId);
-  const [leave, { isLoading, error }] = useRemoveUserFromChannelMutation();
+  const {
+    data,
+    isFetching,
+    isError,
+    error: getUserError,
+  } = useGetUserByIdQuery(userId);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   if (isError) return null;
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await leave({ userId, channelId });
-      console.log(res?.data);
-      // if (res?.data) {
-      //   window.location.reload();
-      // }
-    } catch (error) {
+      const res: any = await asyncEmit("leave_group", {
+        channel_id: channelId,
+        user_id: userId,
+      });
+      if (res?.data.channel_id === channelId) {
+        setOpen(false);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -57,7 +75,7 @@ export default function MemberCard({ userId, channelId, groupName }: Props) {
   ) : (
     <li
       //   onClick={handleClick}
-      className={`group flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/50 ${
+      className={`group relative flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/50 ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
@@ -69,13 +87,13 @@ export default function MemberCard({ userId, channelId, groupName }: Props) {
           {data?.first_name + " " + data?.last_name}
         </p>
       </div>
-      {userId !== user_id ? (
+      {userId !== user_id && !isPrivate ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
               size="icon"
               variant="ghost"
-              className="opacity-0 group-hover:opacity-100"
+              className="absolute opacity-0 group-hover:opacity-100 right-2"
             >
               <X size={20} />
             </Button>
@@ -96,7 +114,7 @@ export default function MemberCard({ userId, channelId, groupName }: Props) {
                   {groupName}
                 </span>
                 <p className="text-sm text-destructive">
-                  {error?.data?.message}
+                  {error || getUserError?.data.message}
                 </p>
               </div>
 

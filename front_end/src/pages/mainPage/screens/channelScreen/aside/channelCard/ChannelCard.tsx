@@ -15,10 +15,8 @@ export default function ChannelCard({ channel }: Props) {
   const navigate = useNavigate();
   const { channelId } = useParams();
 
-  const mate_id =
-    channel?.members[0]?.user_id === user_id
-      ? channel?.members[1]?.user_id
-      : channel?.members[0]?.user_id;
+  const mate = channel.members.filter((m) => m.user_id !== user_id);
+
   const today = isToday(channel?.messages[0]?.createdAt);
 
   const handleClick = () => {
@@ -35,7 +33,7 @@ export default function ChannelCard({ channel }: Props) {
     >
       <div className="w-9 h-9">
         {channel.is_private ? (
-          <DisplayAvatar id={mate_id} />
+          <DisplayAvatar id={mate[0].user_id} />
         ) : (
           <DisplayAvatar id={channel?.channel_id} />
         )}
@@ -44,7 +42,7 @@ export default function ChannelCard({ channel }: Props) {
       <div className={`flex flex-col w-[70%] h-full justify-center `}>
         {channel?.is_private ? (
           <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
-            <DisplayUserName userId={mate_id} />
+            <DisplayUserName userId={mate[0].user_id} />
           </span>
         ) : (
           <p className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
