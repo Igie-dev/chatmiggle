@@ -13,7 +13,7 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
       });
 
       if (!createChannel?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Failed to create group!");
       }
 
       for (const member of members) {
@@ -25,7 +25,7 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
           },
         });
         if (!createMember?.id) {
-          return reject({ error: "Something went wrong!" });
+          throw new Error("Failed to create channel members!");
         }
       }
 
@@ -39,7 +39,7 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
         },
       });
       if (!createMessage?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Failed to save message!");
       }
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id: createChannel.channel_id },
@@ -65,12 +65,12 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
         },
       });
       if (!foundChannel?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Something went wrong!");
       }
       return resolve({ data: foundChannel });
     } catch (error) {
-      console.log(error);
-      return reject({ error: "Something went wrong!" });
+      const errMessage = error.message;
+      return reject({ error: errMessage });
     }
   });
 };

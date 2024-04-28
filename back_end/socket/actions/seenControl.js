@@ -3,7 +3,7 @@ const seenControl = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!channel_id || !user_id) {
-        return reject({ error: "All field are required!" });
+        throw new Error("All field are required!");
       }
 
       const foundChannelMember = await prisma.userChannelMember.findMany({
@@ -13,7 +13,7 @@ const seenControl = ({ channel_id, user_id }) => {
       });
 
       if (foundChannelMember?.length <= 0) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Failed to get channel members!");
       }
 
       const user = foundChannelMember.filter((u) => u.user_id === user_id)[0];
@@ -28,25 +28,40 @@ const seenControl = ({ channel_id, user_id }) => {
       });
 
       if (!updateUserSeen?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error({ error: "Failed to update seen!" });
       }
 
-      const foundChannel = await prisma.channel.findUnique({
-        where: {
-          channel_id,
-        },
+      const channel = await prisma.channel.findUnique({
+        where: { channel_id },
         include: {
+          messages: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+            include: {
+              channel: {
+                include: {
+                  members: {
+                    where: {
+                      is_deleted: false,
+                    },
+                  },
+                },
+              },
+            },
+          },
           members: true,
         },
       });
 
-      if (!foundChannel?.id) {
-        return reject({ error: "Something went wrong!" });
+      if (!channel?.id) {
+        throw new Error({ error: "Something went wrong!" });
       }
-      return resolve({ data: foundChannel });
+      return resolve({ data: channel });
     } catch (error) {
-      console.log(error);
-      return reject({ error: "Something went wrong!" });
+      const errMessage = error.message;
+      return reject({ error: errMessage });
     }
   });
 };

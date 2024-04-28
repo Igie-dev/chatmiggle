@@ -4,7 +4,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (members.lenght <= 1 || !message || !sender_id || !type) {
-        return reject({ error: "All field are required!" });
+        throw new Error("All field are required!");
       }
 
       const existMembersChannel = await prisma.channel.findMany({
@@ -53,7 +53,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         data.channel_id = existMembersChannel[0]?.channel_id;
         const newmessage = await prisma.message.create({ data });
         if (!newmessage?.id) {
-          return reject({ error: "Something went wrong!" });
+          throw new Error("Failed to create channel");
         }
       } else {
         //If channel not exist or channel is not private
@@ -66,7 +66,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         });
 
         if (!createChannel?.id) {
-          return reject({ error: "Something went wrong!" });
+          throw new Error("Failed to create channel");
         }
 
         for (const user of members) {
@@ -79,14 +79,14 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
             }
           );
           if (!createUserChannelMember?.id) {
-            return reject({ error: "Something went wrong!" });
+            throw new Error("Something went wrong!");
           }
         }
 
         const createMessage = await prisma.message.create({ data });
 
         if (!createMessage?.id) {
-          return reject({ error: "Something went wrong!" });
+          throw new Error("Something went wrong!");
         }
       }
 
@@ -133,13 +133,13 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         },
       });
       if (!foundChannel?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Something went wrong!");
       }
 
       return resolve({ data: foundChannel });
     } catch (error) {
-      console.log(error);
-      return reject({ error: "Something went wrong!" });
+      const errMessage = error.message;
+      return reject({ error: errMessage });
     }
   });
 };

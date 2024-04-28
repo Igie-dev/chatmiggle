@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
   return new Promise(async (resolve, reject) => {
     if (!channel_id || !message || !sender_id || !type) {
-      return reject({ error: "All field are required!" });
+      throw new Error("All field are required!");
     }
     try {
       const foundChannel = await prisma.channel.findUnique({
@@ -11,7 +11,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
       });
 
       if (!foundChannel?.id) {
-        return reject({ error: "Channel not found" });
+        throw new Error("Channel not found");
       }
 
       const saveMessage = await prisma.message.create({
@@ -24,7 +24,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
         },
       });
       if (!saveMessage?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Failed to save message!");
       }
 
       const foundChannelMember = await prisma.userChannelMember.findMany({
@@ -45,7 +45,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
             },
           });
           if (!updateMemebers?.id) {
-            return reject({ error: "Something went wrong!" });
+            throw new Error("Failed to update members!");
           }
         }
       }
@@ -75,12 +75,12 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
       });
 
       if (!channel?.id) {
-        return reject({ error: "Something went wrong!" });
+        throw new Error("Something went wrong!");
       }
       return resolve({ data: channel });
     } catch (error) {
-      console.log(error);
-      return reject({ error: "Something went wrong!" });
+      const errMessage = error.message;
+      return reject({ error: errMessage });
     }
   });
 };
