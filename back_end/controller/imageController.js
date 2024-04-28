@@ -179,7 +179,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
 
 const getAvatar = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   try {
     const foundImage = await prisma.avatar.findUnique({
       where: {
