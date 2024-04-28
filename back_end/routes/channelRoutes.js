@@ -7,8 +7,6 @@ import {
   getChannel,
   getUserGroups,
   getMembersChannel,
-  addUserToGroupChannel,
-  removeUserFromChannel,
 } from "../controller/channelController.js";
 const router = express.Router();
 router.use(verifyJWT);
@@ -24,9 +22,5 @@ router.route("/verifyuser/:channelId/:userId").get(verifyUserInChannel);
 router.route("/messages/:channelId").get(getChannelMessages);
 
 router.route("/memberschannel").post(getMembersChannel);
-
-router.route("/adduserchannel").post(addUserToGroupChannel);
-
-router.route("/removeuser").patch(removeUserFromChannel);
 
 export default router;
