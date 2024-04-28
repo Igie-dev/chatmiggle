@@ -10,27 +10,32 @@ type Props = {
 export default function SeenChannel({ members, senderId, messageId }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [isSeen, setIsSeen] = useState(false);
+
   useEffect(() => {
     if (members.length >= 1) {
       const usersSeen = members.filter(
-        (m) => m.user_id === user_id && m.is_seen
+        (m) => m.user_id === user_id && m.is_seen && !m.is_deleted
       );
-      const isSeenByUser = usersSeen.length >= 1;
-      setIsSeen(isSeenByUser);
+      setIsSeen(usersSeen.length >= 1);
     }
   }, [user_id, members, messageId, senderId]);
 
   useEffect(() => {
+    if (isSeen) return;
     socket.on("seen_channel", (res: { data: TChannelData }) => {
-      if (res?.data.channel_id === members[0].channel_id && !isSeen) {
-        setIsSeen(true);
+      if (res?.data) {
+        const foundUser = res?.data?.members.filter(
+          (m) => m.user_id === user_id && m.is_seen && !m.is_deleted
+        );
+        if (foundUser.length >= 1) {
+          setIsSeen(true);
+        }
       }
     });
-
     return () => {
       socket.off("seen_channel");
     };
-  }, [members, isSeen]);
+  }, [members, isSeen, user_id]);
 
   return senderId !== user_id ? (
     <>
