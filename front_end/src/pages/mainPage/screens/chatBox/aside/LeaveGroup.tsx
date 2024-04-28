@@ -23,7 +23,6 @@ export default function LeaveGroup({ channelId, groupName }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  //TODO Send socket to update user channel
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);

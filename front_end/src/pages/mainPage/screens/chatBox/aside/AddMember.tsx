@@ -28,8 +28,6 @@ export default function AddMember({ channelId, groupName }: Props) {
     useGetUserByIdMutMutation();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  //TODO Send socket to update user channel
   useEffect(() => {
     if (!open) {
       setUserId("");
