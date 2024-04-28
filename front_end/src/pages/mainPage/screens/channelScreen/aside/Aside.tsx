@@ -19,7 +19,7 @@ export default function AsideNav({ handleAside, asideRef }: Props) {
         onClick={handleAside}
         size="icon"
         variant="ghost"
-        className="absolute z-50 -right-10 top-2 lg:hidden"
+        className="absolute z-50 -right-12 top-2 lg:hidden"
       >
         <ChevronRight size={20} />
       </Button>
