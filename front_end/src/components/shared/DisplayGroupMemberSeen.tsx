@@ -1,18 +1,38 @@
+import { useEffect, useState } from "react";
 import Avatar from "./DisplayAvatar";
 type Props = {
   members: TChannelMemberData[];
+  senderId: string;
 };
-export default function DisplayGroupMemberSeen({ members }: Props) {
-  const limit = members.length >= 4 ? members.slice(0, 4) : members;
+export default function DisplayGroupMemberSeen({ members, senderId }: Props) {
+  const [seenMembers, setSeenMembers] = useState<TChannelMemberData[]>([]);
+
+  useEffect(() => {
+    const removeSender = members.filter((m) => m.user_id !== senderId);
+    if (removeSender.length >= 0) {
+      const limit =
+        removeSender.length >= 4 ? removeSender.slice(0, 4) : removeSender;
+      setSeenMembers(limit);
+    }
+  }, [members, senderId]);
+
   return (
-    <div className="relative flex h-4 mr-1 min-w-8 max-w-10">
-      {limit.map((m: TChannelMemberData, i: number) => {
+    <div className="relative flex h-4 mr-1 min-w-8 max-w-12">
+      {seenMembers.map((m: TChannelMemberData, i: number) => {
+        if (m.user_id === senderId) return null;
         return (
           <div
             key={m.user_id}
             className="absolute bottom-0 w-4 h-4 border rounded-full"
             style={{
-              left: i === 0 ? `${i}px` : `${i + 8}px`,
+              left:
+                i === 0
+                  ? `${i}px`
+                  : i === 1
+                  ? `${i + 5}px`
+                  : i === 2
+                  ? `${i + 10}px`
+                  : `${i + 15}px`,
             }}
           >
             <Avatar id={m.user_id} />
