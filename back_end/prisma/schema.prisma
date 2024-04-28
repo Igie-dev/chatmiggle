@@ -50,7 +50,7 @@ model Message {
   sender_id  String   
   message    String
   type       String
-  channel    Channel  @relation(fields: [channel_id], references: [channel_id])
+  channel    Channel  @relation(fields: [channel_id], references: [channel_id],onDelete: Cascade, onUpdate: Cascade)
   channel_id String  
   createdAt  DateTime @default(now())
   updatedAt  DateTime? @updatedAt
