@@ -62,7 +62,11 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
               },
             },
           },
-          members: true,
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
         },
       });
       if (!foundChannel?.id) {

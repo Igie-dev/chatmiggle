@@ -45,7 +45,11 @@ const getUserChannels = asyncHandler(async (req, res) => {
               },
             },
           },
-          members: true,
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
         },
       });
 
@@ -215,7 +219,11 @@ const getUserGroups = asyncHandler(async (req, res) => {
                 },
               },
             },
-            members: true,
+            members: {
+              where: {
+                is_deleted: false,
+              },
+            },
           },
         });
 
@@ -286,12 +294,20 @@ const getMembersChannel = asyncHandler(async (req, res) => {
           include: {
             channel: {
               include: {
-                members: true,
+                members: {
+                  where: {
+                    is_deleted: false,
+                  },
+                },
               },
             },
           },
         },
-        members: true,
+        members: {
+          where: {
+            is_deleted: false,
+          },
+        },
       },
     });
     if (!foundChannel?.id) {

@@ -70,7 +70,11 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
               },
             },
           },
-          members: true,
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
         },
       });
 

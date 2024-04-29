@@ -51,7 +51,11 @@ const seenControl = ({ channel_id, user_id }) => {
               },
             },
           },
-          members: true,
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
         },
       });
 
