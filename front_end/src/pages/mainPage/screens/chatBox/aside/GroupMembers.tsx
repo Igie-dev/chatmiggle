@@ -14,7 +14,7 @@ export default function GroupMembers({ channel }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
 
   useEffect(() => {
-    if (members[0].channel_id === channel?.channel_id) return;
+    if (members[0]?.channel_id === channel?.channel_id) return;
     setMembers(channel?.members);
     const getAdmin = channel.members.filter((m) => !m.is_deleted && m.is_admin);
     if (getAdmin.length >= 1) {
