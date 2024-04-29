@@ -37,6 +37,7 @@ user_id     String
 channel_id String
 is_seen    Boolean @default(false)
 is_deleted Boolean @default(false)
+is_admin   Boolean @default(false)
 user User? @relation(fields: [user_id], references: [user_id])
 channel Channel? @relation(fields: [channel_id], references: [channel_id])
 

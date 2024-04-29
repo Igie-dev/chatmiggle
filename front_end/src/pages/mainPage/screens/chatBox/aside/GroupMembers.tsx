@@ -3,17 +3,23 @@ import AddMember from "./AddMember";
 import LeaveGroup from "./LeaveGroup";
 import { useEffect, useState } from "react";
 import { socket } from "@/socket";
+import { useAppSelector } from "@/service/store";
+import { getCurrentUser } from "@/service/slices/user/userSlice";
 type Props = {
   channel: TChannelData;
 };
 export default function GroupMembers({ channel }: Props) {
   const [members, setMembers] = useState<TChannelMemberData[]>([]);
+  const [adminId, setAdminId] = useState("");
+  const { user_id } = useAppSelector(getCurrentUser);
 
   useEffect(() => {
-    if (members.length === 0) {
-      setMembers(channel?.members);
+    setMembers(channel?.members);
+    const getAdmin = channel.members.filter((m) => !m.is_deleted && m.is_admin);
+    if (getAdmin.length >= 1) {
+      setAdminId(getAdmin[0].user_id);
     }
-  }, [channel?.members, members.length]);
+  }, [channel?.members, members.length, channel?.channel_id]);
 
   useEffect(() => {
     socket.on("add_member", (res: { data: TChannelData }) => {
@@ -44,10 +50,14 @@ export default function GroupMembers({ channel }: Props) {
     <div className="absolute top-0 left-0 flex flex-col w-full h-full gap-2 p-2 bg-background">
       {!channel?.is_private ? (
         <div className="flex items-center justify-between pt-2 pb-4 border-b">
-          <AddMember
-            channelId={channel?.channel_id}
-            groupName={channel?.group_name as string}
-          />
+          {adminId === user_id ? (
+            <AddMember
+              channelId={channel?.channel_id}
+              groupName={channel?.group_name as string}
+            />
+          ) : (
+            <span />
+          )}
           <LeaveGroup
             channelId={channel?.channel_id}
             groupName={channel?.group_name as string}
@@ -65,6 +75,7 @@ export default function GroupMembers({ channel }: Props) {
                     groupName={channel?.group_name as string}
                     isPrivate={channel?.is_private}
                     userId={member.user_id}
+                    adminId={adminId}
                   />
                 );
               })

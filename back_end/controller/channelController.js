@@ -265,8 +265,6 @@ const getMembersChannel = asyncHandler(async (req, res) => {
         ],
       },
       select: {
-        channel_id: true,
-        is_private: true,
         members: {
           take: 1,
         },

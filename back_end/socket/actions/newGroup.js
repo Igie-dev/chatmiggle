@@ -22,6 +22,7 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
             user_id: member.user_id,
             channel_id: createChannel?.channel_id,
             is_seen: sender_id === member.user_id,
+            is_admin: sender_id === member.user_id,
           },
         });
         if (!createMember?.id) {

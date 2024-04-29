@@ -22,12 +22,14 @@ type Props = {
   channelId: string;
   groupName: string;
   isPrivate: boolean;
+  adminId: string;
 };
 export default function MemberCard({
   userId,
   channelId,
   groupName,
   isPrivate,
+  adminId,
 }: Props) {
   const [open, setOpen] = useState(false);
   const { user_id } = useAppSelector(getCurrentUser);
@@ -75,19 +77,22 @@ export default function MemberCard({
   ) : (
     <li
       //   onClick={handleClick}
-      className={`group relative flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/50 ${
+      className={`group relative flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-14 hover:shadow-md hover:bg-accent/50 ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
       <div className="w-10 h-10">
         <DisplayAvatar id={data?.user_id} />
       </div>
-      <div className="h-full flex items-center w-[70%]">
+      <div className="flex items-center w-[70%] relative">
         <p className="w-full max-w-full text-sm truncate max-h-6">
           {data?.first_name + " " + data?.last_name}
         </p>
+        <p className="absolute -bottom-4 opacity-50 left-1 text-[10px]">
+          {adminId === userId ? "Admin" : ""}
+        </p>
       </div>
-      {userId !== user_id && !isPrivate ? (
+      {userId !== user_id && !isPrivate && adminId === user_id ? (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
