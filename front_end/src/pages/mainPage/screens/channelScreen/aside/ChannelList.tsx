@@ -79,7 +79,6 @@ export default function ChannelList({ handleAside }: Props) {
 
     socket.on("remove_channel", (res: { data: TChannelData }) => {
       if (res?.data) {
-        console.log(res.data);
         const members = res.data?.members;
         const isUserRemove = members.filter(
           (m) => m.user_id === user_id && m.is_deleted
