@@ -65,9 +65,8 @@ export default function MessageList() {
   //Handle data from socket
   useEffect(() => {
     socket.on("new_message", (res: { data: TChannelData }) => {
-      const newMessage = res?.data.messages[0] as TMessageData;
-
       if (res?.data?.channel_id != channelId) return;
+      const newMessage = res?.data.messages[0] as TMessageData;
       setMessages((prev: TMessageData[]) => [...prev, newMessage]);
       setTargetScroll(newMessage?.message_id);
     });

@@ -14,19 +14,23 @@ export default function GroupMembers({ channel }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
 
   useEffect(() => {
+    if (members.length >= 1 && members[0].channel_id === channel?.channel_id)
+      return;
     setMembers(channel?.members);
     const getAdmin = channel.members.filter((m) => !m.is_deleted && m.is_admin);
     if (getAdmin.length >= 1) {
       setAdminId(getAdmin[0].user_id);
     }
-  }, [channel?.members, members.length, channel?.channel_id]);
+  }, [channel, members]);
 
   useEffect(() => {
     socket.on("add_member", (res: { data: TChannelData }) => {
-      if (res?.data?.channel_id !== channel?.channel_id) return;
-      const newMembers = res.data?.members;
-      const filterMembers = newMembers.filter((member) => !member.is_deleted);
-      setMembers(filterMembers);
+      if (res?.data) {
+        if (res?.data?.channel_id !== channel?.channel_id) return;
+        const newMembers = res.data?.members;
+        const filterMembers = newMembers.filter((member) => !member.is_deleted);
+        setMembers(filterMembers);
+      }
     });
 
     socket.on("remove_member", (res: { data: TChannelData }) => {
@@ -35,7 +39,6 @@ export default function GroupMembers({ channel }: Props) {
         // remove member
         const newNembers = res.data?.members;
         const membersNotRemoved = newNembers.filter((m) => !m.is_deleted);
-        if (membersNotRemoved.length === 0) return;
         setMembers(membersNotRemoved);
       }
     });
