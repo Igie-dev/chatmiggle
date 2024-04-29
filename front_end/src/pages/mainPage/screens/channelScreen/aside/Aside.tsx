@@ -1,18 +1,23 @@
-import { ForwardedRef } from "react";
+import { useRef } from "react";
 import Header from "../../../../../components/shared/Header";
 import ChannelList from "./ChannelList";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import NewChannelButtons from "@/components/shared/NewChannelButtons";
-type Props = {
-  handleAside: () => void;
-  asideRef: ForwardedRef<HTMLElement | null>;
-};
-export default function AsideNav({ handleAside, asideRef }: Props) {
+export default function AsideNav() {
+  const asideRef = useRef<HTMLElement | null>(null);
+  const handleAside = () => {
+    if (asideRef?.current?.classList.contains("-translate-x-full")) {
+      asideRef?.current?.classList.remove("-translate-x-full");
+    } else {
+      asideRef?.current?.classList.add("-translate-x-full");
+    }
+  };
+
   return (
     <aside
       ref={asideRef}
-      className="absolute top-0 left-0 z-50 w-full h-full bg-background/90  transition-all lg:static lg:translate-x-0 lg:w-[22rem]"
+      className="absolute top-0 left-0 z-40 w-full h-full bg-background/90  transition-all lg:static lg:translate-x-0 lg:w-[22rem]"
     >
       {/* Close nav button */}
       <Button
