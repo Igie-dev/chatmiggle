@@ -48,11 +48,6 @@ const socketConnection = (httpServer) => {
     socket.on("active_channel", (channel_id) => {
       socket.join(channel_id);
     });
-
-    // socket.on("listen_seen_channel", (channel_id) => {
-    //   socket.join(channel_id);
-    // });
-
     //Listen for create new private channel
     //The event on front end when using the create private message
     socket.on(
@@ -66,15 +61,15 @@ const socketConnection = (httpServer) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Emit all the members of the created private channel
-              members.forEach((m) => {
-                io.to(m.user_id).emit("channel_message", {
-                  data: res.data,
-                });
-              });
               //Return to sender
               io.to(socket.id).emit("create_new_channel", {
                 data: res?.data?.channel_id,
               });
+              for (const member of members) {
+                io.to(member.user_id).emit("channel_message", {
+                  data: res.data,
+                });
+              }
             }
           })
           .catch((error) => {
@@ -96,21 +91,20 @@ const socketConnection = (httpServer) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Send an emit to client where the channel id was listened
-              const members = res.data?.members;
-              if (members.length >= 1) {
-                members.forEach((m) => {
-                  io.to(m.user_id).emit("channel_message", {
-                    data: res.data,
-                  });
-                });
-              }
               io.to(res?.data?.channel_id).emit("new_message", {
                 data: res.data,
               });
-
               io.to(socket.id).emit("send_new_message", {
                 data: res?.data?.channel_id,
               });
+              const members = res.data?.members;
+              if (members.length >= 1) {
+                for (const member of members) {
+                  io.to(member.user_id).emit("channel_message", {
+                    data: res.data,
+                  });
+                }
+              }
             }
           })
           .catch((error) => {
@@ -134,11 +128,11 @@ const socketConnection = (httpServer) => {
               });
               const members = res.data?.members;
               if (members.length >= 1) {
-                members.forEach((m) => {
-                  io.to(m.user_id).emit("channel_message", {
+                for (const member of members) {
+                  io.to(member.user_id).emit("channel_message", {
                     data: res.data,
                   });
-                });
+                }
               }
             }
           })
@@ -158,14 +152,17 @@ const socketConnection = (httpServer) => {
             io.to(socket.id).emit("seen", {
               data: res?.data,
             });
-            res.data?.members.forEach((m) => {
-              io.to(m.user_id).emit("message_seen", {
-                data: res.data,
-              });
-            });
             io.to(res.data?.channel_id).emit("seen_channel", {
               data: res.data,
             });
+            const members = res.data?.members;
+            if (members.length >= 1) {
+              for (const member of members) {
+                io.to(member.user_id).emit("message_seen", {
+                  data: res.data,
+                });
+              }
+            }
           }
         })
         .catch((error) => {
@@ -183,18 +180,20 @@ const socketConnection = (httpServer) => {
             io.to(socket.id).emit("add_to_group", {
               data: res?.data,
             });
+            const channelId = res.data?.channel_id;
+            io.to(channelId).emit("new_message", {
+              data: res.data,
+            });
             const members = res.data?.members;
             if (members.length >= 1) {
-              members.forEach((m) => {
-                io.to(m.user_id).emit("channel_message", {
+              for (const member of members) {
+                io.to(member.user_id).emit("channel_message", {
                   data: res.data,
                 });
-              });
-              members.forEach((m) => {
-                io.to(m.user_id).emit("add_member", {
+                io.to(member.user_id).emit("add_member", {
                   data: res.data,
                 });
-              });
+              }
             }
           }
         })
@@ -213,18 +212,27 @@ const socketConnection = (httpServer) => {
             io.to(socket.id).emit("leave_group", {
               data: res?.data,
             });
+            const channelId = res.data?.channel_id;
+            io.to(channelId).emit("new_message", {
+              data: res.data,
+            });
             const members = res?.data?.members;
+
             if (members.length >= 1) {
-              members.forEach((m) => {
-                io.to(m.user_id).emit("remove_channel", {
-                  data: res.data,
-                });
-              });
-              members.forEach((m) => {
-                io.to(m.user_id).emit("remove_member", {
-                  data: res.data,
-                });
-              });
+              for (const member of members) {
+                if (member.is_deleted) {
+                  io.to(member.user_id).emit("remove_channel", {
+                    data: res.data,
+                  });
+                } else {
+                  io.to(member.user_id).emit("channel_message", {
+                    data: res.data,
+                  });
+                  io.to(member.user_id).emit("remove_member", {
+                    data: res.data,
+                  });
+                }
+              }
             }
           }
         })
