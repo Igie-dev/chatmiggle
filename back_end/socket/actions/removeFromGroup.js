@@ -1,4 +1,5 @@
 import prisma from "../../lib/prisma.js";
+import { v4 as uuid } from "uuid";
 const removeFromGroup = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -45,19 +46,49 @@ const removeFromGroup = ({ channel_id, user_id }) => {
         }
       }
 
-      const foundUpdatedMembersChannel = await prisma.channel.findUnique({
-        where: { channel_id },
+      const channelAdmin = foundChannel?.members.filter(
+        (m) => !m.is_deleted && m.is_admin
+      );
+      if (channelAdmin.length >= 1) {
+        await prisma.message.create({
+          data: {
+            message_id: uuid(),
+            sender_id: channelAdmin[0].user_id,
+            type: "notification",
+            channel_id: channel_id,
+            message: `${foundUser?.first_name} ${foundUser?.last_name} was removed by admin`,
+          },
+        });
+      }
+
+      const foundUpdatedChannel = await prisma.channel.findUnique({
+        where: {
+          channel_id,
+        },
         include: {
+          messages: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
+            include: {
+              channel: {
+                include: {
+                  members: true,
+                },
+              },
+            },
+          },
           members: true,
         },
       });
 
       //If channel has no member
       //Delete tha channel
-      if (foundUpdatedMembersChannel?.members?.length <= 0) {
+      if (foundUpdatedChannel?.members?.length <= 0) {
         await prisma.channel.delete({ where: { channel_id } });
       }
-      return resolve({ data: foundUpdatedMembersChannel });
+      return resolve({ data: foundUpdatedChannel });
     } catch (error) {
       const errMessage = error.message;
       return reject({ error: errMessage });

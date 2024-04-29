@@ -7,6 +7,7 @@ import DisplayUserName from "../../../../../../components/shared/DisplayUserName
 import SeenChannel from "@/components/shared/SeenChannel";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
+import { EMessageTypes } from "../../../chatBox/chatbox/MessageCard";
 type Props = {
   channel: TChannelData;
 };
@@ -15,7 +16,7 @@ export default function ChannelCard({ channel }: Props) {
   const navigate = useNavigate();
   const { channelId } = useParams();
 
-  const mate = channel.members.filter((m) => m.user_id !== user_id);
+  const mate = channel?.members.filter((m) => m.user_id !== user_id);
 
   const today = isToday(channel?.messages[0]?.createdAt);
 
@@ -33,7 +34,7 @@ export default function ChannelCard({ channel }: Props) {
     >
       <div className="w-9 h-9">
         {channel.is_private ? (
-          <DisplayAvatar id={mate[0].user_id} />
+          <DisplayAvatar id={mate[0]?.user_id} />
         ) : (
           <DisplayAvatar id={channel?.channel_id} />
         )}
@@ -72,11 +73,13 @@ export default function ChannelCard({ channel }: Props) {
       >
         <EllipsisVertical size={16} />
       </Button>
-      <SeenChannel
-        members={channel.members}
-        senderId={channel.messages[0]?.sender_id}
-        messageId={channel.messages[0]?.message_id}
-      />
+      {channel?.messages[0].type === EMessageTypes.TYPE_NOTIF ? null : (
+        <SeenChannel
+          members={channel.members}
+          senderId={channel.messages[0]?.sender_id}
+          messageId={channel.messages[0]?.message_id}
+        />
+      )}
     </li>
   );
 }

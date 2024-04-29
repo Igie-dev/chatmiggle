@@ -1,4 +1,5 @@
 import prisma from "../../lib/prisma.js";
+import { v4 as uuid } from "uuid";
 const addToGroup = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -10,6 +11,13 @@ const addToGroup = ({ channel_id, user_id }) => {
 
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id },
+        include: {
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
+        },
       });
 
       if (!foundChannel?.id) {
@@ -51,6 +59,22 @@ const addToGroup = ({ channel_id, user_id }) => {
         }
       }
 
+      const channelAdmin = foundChannel?.members.filter(
+        (m) => !m.is_deleted && m.is_admin
+      );
+
+      if (channelAdmin.length >= 1) {
+        await prisma.message.create({
+          data: {
+            message_id: uuid(),
+            sender_id: channelAdmin[0].user_id,
+            type: "notification",
+            channel_id: channel_id,
+            message: `${foundUser?.first_name} ${foundUser?.last_name} was added by admin`,
+          },
+        });
+      }
+
       const foundUpdatedChannel = await prisma.channel.findUnique({
         where: {
           channel_id,
@@ -64,12 +88,20 @@ const addToGroup = ({ channel_id, user_id }) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    where: {
+                      is_deleted: false,
+                    },
+                  },
                 },
               },
             },
           },
-          members: true,
+          members: {
+            where: {
+              is_deleted: false,
+            },
+          },
         },
       });
 
