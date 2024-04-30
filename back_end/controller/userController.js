@@ -132,7 +132,7 @@ const getUserFriends = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "No friends found" });
     }
     const userChannels = [];
-    for (const channel of foundUser?.membered_channel) {
+    for await (const channel of foundUser?.membered_channel) {
       const existChannel = userChannels.filter(
         (c) => c.channel_id === channel.channel_id
       );
