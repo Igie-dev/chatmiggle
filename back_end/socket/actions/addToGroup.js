@@ -3,6 +3,9 @@ import { v4 as uuid } from "uuid";
 const addToGroup = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
+      if (!channel_id || !user_id) {
+        throw new Error("All field required");
+      }
       const foundUser = await prisma.user.findUnique({ where: { user_id } });
 
       if (!foundUser?.id) {
