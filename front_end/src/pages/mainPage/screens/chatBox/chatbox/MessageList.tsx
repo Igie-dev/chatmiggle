@@ -22,21 +22,28 @@ export default function MessageList() {
   }, [channelId]);
 
   //Handle data from api request
+  //First fetch messages when render the component / if channel change
   useEffect(() => {
     (async () => {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res: any = await getMessages({ channelId: channelId as string });
-        if (res?.data && res?.data?.messages?.length >= 1) {
-          if (res?.data?.messages[0]?.channel_id === channelId) {
-            const messages = res?.data?.messages as TMessageData[];
-            setMessages(messages);
-            if (res?.data?.cursor) {
-              setCursor(res?.data.cursor);
+
+        if (res?.data) {
+          const newMessages = res.data?.messages as TMessageData[];
+          const providedCursor = res.data?.cursor;
+          if (newMessages?.length >= 1) {
+            if (newMessages[0]?.channel_id === channelId) {
+              setMessages(newMessages);
+              //set taget scroll to bottom
+              //first fetch
+              setTargetScroll(newMessages[newMessages.length - 1]?.message_id);
+              if (providedCursor) {
+                setCursor(providedCursor);
+              }
+            } else {
+              setMessages([]);
             }
-            setTargetScroll(messages[messages.length - 1]?.message_id);
-          } else {
-            setMessages([]);
           }
         }
       } catch (error) {
@@ -53,14 +60,13 @@ export default function MessageList() {
 
   useEffect(() => {
     //handle scroll to bottom
-    // console.log(targetScroll);
     if (targetScroll) {
       const targetEl = document.getElementById(targetScroll) as HTMLElement;
       targetEl?.lastElementChild?.scrollIntoView({
         behavior: "smooth",
       });
     }
-  }, [targetScroll]);
+  }, [targetScroll, messages]);
 
   //Handle data from socket
   useEffect(() => {
@@ -77,6 +83,9 @@ export default function MessageList() {
     };
   }, [channelId]);
 
+  //Messages pagination
+  //Requst another messages with the cursor to paginate
+  //The respose will be added to top of current messages
   const handleGetMoreMessage = () => {
     (async () => {
       try {
@@ -85,13 +94,19 @@ export default function MessageList() {
           channelId: channelId as string,
           cursor,
         });
-        if (res?.data && res?.data?.messages?.length >= 1) {
-          if (res?.data?.messages[0]?.channel_id === channelId) {
-            const messages = res?.data?.messages as TMessageData[];
-            setTargetScroll(messages[messages.length - 1]?.message_id);
-            setMessages((prev) => [...messages, ...prev]);
-            if (res?.data?.cursor) {
-              setCursor(res?.data?.cursor);
+
+        if (res?.data) {
+          const newMessages = res.data?.messages as TMessageData[];
+          const providedCursor = res.data?.cursor;
+          if (newMessages?.length >= 1) {
+            if (newMessages[0]?.channel_id === channelId) {
+              //Set the id of target element to scroll
+              //To make not scroll to very bottom when data added
+              //The id was the first data of this request
+              //To make scroll on top of first fetch
+              setTargetScroll(newMessages[messages.length - 1]?.message_id);
+              setMessages((prev) => [...newMessages, ...prev]);
+              setCursor(providedCursor);
             }
           }
         }
@@ -103,7 +118,7 @@ export default function MessageList() {
 
   return (
     <div className="relative flex-1 w-full overflow-auto">
-      {messages.length >= 100 ? (
+      {cursor ? (
         <div className="flex items-center justify-center w-full py-1">
           <button
             type="button"
