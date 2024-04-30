@@ -21,13 +21,13 @@ export default function ChannelCard({ channel }: Props) {
   const today = isToday(channel?.messages[0]?.createdAt);
 
   const handleClick = () => {
-    navigate(`/c/${channel.channel_id}`);
+    navigate(`/c/${channel?.channel_id}`);
   };
   return (
     <li
       onClick={handleClick}
       className={`group flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
-        channelId === channel.channel_id
+        channelId === channel?.channel_id
           ? "bg-accent/70 border-border/70"
           : "bg-transparent border-transparent hover:shadow-md hover:bg-accent/70"
       }`}
@@ -43,7 +43,7 @@ export default function ChannelCard({ channel }: Props) {
       <div className={`flex flex-col w-[70%] h-full justify-center `}>
         {channel?.is_private ? (
           <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
-            <DisplayUserName userId={mate[0].user_id} />
+            <DisplayUserName userId={mate[0]?.user_id} />
           </span>
         ) : (
           <p className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
@@ -53,15 +53,15 @@ export default function ChannelCard({ channel }: Props) {
 
         <div className="flex items-end w-full">
           <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
-            {channel.messages[0]?.sender_id === user_id
-              ? `You: ${channel.messages[0]?.message}`
-              : `${channel.messages[0]?.message}`}
+            {channel?.messages[0]?.sender_id === user_id
+              ? `You: ${channel?.messages[0]?.message}`
+              : `${channel?.messages[0]?.message}`}
           </p>
           <p className="ml-2 text-xs opacity-40">
             {today
-              ? `${formatTime(channel.messages[0]?.createdAt)}`
-              : `${formatDate(channel.messages[0]?.createdAt)} ${formatTime(
-                  channel.messages[0]?.createdAt
+              ? `${formatTime(channel?.messages[0]?.createdAt)}`
+              : `${formatDate(channel?.messages[0]?.createdAt)} ${formatTime(
+                  channel?.messages[0]?.createdAt
                 )} `}
           </p>
         </div>
