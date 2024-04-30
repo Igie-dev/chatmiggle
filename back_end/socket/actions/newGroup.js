@@ -4,6 +4,16 @@ import { v4 as uuid } from "uuid";
 const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
+      if (
+        !group_name ||
+        members.length <= 0 ||
+        !message ||
+        !sender_id ||
+        !type
+      ) {
+        throw new Error("All field required");
+      }
+
       const createChannel = await prisma.channel.create({
         data: {
           channel_id: uuid(),

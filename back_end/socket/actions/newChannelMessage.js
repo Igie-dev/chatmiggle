@@ -2,10 +2,10 @@ import prisma from "../../lib/prisma.js";
 import { v4 as uuid } from "uuid";
 const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
   return new Promise(async (resolve, reject) => {
-    if (!channel_id || !message || !sender_id || !type) {
-      throw new Error("All field are required!");
-    }
     try {
+      if (!channel_id || !message || !sender_id || !type) {
+        throw new Error("All field are required!");
+      }
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id },
       });
@@ -34,19 +34,15 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
       });
 
       if (foundChannelMember?.length >= 1) {
-        for (const member of foundChannelMember) {
-          const updateMemebers = await prisma.userChannelMember.update({
+        for await (const member of foundChannelMember) {
+          await prisma.userChannelMember.update({
             where: {
               id: member.id,
             },
             data: {
-              ...member,
               is_seen: member.user_id === sender_id,
             },
           });
-          if (!updateMemebers?.id) {
-            throw new Error("Failed to update members!");
-          }
         }
       }
 
@@ -83,6 +79,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
       }
       return resolve({ data: channel });
     } catch (error) {
+      console.log(error);
       const errMessage = error.message;
       return reject({ error: errMessage });
     }
