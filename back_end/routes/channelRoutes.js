@@ -7,6 +7,7 @@ import {
   getChannel,
   getUserGroups,
   getMembersChannel,
+  deleteChannel,
 } from "../controller/channelController.js";
 const router = express.Router();
 router.use(verifyJWT);
@@ -23,4 +24,5 @@ router.route("/messages/:channelId").get(getChannelMessages);
 
 router.route("/memberschannel").post(getMembersChannel);
 
+router.route("/:channelId/:userId").delete(deleteChannel);
 export default router;

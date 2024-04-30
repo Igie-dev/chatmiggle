@@ -1,5 +1,8 @@
 import asyncHandler from "express-async-handler";
 import prisma from "../lib/prisma.js";
+import dotenv from "dotenv";
+dotenv.config();
+const messagesLimit = process.env.MESSAGES_LIMIT;
 
 const getUserChannels = asyncHandler(async (req, res) => {
   const user_id = req.params.userId;
@@ -24,7 +27,7 @@ const getUserChannels = asyncHandler(async (req, res) => {
     }
 
     const userChannels = [];
-    for (const channel of foundUser?.membered_channel) {
+    for await (const channel of foundUser?.membered_channel) {
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id: channel.channel_id },
         include: {
@@ -36,20 +39,12 @@ const getUserChannels = asyncHandler(async (req, res) => {
             include: {
               channel: {
                 include: {
-                  members: {
-                    where: {
-                      is_deleted: false,
-                    },
-                  },
+                  members: true,
                 },
               },
             },
           },
-          members: {
-            where: {
-              is_deleted: false,
-            },
-          },
+          members: true,
         },
       });
 
@@ -143,7 +138,10 @@ const getChannelMessages = asyncHandler(async (req, res) => {
     }
 
     const nextCursorId =
-      foundChannel.messages.length >= 100 ? foundChannel.messages[0].id : null;
+      foundChannel.messages.length >= messagesLimit
+        ? foundChannel.messages[0].id
+        : null;
+
     return res
       .status(200)
       .json({ messages: foundChannel.messages, cursor: nextCursorId });
@@ -159,11 +157,7 @@ const getChannel = asyncHandler(async (req, res) => {
     const foundChannel = await prisma.channel.findUnique({
       where: { channel_id },
       include: {
-        members: {
-          where: {
-            is_deleted: false,
-          },
-        },
+        members: true,
       },
     });
 
@@ -321,6 +315,105 @@ const getMembersChannel = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteChannel = asyncHandler(async (req, res) => {
+  const channelId = req.params.channelId;
+  const userId = req.params.userId;
+
+  try {
+    const foundUser = await prisma.userChannelMember.findFirst({
+      where: {
+        AND: [
+          { user_id: userId },
+          { channel_id: channelId },
+          { is_deleted: false },
+        ],
+      },
+    });
+
+    if (!foundUser?.id) {
+      return res.status(404).json({ message: "User not admin" });
+    }
+
+    const foundChannel = await prisma.channel.findUnique({
+      where: { channel_id: channelId },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          include: {
+            channel: {
+              include: {
+                members: true,
+              },
+            },
+          },
+        },
+        members: true,
+      },
+    });
+
+    if (!foundChannel?.id) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    //Channel is private
+    if (foundChannel?.is_private) {
+      //remove user from channel if channel is private
+      const foundChannelMembers = foundChannel?.members;
+      const checkMemberOfPrivate = foundChannelMembers.filter(
+        (m) => !m.is_deleted
+      );
+
+      if (checkMemberOfPrivate.length <= 1) {
+        //Delete channel if channel is group
+        await prisma.channel.delete({
+          where: { channel_id: channelId },
+        });
+      } else {
+        await prisma.userChannelMember.updateMany({
+          where: { AND: [{ user_id: userId }, { channel_id: channelId }] },
+          data: {
+            is_deleted: true,
+          },
+        });
+      }
+
+      const channel = foundChannel;
+      channel.members = foundChannel.members.map((m) => {
+        if (m.user_id === userId) {
+          return { ...m, is_deleted: true };
+        }
+        return m;
+      });
+      return res.status(200).json(channel);
+    }
+
+    //Channel is group
+    if (!foundUser?.is_admin) {
+      return res
+        .status(500)
+        .json({ message: "Failed to delete user not admin" });
+    }
+
+    //Delete channel if channel is group
+    await prisma.channel.delete({
+      where: { channel_id: channelId },
+    });
+
+    const channel = foundChannel;
+    channel.members = foundChannel?.members.map((m) => {
+      return { ...m, is_deleted: true };
+    });
+
+    return res.status(200).json(channel);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
 export {
   getUserChannels,
   verifyUserInChannel,
@@ -328,4 +421,5 @@ export {
   getChannel,
   getUserGroups,
   getMembersChannel,
+  deleteChannel,
 };
