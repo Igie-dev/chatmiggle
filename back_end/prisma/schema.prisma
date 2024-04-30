@@ -38,8 +38,8 @@ channel_id String
 is_seen    Boolean @default(false)
 is_deleted Boolean @default(false)
 is_admin   Boolean @default(false)
-user User? @relation(fields: [user_id], references: [user_id])
-channel Channel? @relation(fields: [channel_id], references: [channel_id])
+user User? @relation(fields: [user_id], references: [user_id],onDelete: Cascade, onUpdate: Cascade)
+channel Channel? @relation(fields: [channel_id], references: [channel_id],onDelete: Cascade, onUpdate: Cascade)
 
 @@index([user_id,channel_id])
 }
