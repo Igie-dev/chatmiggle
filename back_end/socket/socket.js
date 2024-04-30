@@ -57,7 +57,7 @@ const socketConnection = (httpServer) => {
         //the storing of message data on database
         //it return the data when it successfully saved
         createNewChannel({ members, message, sender_id, type })
-          .then((res) => {
+          .then(async (res) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Emit all the members of the created private channel
@@ -65,7 +65,7 @@ const socketConnection = (httpServer) => {
               io.to(socket.id).emit("create_new_channel", {
                 data: res?.data?.channel_id,
               });
-              for (const member of members) {
+              for await (const member of members) {
                 io.to(member.user_id).emit("channel_message", {
                   data: res.data,
                 });
@@ -87,7 +87,7 @@ const socketConnection = (httpServer) => {
       "send_new_message",
       async ({ channel_id, sender_id, message, type }) => {
         newChannelMessage({ channel_id, sender_id, message, type })
-          .then((res) => {
+          .then(async (res) => {
             if (res?.data) {
               //The data is a whole channel with latest message
               //Send an emit to client where the channel id was listened
@@ -99,7 +99,7 @@ const socketConnection = (httpServer) => {
               });
               const members = res.data?.members;
               if (members.length >= 1) {
-                for (const member of members) {
+                for await (const member of members) {
                   io.to(member.user_id).emit("channel_message", {
                     data: res.data,
                   });
@@ -121,14 +121,14 @@ const socketConnection = (httpServer) => {
       "create_group",
       async ({ group_name, message, sender_id, type, members }) => {
         createNewGroup({ group_name, message, sender_id, type, members })
-          .then((res) => {
+          .then(async (res) => {
             if (res?.data) {
               io.to(socket.id).emit("create_group", {
                 data: res.data,
               });
               const members = res.data?.members;
               if (members.length >= 1) {
-                for (const member of members) {
+                for await (const member of members) {
                   io.to(member.user_id).emit("channel_message", {
                     data: res.data,
                   });
@@ -147,7 +147,7 @@ const socketConnection = (httpServer) => {
     //Handle seen event
     socket.on("seen", async ({ channel_id, user_id }) => {
       seenControl({ channel_id, user_id })
-        .then((res) => {
+        .then(async (res) => {
           if (res?.data) {
             io.to(socket.id).emit("seen", {
               data: res?.data,
@@ -157,7 +157,7 @@ const socketConnection = (httpServer) => {
             });
             const members = res.data?.members;
             if (members.length >= 1) {
-              for (const member of members) {
+              for await (const member of members) {
                 io.to(member.user_id).emit("message_seen", {
                   data: res.data,
                 });
@@ -175,7 +175,7 @@ const socketConnection = (httpServer) => {
     //Handle add user to group
     socket.on("add_to_group", async ({ user_id, channel_id }) => {
       addToGroup({ user_id, channel_id })
-        .then((res) => {
+        .then(async (res) => {
           if (res?.data) {
             io.to(socket.id).emit("add_to_group", {
               data: res?.data,
@@ -186,7 +186,7 @@ const socketConnection = (httpServer) => {
             });
             const members = res.data?.members;
             if (members.length >= 1) {
-              for (const member of members) {
+              for await (const member of members) {
                 io.to(member.user_id).emit("channel_message", {
                   data: res.data,
                 });
@@ -205,9 +205,9 @@ const socketConnection = (httpServer) => {
     });
 
     //Handle remove member from group
-    socket.on("leave_group", async ({ user_id, channel_id }) => {
-      removeFromGroup({ user_id, channel_id })
-        .then((res) => {
+    socket.on("leave_group", async ({ user_id, channel_id, type }) => {
+      removeFromGroup({ user_id, channel_id, type })
+        .then(async (res) => {
           if (res?.data) {
             io.to(socket.id).emit("leave_group", {
               data: res?.data,
@@ -219,7 +219,7 @@ const socketConnection = (httpServer) => {
             const members = res?.data?.members;
 
             if (members.length >= 1) {
-              for (const member of members) {
+              for await (const member of members) {
                 if (member.is_deleted) {
                   io.to(member.user_id).emit("remove_channel", {
                     data: res.data,
@@ -241,6 +241,39 @@ const socketConnection = (httpServer) => {
             error: error.error,
           });
         });
+    });
+
+    //TODO Fix broadcast the delete channel
+    //Handle delete group
+    socket.on("delete_group", ({ user_id, channel }) => {
+      const members = channel?.members;
+      if (members.length >= 1) {
+        for (const member of members) {
+          io.to(member.user_id).emit("remove_channel", {
+            data: channel,
+          });
+        }
+      }
+      io.to(socket.id).emit("delete_group", {
+        data: channel,
+      });
+    });
+
+    //Handle delete private channel
+    socket.on("delete_channel", ({ user_id, channel }) => {
+      const members = channel?.members;
+      if (members.length >= 1) {
+        for (const member of members) {
+          if (members.user_id === user_id) {
+            io.to(member.user_id).emit("remove_channel", {
+              data: channel,
+            });
+          }
+        }
+      }
+      io.to(socket.id).emit("delete_channel", {
+        data: channel,
+      });
     });
   });
 };
