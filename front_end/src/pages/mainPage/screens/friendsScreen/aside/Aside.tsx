@@ -2,8 +2,8 @@ import { useRef } from "react";
 import Header from "../../../../../components/shared/Header";
 import FriendsList from "./FriendsList";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import CreateNewGroup from "../../channelScreen/newChannel/CreateNewGroup";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import NewChannelButtons from "@/components/shared/NewChannelButtons";
 export default function AsideNav() {
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
@@ -39,18 +39,7 @@ export default function AsideNav() {
         </Button>
         <Header />
         <FriendsList handleAside={handleAside} />
-        <CreateNewGroup>
-          <Button
-            variant="secondary"
-            title="New chat"
-            className="absolute w-12 h-12 p-2 transition-all border rounded-full opacity-50 group bg-secondary/50 hover:opacity-100 hover:bg-secondary bottom-4 right-2 hover:scale-105"
-          >
-            <p className="absolute !text-xs font-light right-[110%] opacity-0 group-hover:opacity-100 transition-all">
-              New Group
-            </p>
-            <Plus size={20} />
-          </Button>
-        </CreateNewGroup>
+        <NewChannelButtons />
       </div>
     </aside>
   );
