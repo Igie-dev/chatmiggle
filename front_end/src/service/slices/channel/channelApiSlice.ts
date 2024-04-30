@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiSlice } from "../api/apiSlice";
-
+const messagesLimit = import.meta.env.VITE_MESSAGES_LIMIT;
 const channelApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserChannels: builder.query({
@@ -29,7 +29,7 @@ const channelApiSlice = apiSlice.injectEndpoints({
         channelId: string;
         cursor?: number | null;
       }) => ({
-        url: `/channel/messages/${channelId}?take=100${
+        url: `/channel/messages/${channelId}?take=${messagesLimit}${
           cursor ? `&cursor=${cursor}` : ""
         }`,
         method: "GET",
@@ -55,6 +55,18 @@ const channelApiSlice = apiSlice.injectEndpoints({
         body: { members },
       }),
     }),
+    deleteChannel: builder.mutation({
+      query: ({
+        channelId,
+        userId,
+      }: {
+        channelId: string;
+        userId: string;
+      }) => ({
+        url: `/channel/${channelId}/${userId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -65,4 +77,5 @@ export const {
   useGetChannelQuery,
   useGetUserGroupsQuery,
   useGetMembersChannelMutation,
+  useDeleteChannelMutation,
 } = channelApiSlice;
