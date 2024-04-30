@@ -1,6 +1,6 @@
 import prisma from "../../lib/prisma.js";
 import { v4 as uuid } from "uuid";
-const removeFromGroup = ({ channel_id, user_id }) => {
+const removeFromGroup = ({ channel_id, user_id, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const foundChannel = await prisma.channel.findUnique({
@@ -30,7 +30,7 @@ const removeFromGroup = ({ channel_id, user_id }) => {
         return resolve({ data: { user_id, channel_id } });
       }
 
-      for (const member of foundChannel?.members) {
+      for await (const member of foundChannel?.members) {
         if (member.user_id === user_id) {
           const removeUserFromChannel = await prisma.userChannelMember.update({
             where: {
@@ -49,6 +49,7 @@ const removeFromGroup = ({ channel_id, user_id }) => {
       const channelAdmin = foundChannel?.members.filter(
         (m) => !m.is_deleted && m.is_admin
       );
+
       if (channelAdmin.length >= 1) {
         await prisma.message.create({
           data: {
@@ -56,7 +57,12 @@ const removeFromGroup = ({ channel_id, user_id }) => {
             sender_id: channelAdmin[0].user_id,
             type: "notification",
             channel_id: channel_id,
-            message: `${foundUser?.first_name} ${foundUser?.last_name} was removed by admin`,
+            message:
+              type === "remove"
+                ? `${foundUser?.first_name} ${foundUser?.last_name} was removed by admin!`
+                : type === "leave"
+                ? `${foundUser?.first_name} ${foundUser?.last_name} left this group!`
+                : "",
           },
         });
       }
