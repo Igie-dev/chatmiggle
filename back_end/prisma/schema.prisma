@@ -75,7 +75,7 @@ model Avatar {
   mimetype String
   user_avatar_id String? @unique
   group_avatar_id String? @unique
-  channel Channel?  @relation(fields: [group_avatar_id], references: [avatar_id])
-  user   User? @relation(fields: [user_avatar_id], references: [avatar_id])
+  channel Channel?  @relation(fields: [group_avatar_id], references: [avatar_id],onDelete: Cascade, onUpdate: Cascade)
+  user   User? @relation(fields: [user_avatar_id], references: [avatar_id] ,onDelete: Cascade, onUpdate: Cascade)
   @@index([user_avatar_id,group_avatar_id])
 }
