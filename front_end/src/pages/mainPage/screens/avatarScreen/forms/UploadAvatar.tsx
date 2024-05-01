@@ -44,6 +44,7 @@ export default function UploadAvatar() {
       navigate(-1);
     }
   }, [isSuccess, navigate]);
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -64,7 +65,9 @@ export default function UploadAvatar() {
         <h1 className="text-lg font-semibold">Upload avatar</h1>
       </div>
       {isError ? (
-        <p className="text-sm text-destructive ">Error: {error.data.message}</p>
+        <p className="text-sm text-destructive ">
+          Error: {error?.data?.message}
+        </p>
       ) : null}
       {preview ? (
         <div className="border border-border overflow-hidden w-full h-[25rem] rounded-md">
