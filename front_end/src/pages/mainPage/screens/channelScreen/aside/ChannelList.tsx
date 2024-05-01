@@ -119,15 +119,13 @@ export default function ChannelList({ handleAside }: Props) {
 
   //Handle auto select channel when first visit
   useEffect(() => {
-    if (channels?.length <= 0 || search) {
-      navigate("/c");
+    if (channels?.length >= 1) {
+      if (!channelId) {
+        navigate(`/c/${channels[0]?.channel_id}`);
+      }
       return;
     }
-
-    if (!channelId && channels?.length >= 0) {
-      navigate(`/c/${channels[0]?.channel_id}`);
-      return;
-    }
+    return;
   }, [channelId, channels, navigate, search]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
