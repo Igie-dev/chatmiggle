@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SignOutBtn from "@/components/shared/SignOutBtn";
 import { useEffect } from "react";
+import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
+import { Skeleton } from "../ui/skeleton";
 export default function Header() {
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
-
+  const { data, isLoading } = useGetUserByIdQuery(user_id);
   const handleCopyId = () => {
     navigator.clipboard.writeText(`${user_id}`);
   };
@@ -32,15 +34,18 @@ export default function Header() {
       socket.off("user_join");
     };
   }, [user_id]);
-
   return (
     <header className="flex item-center justify-center w-full h-[10%] relative p-2 rounded-md">
       <div className="flex items-center justify-between w-full h-fit">
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="w-9 h-9">
-                <DisplayAvatar id={user_id} />
+              <div className="w-10 h-10 overflow-hidden border rounded-full">
+                {isLoading ? (
+                  <Skeleton className="w-full h-full" />
+                ) : (
+                  <DisplayAvatar id={data?.avatar_id} />
+                )}
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-[12rem] p-2 text-xs">

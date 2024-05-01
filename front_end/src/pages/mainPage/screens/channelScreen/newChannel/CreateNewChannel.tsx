@@ -135,7 +135,7 @@ export default function CreateNewChannel({ children }: Props) {
               ) : !error && mate?.user_id ? (
                 <div className="flex items-center w-full gap-4 p-2 border rounded-md h-fit">
                   <div className="w-10 h-10 overflow-hidden rounded-full">
-                    <DisplayAvatar id={mate?.user_id} />
+                    <DisplayAvatar id={mate?.avatar_id as string} />
                   </div>
                   <p className="text-sm  max-w-[70%] truncate">
                     {mate?.first_name + " " + mate?.last_name}

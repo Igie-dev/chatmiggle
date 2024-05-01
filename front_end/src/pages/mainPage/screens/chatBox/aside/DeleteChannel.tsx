@@ -17,6 +17,7 @@ import { useDeleteChannelMutation } from "@/service/slices/channel/channelApiSli
 import { asyncEmit } from "@/socket";
 type Props = {
   channelId: string;
+  channelAvatarId: string;
   groupName?: string;
   userId: string;
   isPrivate: boolean;
@@ -27,11 +28,10 @@ export default function DeleteChannel({
   groupName,
   userId,
   isPrivate,
+  channelAvatarId,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [deleteChannel, { isLoading, error }] = useDeleteChannelMutation();
-  //TODO Broadcast to socket
-  //TODO Fix broadcast the delete channel
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -79,7 +79,7 @@ export default function DeleteChannel({
           {!isPrivate ? (
             <div className="flex flex-col items-center justify-center gap-2 my-5">
               <div className="w-16 h-16 overflow-hidden border rounded-full">
-                <DisplayAvatar id={channelId} />
+                <DisplayAvatar id={channelAvatarId} />
               </div>
               <span className="w-full font-normal text-center truncate text-medium">
                 {groupName}

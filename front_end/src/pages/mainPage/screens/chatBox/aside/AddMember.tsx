@@ -18,9 +18,14 @@ import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import { asyncEmit } from "@/socket";
 type Props = {
   channelId: string;
+  channelAvatarId: string;
   groupName: string;
 };
-export default function AddMember({ channelId, groupName }: Props) {
+export default function AddMember({
+  channelId,
+  groupName,
+  channelAvatarId,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
   const [newMember, setNewMember] = useState<TUser | null>(null);
@@ -86,7 +91,7 @@ export default function AddMember({ channelId, groupName }: Props) {
           </DialogHeader>
           <div className="flex flex-col items-center justify-center gap-2 my-5">
             <div className="w-16 h-16 overflow-hidden border rounded-full">
-              <DisplayAvatar id={channelId} />
+              <DisplayAvatar id={channelAvatarId} />
             </div>
             <span className="w-full font-normal text-center truncate text-medium">
               {groupName}
@@ -98,7 +103,7 @@ export default function AddMember({ channelId, groupName }: Props) {
               <div className="flex items-center w-full p-2 border rounded-md bg-accent">
                 <div className="flex items-center flex-1 gap-2 ">
                   <div className="w-10 h-10">
-                    <DisplayAvatar id={newMember.user_id} />
+                    <DisplayAvatar id={newMember?.avatar_id as string} />
                   </div>
                   <p className="text-sm truncate w-[80%]  text-start">
                     {newMember.first_name + " " + newMember.last_name}

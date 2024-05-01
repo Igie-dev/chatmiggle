@@ -15,7 +15,9 @@ type Props = {
 export default function MessageCard({ message, lastMessage }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const senderMe = user_id === message.sender_id;
-
+  const senderData = message.channel.members.filter(
+    (m) => m.user_id === message.sender_id
+  );
   return (
     <>
       {message?.type === EMessageTypes.TYPE_NOTIF ? (
@@ -35,7 +37,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
         >
           {!senderMe ? (
             <div className="mr-1 w-9 h-9">
-              <DisplayAvatar id={message.sender_id} />
+              <DisplayAvatar id={senderData[0]?.user?.avatar_id as string} />
             </div>
           ) : null}
           <div

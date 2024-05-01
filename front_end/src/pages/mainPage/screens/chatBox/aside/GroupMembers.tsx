@@ -57,6 +57,7 @@ export default function GroupMembers({ channel }: Props) {
           <AddMember
             channelId={channel?.channel_id}
             groupName={channel?.group_name as string}
+            channelAvatarId={channel?.avatar_id as string}
           />
         ) : (
           <span />
@@ -69,6 +70,7 @@ export default function GroupMembers({ channel }: Props) {
             cardDescription="Are you sure you want to leave this group?"
             cardTitle="Leave Group"
             type="leave"
+            channelAvatarId={channel?.avatar_id as string}
           >
             <Button variant="destructive" size="sm">
               <p>Leave</p>
@@ -82,6 +84,7 @@ export default function GroupMembers({ channel }: Props) {
             groupName={channel?.group_name as string}
             userId={channel?.is_private ? user_id : adminId}
             isPrivate={channel?.is_private}
+            channelAvatarId={channel?.avatar_id as string}
           />
         ) : null}
       </div>
@@ -98,6 +101,7 @@ export default function GroupMembers({ channel }: Props) {
                     isPrivate={channel?.is_private}
                     userId={member.user_id}
                     adminId={adminId}
+                    channelAvatarId={channel?.avatar_id as string}
                   />
                 );
               })

@@ -172,7 +172,7 @@ export default function CreateNewGroup({ children }: Props) {
                       >
                         <div className="flex items-center flex-1 gap-2 ">
                           <div className="w-10 h-10">
-                            <DisplayAvatar id={u.user_id} />
+                            <DisplayAvatar id={u.avatar_id as string} />
                           </div>
                           <p className="text-sm truncate w-[80%]  text-start">
                             {u.first_name + " " + u.last_name}

@@ -9,6 +9,7 @@ import LeaveGroup from "./LeaveGroup";
 type Props = {
   userId: string;
   channelId: string;
+  channelAvatarId: string;
   groupName: string;
   isPrivate: boolean;
   adminId: string;
@@ -19,6 +20,7 @@ export default function MemberCard({
   groupName,
   isPrivate,
   adminId,
+  channelAvatarId,
 }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserByIdQuery(userId);
@@ -43,7 +45,7 @@ export default function MemberCard({
       }`}
     >
       <div className="w-10 h-10">
-        <DisplayAvatar id={data?.user_id} />
+        <DisplayAvatar id={data?.avatar_id as string} />
       </div>
       <div className="flex items-center w-[70%] relative">
         <p className="w-full max-w-full text-sm truncate max-h-6">
@@ -62,6 +64,7 @@ export default function MemberCard({
           cardTitle="Remove user"
           firstName={data?.first_name}
           lastName={data?.last_name}
+          channelAvatarId={channelAvatarId}
           type="remove"
         >
           <Button

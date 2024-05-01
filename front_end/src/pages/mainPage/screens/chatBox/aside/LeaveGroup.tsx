@@ -15,6 +15,7 @@ import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 type Props = {
   userId: string;
   channelId: string;
+  channelAvatarId: string;
   groupName: string;
   children: ReactNode;
   cardDescription: string;
@@ -33,6 +34,7 @@ export default function LeaveGroup({
   lastName,
   firstName,
   type,
+  channelAvatarId,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -69,7 +71,7 @@ export default function LeaveGroup({
           </DialogHeader>
           <div className="flex flex-col items-center justify-center gap-2 my-5">
             <div className="w-16 h-16 overflow-hidden border rounded-full">
-              <DisplayAvatar id={channelId} />
+              <DisplayAvatar id={channelAvatarId} />
             </div>
             <span className="w-full font-normal text-center truncate text-medium">
               {groupName}

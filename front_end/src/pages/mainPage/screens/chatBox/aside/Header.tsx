@@ -13,17 +13,19 @@ type Props = {
 
 function Header({ channel, isFetching }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
-  const mate = channel?.members.filter((m) => m.user_id !== user_id);
+  const mate: TChannelMemberData[] = channel?.members.filter(
+    (m) => m.user_id !== user_id
+  );
   return (
-    <header className="flex flex-col items-center justify-between w-full gap-5 px-5 py-4 border rounded-md  h-fit bg-accent/50">
+    <header className="flex flex-col items-center justify-between w-full gap-5 px-5 py-4 border rounded-md h-fit bg-accent/50">
       <div className="flex flex-col items-center justify-center w-full gap-2 ">
         <div className="w-16 h-16 overflow-hidden border rounded-full">
           {isFetching ? (
             <Skeleton className="w-full h-full" />
           ) : channel && channel?.is_private ? (
-            <DisplayAvatar id={mate[0]?.user_id} />
+            <DisplayAvatar id={mate[0]?.user?.avatar_id as string} />
           ) : (
-            <DisplayAvatar id={channel?.channel_id} />
+            <DisplayAvatar id={channel?.avatar_id as string} />
           )}
         </div>
         {isFetching ? (

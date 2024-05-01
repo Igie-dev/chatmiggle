@@ -14,7 +14,9 @@ export default function ChannelCard({ channel, handleAside }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const navigate = useNavigate();
   const { channelId } = useParams();
-  const mate = channel?.members.filter((m) => m.user_id !== user_id);
+  const mate: TChannelMemberData[] = channel?.members.filter(
+    (m) => m.user_id !== user_id
+  );
   const today = isToday(channel?.messages[0]?.createdAt);
   const handleClick = () => {
     navigate(`/c/${channel?.channel_id}`);
@@ -31,9 +33,9 @@ export default function ChannelCard({ channel, handleAside }: Props) {
     >
       <div className="w-9 h-9">
         {channel.is_private ? (
-          <DisplayAvatar id={mate[0]?.user_id} />
+          <DisplayAvatar id={mate[0]?.user?.avatar_id as string} />
         ) : (
-          <DisplayAvatar id={channel?.channel_id} />
+          <DisplayAvatar id={channel?.avatar_id} />
         )}
       </div>
 

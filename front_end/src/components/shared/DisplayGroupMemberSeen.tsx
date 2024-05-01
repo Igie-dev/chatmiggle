@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Avatar from "./DisplayAvatar";
+import DisplayAvatar from "./DisplayAvatar";
 type Props = {
   members: TChannelMemberData[];
   senderId: string;
@@ -35,7 +35,7 @@ export default function DisplayGroupMemberSeen({ members, senderId }: Props) {
                   : `${i + 15}px`,
             }}
           >
-            <Avatar id={m.user_id} />
+            <DisplayAvatar id={m.user?.avatar_id as string} />
           </div>
         );
       })}
