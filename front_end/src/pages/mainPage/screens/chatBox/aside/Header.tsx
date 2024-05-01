@@ -23,9 +23,9 @@ function Header({ channel, isFetching }: Props) {
           {isFetching ? (
             <Skeleton className="w-full h-full" />
           ) : channel && channel?.is_private ? (
-            <DisplayAvatar id={mate[0]?.user?.avatar_id as string} />
+            <DisplayAvatar id={(mate[0]?.user?.avatar_id as string) ?? ""} />
           ) : (
-            <DisplayAvatar id={channel?.avatar_id as string} />
+            <DisplayAvatar id={(channel?.avatar_id as string) ?? ""} />
           )}
         </div>
         {isFetching ? (
