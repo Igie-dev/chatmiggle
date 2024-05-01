@@ -198,7 +198,11 @@ const getChannel = asyncHandler(async (req, res) => {
     const foundChannel = await prisma.channel.findUnique({
       where: { channel_id },
       include: {
-        members: true,
+        members: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -257,6 +261,9 @@ const getUserGroups = asyncHandler(async (req, res) => {
             members: {
               where: {
                 is_deleted: false,
+              },
+              include: {
+                user: true,
               },
             },
           },
