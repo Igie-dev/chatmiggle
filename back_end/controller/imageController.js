@@ -254,7 +254,6 @@ const getAvatar = asyncHandler(async (req, res) => {
     }
 
     function returnLink(foundImage) {
-      console.log(foundImage);
       const buffer = Buffer.from(foundImage?.data, "binary");
       const url = bufferToDataURL(buffer, foundImage?.mimetype);
       return res.status(200).json({ url: url });
