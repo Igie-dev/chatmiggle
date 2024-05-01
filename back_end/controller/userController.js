@@ -56,6 +56,7 @@ const getUser = asyncHandler(async (req, res) => {
         email: true,
         createdAt: true,
         updatedAt: true,
+        avatar_id: true,
       },
     });
 

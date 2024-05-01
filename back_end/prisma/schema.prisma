@@ -13,6 +13,8 @@ model User {
   first_name String
   last_name  String
   email      String   @unique
+  Avatar       Avatar?
+  avatar_id String?   @unique
   password   String
   createdAt  DateTime @default(now())
   updatedAt  DateTime? @updatedAt
@@ -24,6 +26,8 @@ model Channel {
   channel_id      String          @unique
   is_private       Boolean
   group_name      String?
+  Avatar          Avatar?
+  avatar_id String?   @unique
   messages        Message[]
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
@@ -67,7 +71,11 @@ model Otp {
 
 model Avatar {
   id       Int    @id @default(autoincrement())
-  avatar_id String  @unique
   data     Bytes
   mimetype String
+  user_avatar_id String? @unique
+  group_avatar_id String? @unique
+  channel Channel?  @relation(fields: [group_avatar_id], references: [avatar_id])
+  user   User? @relation(fields: [user_avatar_id], references: [avatar_id])
+  @@index([user_avatar_id,group_avatar_id])
 }

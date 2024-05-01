@@ -154,6 +154,9 @@ const getChannelMessages = asyncHandler(async (req, res) => {
                   where: {
                     is_deleted: false,
                   },
+                  include: {
+                    user: true,
+                  },
                 },
               },
             },
