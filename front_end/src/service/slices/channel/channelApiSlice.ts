@@ -4,8 +4,10 @@ const messagesLimit = import.meta.env.VITE_MESSAGES_LIMIT;
 const channelApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserChannels: builder.query({
-      query: (user_id: string) => ({
-        url: `/channel/userchannel/${user_id}`,
+      query: ({ user_id, search }: { user_id: string; search: string }) => ({
+        url: `/channel/userchannel/${user_id}${
+          search ? `?search=${search}` : ""
+        }`,
         method: "GET",
       }),
     }),
@@ -47,14 +49,6 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-
-    getMembersChannel: builder.mutation({
-      query: (members: { user_id: string }[]) => ({
-        url: `/channel/memberschannel`,
-        method: "POST",
-        body: { members },
-      }),
-    }),
     deleteChannel: builder.mutation({
       query: ({
         channelId,
@@ -76,6 +70,5 @@ export const {
   useGetChannelMessagesMutation,
   useGetChannelQuery,
   useGetUserGroupsQuery,
-  useGetMembersChannelMutation,
   useDeleteChannelMutation,
 } = channelApiSlice;

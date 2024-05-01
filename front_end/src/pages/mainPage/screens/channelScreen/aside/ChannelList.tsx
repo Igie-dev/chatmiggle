@@ -3,7 +3,7 @@ import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useDeferredValue, ChangeEvent } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { socket } from "@/socket";
@@ -14,13 +14,20 @@ type Props = {
 export default function ChannelList({ handleAside }: Props) {
   const [channels, setChannels] = useState<TChannelData[]>([]);
   const { user_id } = useAppSelector(getCurrentUser);
-  const { data, isFetching, isError } = useGetUserChannelsQuery(user_id);
+  const [search, setSearch] = useState("");
+  const defferedSearch = useDeferredValue(search);
+  const { data, isFetching, isError } = useGetUserChannelsQuery({
+    user_id,
+    search: defferedSearch,
+  });
   const { channelId } = useParams();
   const navigate = useNavigate();
   //Handle data from api request
   useEffect(() => {
-    if (data?.length >= 1) {
+    if (data) {
       setChannels(data);
+    } else {
+      setChannels([]);
     }
   }, [data]);
 
@@ -112,7 +119,7 @@ export default function ChannelList({ handleAside }: Props) {
 
   //Handle auto select channel when first visit
   useEffect(() => {
-    if (channels?.length <= 0) {
+    if (channels?.length <= 0 || search) {
       navigate("/c");
       return;
     }
@@ -121,15 +128,22 @@ export default function ChannelList({ handleAside }: Props) {
       navigate(`/c/${channels[0]?.channel_id}`);
       return;
     }
-  }, [channelId, channels, navigate]);
+  }, [channelId, channels, navigate, search]);
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTimeout(() => {
+      setSearch(value);
+    }, 500);
+  };
   return (
-    <div onClick={handleAside} className="flex flex-col h-[89%] w-full gap-2 ">
+    <div className="flex flex-col h-[89%] w-full gap-2 ">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
         <h1 className="text-sm font-semibold">Chat</h1>
         <Input
           type="text"
           placeholder="Search..."
+          onChange={(e) => handleChange(e)}
           className="bg-accent/70 h-11"
         />
       </header>
@@ -145,7 +159,13 @@ export default function ChannelList({ handleAside }: Props) {
               </div>
             ) : (
               channels?.map((c: TChannelData) => {
-                return <ChannelCard key={c.id} channel={c} />;
+                return (
+                  <ChannelCard
+                    key={c.id}
+                    channel={c}
+                    handleAside={handleAside}
+                  />
+                );
               })
             )}
           </>

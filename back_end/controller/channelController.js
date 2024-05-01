@@ -6,6 +6,7 @@ const messagesLimit = process.env.MESSAGES_LIMIT;
 
 const getUserChannels = asyncHandler(async (req, res) => {
   const user_id = req.params.userId;
+  const search = req.query.search;
 
   try {
     const foundUser = await prisma.user.findUnique({
@@ -39,25 +40,62 @@ const getUserChannels = asyncHandler(async (req, res) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    include: {
+                      user: true,
+                    },
+                  },
                 },
               },
             },
           },
-          members: true,
+          members: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
-
       if (foundChannel?.messages?.length >= 1) {
         userChannels.push(foundChannel);
       }
     }
 
-    userChannels?.sort(
-      (a, b) => b.messages[0].createdAt - a.messages[0].createdAt
-    );
+    let channels = [];
+    if (search) {
+      const lowercaseSearch = search.toLowerCase();
+      const filteredByGroupName = userChannels?.filter(
+        (c) =>
+          c.group_name?.toLowerCase().includes(lowercaseSearch) && !c.is_private
+      );
+      const filterByName = userChannels?.filter(
+        (c) =>
+          c.is_private &&
+          c.members.some((m) => {
+            return (
+              m.user.first_name.toLowerCase().includes(lowercaseSearch) ||
+              m.user.last_name.toLowerCase().includes(lowercaseSearch)
+            );
+          })
+      );
 
-    return res.status(200).json(userChannels);
+      if (filteredByGroupName.length >= 1 || filterByName.length >= 1) {
+        if (filterByName.length >= 1) {
+          channels = filterByName;
+        }
+        if (filteredByGroupName.length >= 1) {
+          channels = filteredByGroupName;
+        }
+      } else {
+        channels = [];
+      }
+    } else {
+      channels = userChannels;
+    }
+
+    channels?.sort((a, b) => b.messages[0].createdAt - a.messages[0].createdAt);
+
+    return res.status(200).json(channels);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong" });
@@ -238,83 +276,6 @@ const getUserGroups = asyncHandler(async (req, res) => {
   }
 });
 
-const getMembersChannel = asyncHandler(async (req, res) => {
-  const { members } = req.body;
-  if (members?.length < 2) {
-    return res.status(400).json({ message: "Members atleast has 2 users" });
-  }
-  try {
-    const existMembersChannel = await prisma.channel.findFirst({
-      where: {
-        AND: [
-          {
-            members: {
-              some: {
-                user_id: members[0].user_id,
-              },
-            },
-          },
-          {
-            members: {
-              some: {
-                user_id: members[1].user_id,
-              },
-            },
-          },
-          {
-            is_private: true,
-          },
-        ],
-      },
-      select: {
-        channel_id: true,
-        members: {
-          take: 1,
-        },
-      },
-    });
-
-    if (existMembersChannel?.length <= 0) {
-      return res.status(404).json({ message: "No channel found" });
-    }
-    const foundChannel = await prisma.channel.findUnique({
-      where: { channel_id: existMembersChannel?.channel_id },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: "desc",
-          },
-          take: 1,
-          include: {
-            channel: {
-              include: {
-                members: {
-                  where: {
-                    is_deleted: false,
-                  },
-                },
-              },
-            },
-          },
-        },
-        members: {
-          where: {
-            is_deleted: false,
-          },
-        },
-      },
-    });
-    if (!foundChannel?.id) {
-      return reject({ error: "Something went wrong!" });
-    }
-
-    return res.status(200).json(foundChannel);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
-  }
-});
-
 const deleteChannel = asyncHandler(async (req, res) => {
   const channelId = req.params.channelId;
   const userId = req.params.userId;
@@ -419,6 +380,5 @@ export {
   getChannelMessages,
   getChannel,
   getUserGroups,
-  getMembersChannel,
   deleteChannel,
 };
