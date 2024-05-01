@@ -39,7 +39,6 @@ export default function CreateNewChannel({ children }: Props) {
         if (res?.data) {
           const user = res.data as TUser;
           setMate(user);
-          console.log(res);
         }
       } catch (error) {
         console.log(error);
