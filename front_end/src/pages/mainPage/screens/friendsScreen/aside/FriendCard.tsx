@@ -2,39 +2,14 @@
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
-import { useGetMembersChannelMutation } from "@/service/slices/channel/channelApiSlice";
-import { getCurrentUser } from "@/service/slices/user/userSlice";
-import { useAppSelector } from "@/service/store";
-import { useNavigate } from "react-router-dom";
 type Props = {
   user: TChannelMemberData;
 };
 export default function FriendCard({ user }: Props) {
-  const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserByIdQuery(user.user_id);
-  const [getMembersChannel, { isLoading }] = useGetMembersChannelMutation();
-  const navigate = useNavigate();
-  const handleClick = async () => {
-    try {
-      const members: { user_id: string }[] = [
-        {
-          user_id: data?.user_id,
-        },
-        {
-          user_id: user_id,
-        },
-      ];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await getMembersChannel(members);
-      if (res?.data) {
-        navigate(`/c/${res.data.channel_id}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   if (isError) return null;
+  //TODO make navigate to channel if not deleted of exist
+  //TODO if no channel make new channel popup
   return isFetching ? (
     <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
       <div className="overflow-hidden rounded-full w-11 h-11">
@@ -47,12 +22,7 @@ export default function FriendCard({ user }: Props) {
       </div>
     </li>
   ) : (
-    <li
-      onClick={handleClick}
-      className={`flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/70 ${
-        isLoading ? "hover:cursor-wait" : "hover:cursor-pointer"
-      }`}
-    >
+    <li className="flex items-center w-full gap-3 p-2 bg-transparent border rounded-md cursor-pointer h-fit hover:shadow-md hover:bg-accent/70">
       <div className="w-9 h-9">
         <DisplayAvatar id={data?.user_id} />
       </div>
