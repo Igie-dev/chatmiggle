@@ -1,8 +1,7 @@
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { ModeToggle } from "@/components/ui/mode-toggle";
-import { Link, NavLink, useParams } from "react-router-dom";
-import { LayoutList, MessageCircleMore } from "lucide-react";
+import { Link } from "react-router-dom";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { socket } from "@/socket";
 import {
@@ -17,7 +16,6 @@ import SignOutBtn from "@/components/shared/SignOutBtn";
 import { useEffect } from "react";
 export default function Header() {
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
-  const { channelId } = useParams();
 
   const handleCopyId = () => {
     navigator.clipboard.writeText(`${user_id}`);
@@ -36,7 +34,7 @@ export default function Header() {
   }, [user_id]);
 
   return (
-    <header className="flex flex-col w-full h-[12%] gap-4 relative">
+    <header className="flex item-center justify-center w-full h-[10%] relative p-2 rounded-md">
       <div className="flex items-center justify-between w-full h-fit">
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
@@ -102,32 +100,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <nav className="flex items-center w-full h-10 gap-1 justify-evenly">
-        <NavLink
-          to={`${channelId?.length ? `/c/${channelId}` : "/c"}`}
-          className={({ isActive }) =>
-            `flex items-center justify-center border flex-1 h-full rounded-md ${
-              isActive
-                ? "bg-accent/70 border-border"
-                : "hover:bg-accent/70 transition-all border-transparent"
-            }`
-          }
-        >
-          <MessageCircleMore size={20} className="opacity-70" />
-        </NavLink>
-        <NavLink
-          to={`${channelId?.length ? `/f/${channelId}` : "/f"}`}
-          className={({ isActive }) =>
-            `flex items-center justify-center  border flex-1 h-full rounded-md ${
-              isActive
-                ? "bg-accent/70 border-border"
-                : "hover:bg-accent/70 transition-all border-transparent"
-            }`
-          }
-        >
-          <LayoutList size={20} className="opacity-70" />
-        </NavLink>
-      </nav>
     </header>
   );
 }

@@ -124,7 +124,7 @@ export default function ChannelList({ handleAside }: Props) {
   }, [channelId, channels, navigate]);
 
   return (
-    <div onClick={handleAside} className="flex flex-col h-[87%] w-full gap-2 ">
+    <div onClick={handleAside} className="flex flex-col h-[89%] w-full gap-2 ">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
         <h1 className="text-sm font-semibold">Chat</h1>
         <Input

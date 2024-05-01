@@ -52,10 +52,6 @@ export default function Router() {
     () => import("@/pages/mainPage/screens/channelScreen/ChannelScreen")
   );
 
-  const FriendsScreen = lazy(
-    () => import("@/pages/mainPage/screens/friendsScreen/FriendsScreen")
-  );
-
   return (
     <Suspense fallback={<LoaderSpinner />}>
       <BrowserRouter>
@@ -82,12 +78,6 @@ export default function Router() {
               <Route path="/c" element={<ChannelScreen />}>
                 <Route element={<ChatBoxGuard />}>
                   <Route path="/c/:channelId" element={<ChatBoxContainer />} />
-                </Route>
-              </Route>
-              {/* Group List */}
-              <Route path="/f" element={<FriendsScreen />}>
-                <Route element={<ChatBoxGuard />}>
-                  <Route path="/f/:channelId" element={<ChatBoxContainer />} />
                 </Route>
               </Route>
               <Route path="/avatar" element={<AvatarScreen />}>

@@ -25,15 +25,15 @@ export default function ChatboxAside() {
       <Button
         onClick={handleAside}
         size="icon"
-        variant="ghost"
-        className="absolute -left-12 top-2 xl:hidden"
+        variant="outline"
+        className="absolute -left-12 top-2 bg-accent/70 xl:hidden"
       >
         <EllipsisVertical size={20} />
       </Button>
       <Button
         onClick={handleAside}
         size="icon"
-        variant="ghost"
+        variant="outline"
         className="absolute right-2 top-2 xl:hidden"
       >
         <X size={20} />
