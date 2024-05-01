@@ -242,8 +242,6 @@ const socketConnection = (httpServer) => {
           });
         });
     });
-
-    //TODO Fix broadcast the delete channel
     //Handle delete group
     socket.on("delete_group", ({ user_id, channel }) => {
       const members = channel?.members;
@@ -261,17 +259,10 @@ const socketConnection = (httpServer) => {
 
     //Handle delete private channel
     socket.on("delete_channel", ({ user_id, channel }) => {
-      const members = channel?.members;
-      if (members.length >= 1) {
-        for (const member of members) {
-          if (members.user_id === user_id) {
-            io.to(member.user_id).emit("remove_channel", {
-              data: channel,
-            });
-          }
-        }
-      }
-      io.to(socket.id).emit("delete_channel", {
+      io.to(user_id).emit("remove_channel", {
+        data: channel,
+      });
+      io.to(user_id).emit("delete_channel", {
         data: channel,
       });
     });
