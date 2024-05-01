@@ -244,7 +244,7 @@ const getMembersChannel = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Members atleast has 2 users" });
   }
   try {
-    const existMembersChannel = await prisma.channel.findMany({
+    const existMembersChannel = await prisma.channel.findFirst({
       where: {
         AND: [
           {
@@ -267,6 +267,7 @@ const getMembersChannel = asyncHandler(async (req, res) => {
         ],
       },
       select: {
+        channel_id: true,
         members: {
           take: 1,
         },
@@ -276,9 +277,8 @@ const getMembersChannel = asyncHandler(async (req, res) => {
     if (existMembersChannel?.length <= 0) {
       return res.status(404).json({ message: "No channel found" });
     }
-
     const foundChannel = await prisma.channel.findUnique({
-      where: { channel_id: existMembersChannel[0]?.channel_id },
+      where: { channel_id: existMembersChannel?.channel_id },
       include: {
         messages: {
           orderBy: {
@@ -318,7 +318,6 @@ const getMembersChannel = asyncHandler(async (req, res) => {
 const deleteChannel = asyncHandler(async (req, res) => {
   const channelId = req.params.channelId;
   const userId = req.params.userId;
-
   try {
     const foundUser = await prisma.userChannelMember.findFirst({
       where: {
