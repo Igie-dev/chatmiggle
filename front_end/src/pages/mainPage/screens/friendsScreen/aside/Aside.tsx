@@ -16,7 +16,7 @@ export default function AsideNav() {
   return (
     <aside
       ref={asideRef}
-      className="absolute top-0 left-0 z-40 w-full h-full bg-background/90 lg:static lg:translate-x-0  transition-all lg:w-[22rem]"
+      className="absolute top-0 left-0 z-50 w-full h-full bg-background/90 lg:static lg:translate-x-0  transition-all lg:w-[22rem]"
     >
       {/* Close nav button */}
       <Button
