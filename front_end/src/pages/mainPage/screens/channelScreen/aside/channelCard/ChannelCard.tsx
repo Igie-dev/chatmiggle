@@ -8,8 +8,9 @@ import SeenChannel from "@/components/shared/SeenChannel";
 import { EMessageTypes } from "../../../chatBox/chatbox/MessageCard";
 type Props = {
   channel: TChannelData;
+  handleAside: () => void;
 };
-export default function ChannelCard({ channel }: Props) {
+export default function ChannelCard({ channel, handleAside }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const navigate = useNavigate();
   const { channelId } = useParams();
@@ -17,6 +18,7 @@ export default function ChannelCard({ channel }: Props) {
   const today = isToday(channel?.messages[0]?.createdAt);
   const handleClick = () => {
     navigate(`/c/${channel?.channel_id}`);
+    handleAside();
   };
   return (
     <li
