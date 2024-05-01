@@ -29,13 +29,14 @@ export default function ChannelList({ handleAside }: Props) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     socket.on("channel_message", (res: { data: TChannelData }) => {
       if (!res?.data) return;
-      const user = res?.data?.members.filter((m) => m.user_id === user_id);
+      const channel = res?.data as TChannelData;
+      if (!channel?.channel_id) return;
+      const user = channel?.members.filter((m) => m.user_id === user_id);
       if (user.length === 0) return;
-      const newChannelId = res?.data?.channel_id;
+      const newChannelId = channel?.channel_id;
       //If channels empty, add to latest new channel
       if (channels.length <= 0) {
-        const firstChannel = [res.data];
-        setChannels(firstChannel);
+        setChannels([channel]);
         return;
       }
 
@@ -49,11 +50,11 @@ export default function ChannelList({ handleAside }: Props) {
       if (existChannel.length >= 1) {
         const updatedChannels: TChannelData[] = channels.map(
           (c: TChannelData) => {
-            if (c.channel_id === res.data?.channel_id) {
+            if (c.channel_id === channel?.channel_id) {
               //Update messages data of channel
-              const newMessages = res.data?.messages;
+              const newMessages = channel?.messages;
               //Update members data of channel to desplay channel seen
-              const newMembers = res.data?.members;
+              const newMembers = channel?.members;
               // Update the channel with the new messages array
               return { ...c, members: newMembers, messages: newMessages };
             }
@@ -61,10 +62,10 @@ export default function ChannelList({ handleAside }: Props) {
           }
         );
         const channelLatestMessage = updatedChannels.filter(
-          (c) => c.channel_id === res.data?.channel_id
+          (c) => c.channel_id === channel?.channel_id
         );
         const channelsOldMessage = updatedChannels.filter(
-          (c) => c.channel_id !== res.data?.channel_id
+          (c) => c.channel_id !== channel?.channel_id
         );
 
         setChannels([...channelLatestMessage, ...channelsOldMessage]);
@@ -72,15 +73,13 @@ export default function ChannelList({ handleAside }: Props) {
         //Not exist
         //Unshift channel to list
         //Or add the new channel to top
-        const newChannel = [res?.data] as TChannelData[];
+        const newChannel = [channel] as TChannelData[];
         setChannels((prev) => [...newChannel, ...prev]);
       }
     });
 
     socket.on("remove_channel", (res: { data: TChannelData }) => {
       if (res?.data) {
-        //TODO Fix broadcast the delete channel
-        console.log(res.data);
         const members = res.data?.members;
         const isUserRemove = members.filter(
           (m) => m.user_id === user_id && m.is_deleted
@@ -95,7 +94,13 @@ export default function ChannelList({ handleAside }: Props) {
             (c) => c.channel_id !== channel_id
           );
           setChannels(removeChannel);
-          navigate(`/c/${removeChannel[0].channel_id}`);
+          if (removeChannel.length >= 1) {
+            if (channelId === channel_id) {
+              navigate(`/c/${removeChannel[0]?.channel_id}`);
+            }
+          } else {
+            navigate("/c");
+          }
         }
       }
     });
@@ -103,12 +108,18 @@ export default function ChannelList({ handleAside }: Props) {
       socket.off("channel_message");
       socket.off("remove_channel");
     };
-  }, [channels, user_id, navigate]);
+  }, [channels, user_id, navigate, channelId]);
 
   //Handle auto select channel when first visit
   useEffect(() => {
-    if (!channelId && channels?.length && channels[0]?.channel_id) {
-      navigate(`/c/${channels[0].channel_id}`);
+    if (channels?.length <= 0) {
+      navigate("/c");
+      return;
+    }
+
+    if (!channelId && channels?.length >= 0) {
+      navigate(`/c/${channels[0]?.channel_id}`);
+      return;
     }
   }, [channelId, channels, navigate]);
 
