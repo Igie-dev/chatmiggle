@@ -67,6 +67,9 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
                     where: {
                       is_deleted: false,
                     },
+                    include: {
+                      user: true,
+                    },
                   },
                 },
               },
@@ -75,6 +78,9 @@ const createNewGroup = ({ group_name, members, message, sender_id, type }) => {
           members: {
             where: {
               is_deleted: false,
+            },
+            include: {
+              user: true,
             },
           },
         },

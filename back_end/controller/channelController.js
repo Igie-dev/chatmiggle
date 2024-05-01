@@ -253,6 +253,9 @@ const getUserGroups = asyncHandler(async (req, res) => {
                       where: {
                         is_deleted: false,
                       },
+                      include: {
+                        user: true,
+                      },
                     },
                   },
                 },
@@ -315,12 +318,20 @@ const deleteChannel = asyncHandler(async (req, res) => {
           include: {
             channel: {
               include: {
-                members: true,
+                members: {
+                  include: {
+                    user: true,
+                  },
+                },
               },
             },
           },
         },
-        members: true,
+        members: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 

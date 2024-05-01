@@ -46,6 +46,9 @@ const seenControl = ({ channel_id, user_id }) => {
                     where: {
                       is_deleted: false,
                     },
+                    include: {
+                      user: true,
+                    },
                   },
                 },
               },
@@ -54,6 +57,9 @@ const seenControl = ({ channel_id, user_id }) => {
           members: {
             where: {
               is_deleted: false,
+            },
+            include: {
+              user: true,
             },
           },
         },

@@ -80,12 +80,20 @@ const removeFromGroup = ({ channel_id, user_id, type }) => {
             include: {
               channel: {
                 include: {
-                  members: true,
+                  members: {
+                    include: {
+                      user: true,
+                    },
+                  },
                 },
               },
             },
           },
-          members: true,
+          members: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
 

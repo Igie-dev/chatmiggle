@@ -61,6 +61,9 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
                     where: {
                       is_deleted: false,
                     },
+                    include: {
+                      user: true,
+                    },
                   },
                 },
               },
@@ -69,6 +72,9 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
           members: {
             where: {
               is_deleted: false,
+            },
+            include: {
+              user: true,
             },
           },
         },
