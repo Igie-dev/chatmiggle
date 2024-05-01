@@ -5,8 +5,6 @@ import { isToday, formatTime, formatDate } from "@/utils/dateFormat";
 import { useNavigate, useParams } from "react-router-dom";
 import DisplayUserName from "../../../../../../components/shared/DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
-import { Button } from "@/components/ui/button";
-import { EllipsisVertical } from "lucide-react";
 import { EMessageTypes } from "../../../chatBox/chatbox/MessageCard";
 type Props = {
   channel: TChannelData;
@@ -15,11 +13,8 @@ export default function ChannelCard({ channel }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const navigate = useNavigate();
   const { channelId } = useParams();
-
   const mate = channel?.members.filter((m) => m.user_id !== user_id);
-
   const today = isToday(channel?.messages[0]?.createdAt);
-
   const handleClick = () => {
     navigate(`/c/${channel?.channel_id}`);
   };
@@ -66,13 +61,7 @@ export default function ChannelCard({ channel }: Props) {
           </p>
         </div>
       </div>
-      <Button
-        size="icon"
-        variant="outline"
-        className="transition-all border-transparent rounded-full opacity-0 bg-accent/70 group-hover:opacity-100 group-hover:border-border"
-      >
-        <EllipsisVertical size={16} />
-      </Button>
+
       {channel?.messages[0].type === EMessageTypes.TYPE_NOTIF ? null : (
         <SeenChannel
           members={channel.members}
