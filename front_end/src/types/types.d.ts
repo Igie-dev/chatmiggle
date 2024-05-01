@@ -22,6 +22,7 @@ declare global {
     user_id: string;
     first_name: string;
     last_name: string;
+    avatar_id?: string;
     email: string;
     createdAt: Date;
     updatedAt: Date;
@@ -52,12 +53,14 @@ declare global {
     is_seen: boolean;
     is_deleted: boolean;
     is_admin: boolean;
+    user: TUser;
   };
   type TChannelData = {
     id?: number;
     channel_id: string;
     group_name?: string;
     is_private: boolean;
+    avatar_id?: string;
     messages: TMessageData[];
     members: TChannelMemberData[];
     createdAt: string;
