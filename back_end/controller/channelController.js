@@ -72,13 +72,10 @@ const getUserChannels = asyncHandler(async (req, res) => {
         (c) =>
           c.is_private &&
           c.members.some((m) => {
-            return (
-              m.user.first_name.toLowerCase().includes(lowercaseSearch) ||
-              m.user.last_name.toLowerCase().includes(lowercaseSearch)
-            );
+            const fullName = `${m.user.first_name.toLowerCase()} ${m.user.last_name.toLowerCase()}`;
+            return fullName.includes(lowercaseSearch);
           })
       );
-
       if (filteredByGroupName.length >= 1 || filterByName.length >= 1) {
         if (filterByName.length >= 1) {
           channels = filterByName;
