@@ -4,10 +4,8 @@ import { isToday, formatDate, formatTime } from "@/utils/dateFormat";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import SeenMessage from "@/components/shared/SeenMessage";
 import { Bell } from "lucide-react";
-export enum EMessageTypes {
-  TYPE_TEXT = "text",
-  TYPE_NOTIF = "notification",
-}
+import ImageMessage from "./ImageMessage";
+import { EMessageTypes } from "@/types/enums";
 type Props = {
   message: TMessageData;
   lastMessage?: boolean;
@@ -31,7 +29,8 @@ export default function MessageCard({ message, lastMessage }: Props) {
             {message?.message}
           </p>
         </li>
-      ) : message?.type === EMessageTypes.TYPE_TEXT ? (
+      ) : message?.type === EMessageTypes.TYPE_TEXT ||
+        message.type === EMessageTypes.TYPE_IMG ? (
         <li
           id={message.message_id}
           className="flex justify-start w-full h-fit "
@@ -48,7 +47,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
               senderMe ? "flex-row-reverse " : ""
             }`}
           >
-            {message.type === "text" ? (
+            {message?.type === EMessageTypes.TYPE_TEXT ? (
               <pre
                 className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
                   senderMe ? "bg-accent/70" : "bg-transparent"
@@ -56,8 +55,10 @@ export default function MessageCard({ message, lastMessage }: Props) {
               >
                 {message.message}
               </pre>
+            ) : message?.type === EMessageTypes.TYPE_IMG ? (
+              <ImageMessage message={message} />
             ) : null}
-            <div className="absolute  top-[105%] w-fit flex opacity-80">
+            <div className="absolute flex -bottom-4 w-fit opacity-80">
               {lastMessage ? <SeenMessage message={message} /> : null}
               <p className="font-thin text-[10px]">
                 {isToday(message.createdAt)
