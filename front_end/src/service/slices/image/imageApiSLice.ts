@@ -27,6 +27,13 @@ const imageApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["avatar"],
     }),
+    sendImage: builder.mutation({
+      query: (data: FormData) => ({
+        url: `/image/sendimage`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -34,4 +41,5 @@ export const {
   useUploadAvatarMutation,
   useGetAvatarLinkQuery,
   useDeleteAvatarMutation,
+  useSendImageMutation,
 } = imageApiSlice;
