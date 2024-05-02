@@ -129,7 +129,7 @@ export default function MessageList() {
           </button>
         </div>
       ) : null}
-      <ul className="flex flex-col w-full gap-5 px-4 py-2 pb-20 h-fit">
+      <ul className="flex flex-col w-full gap-8 px-4 py-2 pb-20 h-fit">
         {isLoading ? (
           <LoaderSpinner />
         ) : (
