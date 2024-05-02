@@ -229,7 +229,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
 
 const getAvatar = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   try {
     const foundUserAvatar = await prisma.avatar.findUnique({
       where: {
@@ -289,4 +288,29 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     return res.status(500).json({ message: "Something went wrong" });
   }
 });
-export { uploadImage, uploadAvatar, getAvatar, deleteAvatar };
+
+const imageAsAMessage = asyncHandler(async (req, res) => {
+  try {
+    const saveImage = await prisma.avatar.create({
+      data: {
+        data: fs.readFileSync(`${imageData.filePath}`),
+        mimetype: imageData.mimetype,
+      },
+    });
+
+    if (!saveImage?.id) {
+      return res.status(500).json({ message: "Failed to save image" });
+    }
+
+    const foundImage = await prisma.avatar.findUnique({
+      where: { id: saveImage?.id },
+    });
+    const buffer = Buffer.from(foundImage?.data, "binary");
+    const url = bufferToDataURL(buffer, foundImage?.mimetype);
+    return res.status(200).json({ url: url });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+});
+export { uploadImage, uploadAvatar, getAvatar, deleteAvatar, imageAsAMessage };
