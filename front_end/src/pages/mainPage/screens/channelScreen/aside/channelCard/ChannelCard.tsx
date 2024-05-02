@@ -5,7 +5,7 @@ import { isToday, formatTime, formatDate } from "@/utils/dateFormat";
 import { useNavigate, useParams } from "react-router-dom";
 import DisplayUserName from "../../../../../../components/shared/DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
-import { EMessageTypes } from "../../../chatBox/chatbox/MessageCard";
+import { EMessageTypes } from "@/types/enums";
 type Props = {
   channel: TChannelData;
   handleAside: () => void;
@@ -35,7 +35,7 @@ export default function ChannelCard({ channel, handleAside }: Props) {
         {channel.is_private ? (
           <DisplayAvatar id={mate[0]?.user?.avatar_id as string} />
         ) : (
-          <DisplayAvatar id={channel?.avatar_id} />
+          <DisplayAvatar id={channel?.avatar_id as string} />
         )}
       </div>
 
@@ -51,11 +51,18 @@ export default function ChannelCard({ channel, handleAside }: Props) {
         )}
 
         <div className="flex items-end w-full">
-          <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
-            {channel?.messages[0]?.sender_id === user_id
-              ? `You: ${channel?.messages[0]?.message}`
-              : `${channel?.messages[0]?.message}`}
-          </p>
+          {channel?.messages[0]?.type === EMessageTypes.TYPE_TEXT ||
+          channel?.messages[0]?.type === EMessageTypes.TYPE_NOTIF ? (
+            <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
+              {channel?.messages[0]?.sender_id === user_id
+                ? `You: ${channel?.messages[0]?.message}`
+                : `${channel?.messages[0]?.message}`}
+            </p>
+          ) : channel?.messages[0]?.type === EMessageTypes.TYPE_IMG ? (
+            <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
+              Image
+            </p>
+          ) : null}
           <p className="ml-2 text-xs opacity-40">
             {today
               ? `${formatTime(channel?.messages[0]?.createdAt)}`
