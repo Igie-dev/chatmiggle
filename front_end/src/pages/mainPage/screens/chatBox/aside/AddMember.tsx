@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Search, X } from "lucide-react";
+import { Search, UserRoundPlus, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import { asyncEmit } from "@/socket";
+import CustomTooltip from "@/components/shared/CustomTooltip";
 type Props = {
   channelId: string;
   channelAvatarId: string;
@@ -77,8 +78,10 @@ export default function AddMember({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" title="Add new member">
-          <Plus size={20} />
+        <Button size="icon" variant="outline">
+          <CustomTooltip title="Add member">
+            <UserRoundPlus size={20} />
+          </CustomTooltip>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

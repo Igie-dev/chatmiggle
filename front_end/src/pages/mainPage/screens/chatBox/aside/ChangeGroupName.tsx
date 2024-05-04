@@ -16,6 +16,7 @@ import { PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import CustomTooltip from "@/components/shared/CustomTooltip";
 type Props = {
   channelId: string;
   avatarId: string;
@@ -65,7 +66,9 @@ export default function ChangeGroupName({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="icon" variant="outline">
-          <PencilLine size={20} />
+          <CustomTooltip title="Change group name">
+            <PencilLine size={20} />
+          </CustomTooltip>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

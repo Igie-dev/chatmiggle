@@ -23,7 +23,7 @@ type Props = {
   firstName?: string;
   lastName?: string;
   type: "leave" | "remove";
-  userAvatarId: string;
+  userAvatarId?: string;
 };
 export default function LeaveGroup({
   userId,
@@ -82,7 +82,7 @@ export default function LeaveGroup({
             {firstName && lastName ? (
               <div className="flex items-center w-[90%] border p-2 rounded-md mt-5 bg-accent/70 gap-4 ">
                 <div className="w-10 h-10">
-                  <DisplayAvatar id={userAvatarId} />
+                  <DisplayAvatar id={userAvatarId ?? ""} />
                 </div>
                 <div className="flex items-center w-[70%] relative">
                   <p className="w-full max-w-full text-sm truncate max-h-6">

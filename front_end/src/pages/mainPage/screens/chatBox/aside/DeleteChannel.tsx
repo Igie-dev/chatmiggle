@@ -1,6 +1,4 @@
 import { FormEvent, useState } from "react";
-// import { getCurrentUser } from "@/service/slices/user/userSlice";
-// import { useAppSelector } from "@/service/store";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +13,8 @@ import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { useDeleteChannelMutation } from "@/service/slices/channel/channelApiSlice";
 import { asyncEmit } from "@/socket";
+import { Trash } from "lucide-react";
+import CustomTooltip from "@/components/shared/CustomTooltip";
 type Props = {
   channelId: string;
   channelAvatarId: string;
@@ -60,8 +60,10 @@ export default function DeleteChannel({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive" size="sm">
-          <p>Delete</p>
+        <Button size="icon" variant="outline">
+          <CustomTooltip title="Delete channel">
+            <Trash size={20} />
+          </CustomTooltip>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

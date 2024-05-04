@@ -1,19 +1,12 @@
 import MemberCard from "./MemberCard";
-import AddMember from "./AddMember";
-import DeleteChannel from "./DeleteChannel";
 import { useEffect, useState } from "react";
 import { socket } from "@/socket";
-import { useAppSelector } from "@/service/store";
-import { getCurrentUser } from "@/service/slices/user/userSlice";
-import LeaveGroup from "./LeaveGroup";
-import { Button } from "@/components/ui/button";
 type Props = {
   channel: TChannelData;
 };
 export default function GroupMembers({ channel }: Props) {
   const [members, setMembers] = useState<TChannelMemberData[]>([]);
   const [adminId, setAdminId] = useState("");
-  const { user_id } = useAppSelector(getCurrentUser);
 
   useEffect(() => {
     if (members[0]?.channel_id === channel?.channel_id) return;
@@ -52,43 +45,6 @@ export default function GroupMembers({ channel }: Props) {
 
   return (
     <div className="absolute top-0 left-0 flex flex-col w-full h-full gap-2 p-2 bg-background">
-      <div className="flex items-center justify-between pt-2 pb-4 border-b">
-        {adminId === user_id && !channel?.is_private ? (
-          <AddMember
-            channelId={channel?.channel_id}
-            groupName={channel?.group_name as string}
-            channelAvatarId={channel?.avatar_id as string}
-          />
-        ) : (
-          <span />
-        )}
-        {adminId !== user_id && !channel?.is_private ? (
-          <LeaveGroup
-            userId={user_id}
-            channelId={channel?.channel_id}
-            groupName={channel?.group_name as string}
-            cardDescription="Are you sure you want to leave this group?"
-            cardTitle="Leave Group"
-            type="leave"
-            channelAvatarId={channel?.avatar_id as string}
-          >
-            <Button variant="destructive" size="sm">
-              <p>Leave</p>
-            </Button>
-          </LeaveGroup>
-        ) : null}
-
-        {adminId === user_id || channel?.is_private ? (
-          <DeleteChannel
-            channelId={channel?.channel_id}
-            groupName={channel?.group_name as string}
-            userId={channel?.is_private ? user_id : adminId}
-            isPrivate={channel?.is_private}
-            channelAvatarId={channel?.avatar_id as string}
-          />
-        ) : null}
-      </div>
-
       <div className="w-full h-[95%] overflow-auto">
         <ul className="flex flex-col w-full pb-5 h-fit">
           {members?.length >= 1
