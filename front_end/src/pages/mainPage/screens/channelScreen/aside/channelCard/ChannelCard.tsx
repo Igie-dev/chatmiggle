@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
-import { isToday, formatTime, formatDate } from "@/utils/dateFormat";
+import { isToday, formatTime, formatDate } from "@/utils/dateUtil";
 import { useNavigate, useParams } from "react-router-dom";
 import DisplayUserName from "../../../../../../components/shared/DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
