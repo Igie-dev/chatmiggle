@@ -4,7 +4,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (members.lenght <= 1 || !message || !sender_id || !type) {
-        throw new Error("All field are required!");
+        return reject({ error: "All field are required!" });
       }
 
       const existMembersChannel = await prisma.channel.findFirst({
@@ -70,7 +70,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         }
 
         if (!newmessage?.id) {
-          throw new Error("Failed to create channel");
+          return reject({ error: "Failed to create channel" });
         }
       }
       if (!existMembersChannel?.channel_id) {
@@ -84,7 +84,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
         });
 
         if (!createChannel?.id) {
-          throw new Error("Failed to create channel");
+          return reject({ error: "Failed to create channel" });
         }
 
         for await (const user of members) {
@@ -147,8 +147,7 @@ const createNewChannel = ({ members, message, sender_id, type }) => {
       data.message_id = "";
       return resolve({ data: foundChannel });
     } catch (error) {
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong" });
     }
   });
 };

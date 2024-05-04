@@ -3,7 +3,7 @@ const seenControl = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!channel_id || !user_id) {
-        throw new Error("All field are required!");
+        return reject({ error: "All field are required!" });
       }
 
       const foundChannelMember = await prisma.userChannelMember.findMany({
@@ -13,7 +13,7 @@ const seenControl = ({ channel_id, user_id }) => {
       });
 
       if (foundChannelMember?.length <= 0) {
-        throw new Error("Failed to get channel members!");
+        return reject({ error: "Failed to get channel members!" });
       }
 
       const user = foundChannelMember.filter((u) => u.user_id === user_id)[0];
@@ -28,7 +28,7 @@ const seenControl = ({ channel_id, user_id }) => {
       });
 
       if (!updateUserSeen?.id) {
-        throw new Error({ error: "Failed to update seen!" });
+        return reject({ error: "Failed to update seen!" });
       }
 
       const channel = await prisma.channel.findUnique({
@@ -70,8 +70,7 @@ const seenControl = ({ channel_id, user_id }) => {
       }
       return resolve({ data: channel });
     } catch (error) {
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong!" });
     }
   });
 };

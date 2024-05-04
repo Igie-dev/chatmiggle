@@ -4,12 +4,12 @@ const addToGroup = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!channel_id || !user_id) {
-        throw new Error("All field required");
+        return reject({ error: "All field required" });
       }
       const foundUser = await prisma.user.findUnique({ where: { user_id } });
 
       if (!foundUser?.id) {
-        throw new Error("User not found");
+        return reject({ error: "User not found" });
       }
 
       const foundChannel = await prisma.channel.findUnique({
@@ -24,7 +24,7 @@ const addToGroup = ({ channel_id, user_id }) => {
       });
 
       if (!foundChannel?.id) {
-        throw new Error("Channel not found");
+        return reject({ error: "Channel not found" });
       }
 
       const foundUserAsMember = await prisma.userChannelMember.findFirst({
@@ -43,7 +43,7 @@ const addToGroup = ({ channel_id, user_id }) => {
         });
 
         if (!addUserChannel?.id) {
-          throw new Error("Failed to add user to group");
+          return reject({ error: "Failed to add user to group" });
         }
       } else {
         if (foundUserAsMember?.is_deleted) {
@@ -57,7 +57,7 @@ const addToGroup = ({ channel_id, user_id }) => {
           });
 
           if (!updateChannelMember?.id) {
-            throw new Error("Failed to add user to group");
+            return reject({ error: "Failed to add user to group" });
           }
         }
       }
@@ -116,8 +116,7 @@ const addToGroup = ({ channel_id, user_id }) => {
 
       return resolve({ data: foundUpdatedChannel });
     } catch (error) {
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong" });
     }
   });
 };

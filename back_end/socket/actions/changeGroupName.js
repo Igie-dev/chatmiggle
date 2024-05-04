@@ -8,7 +8,7 @@ const changeGroupName = ({ channelId, name, userId }) => {
       });
 
       if (!foundChannel?.id) {
-        throw new Error("Channel not found");
+        return reject({ error: "Channel not found" });
       }
 
       const updateChannel = await prisma.channel.update({
@@ -16,7 +16,7 @@ const changeGroupName = ({ channelId, name, userId }) => {
         data: { group_name: name },
       });
       if (!updateChannel?.id) {
-        throw new Error("Failed to rename group name");
+        return reject({ error: "Failed to rename group name" });
       }
 
       const foundUser = await prisma.user.findUnique({
@@ -76,8 +76,7 @@ const changeGroupName = ({ channelId, name, userId }) => {
       });
       return resolve({ data: foundUpdatedChannel });
     } catch (error) {
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong" });
     }
   });
 };

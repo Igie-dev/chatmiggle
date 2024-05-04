@@ -15,12 +15,12 @@ const removeFromGroup = ({ channel_id, user_id, type }) => {
       });
 
       if (!foundChannel?.id) {
-        throw new Error("Channel not found");
+        return reject({ error: "Channel not found" });
       }
 
       const foundUser = await prisma.user.findUnique({ where: { user_id } });
       if (!foundUser?.id) {
-        throw new Error("User not found");
+        return reject({ error: "User not found" });
       }
 
       //If channel has no member
@@ -104,8 +104,7 @@ const removeFromGroup = ({ channel_id, user_id, type }) => {
       }
       return resolve({ data: foundUpdatedChannel });
     } catch (error) {
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong!" });
     }
   });
 };

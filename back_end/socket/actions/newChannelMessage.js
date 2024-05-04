@@ -4,14 +4,14 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!channel_id || !message || !sender_id || !type) {
-        throw new Error("All field are required!");
+        return reject({ error: "All field are required!" });
       }
       const foundChannel = await prisma.channel.findUnique({
         where: { channel_id },
       });
 
       if (!foundChannel?.id) {
-        throw new Error("Channel not found");
+        return reject({ error: "Channel not found" });
       }
 
       const saveMessage = await prisma.message.create({
@@ -24,7 +24,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
         },
       });
       if (!saveMessage?.id) {
-        throw new Error("Failed to save message!");
+        return reject({ error: "Failed to save message!" });
       }
 
       const foundChannelMember = await prisma.userChannelMember.findMany({
@@ -85,9 +85,7 @@ const newChannelMessage = ({ channel_id, sender_id, message, type }) => {
       }
       return resolve({ data: channel });
     } catch (error) {
-      console.log(error);
-      const errMessage = error.message;
-      return reject({ error: errMessage });
+      return reject({ error: "Something went wrong!" });
     }
   });
 };
