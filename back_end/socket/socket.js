@@ -11,6 +11,7 @@ import seenControl from "./actions/seenControl.js";
 import createNewGroup from "./actions/newGroup.js";
 import removeFromGroup from "./actions/removeFromGroup.js";
 import addToGroup from "./actions/addToGroup.js";
+import changeGroupName from "./actions/changeGroupName.js";
 //Config
 const socketConnection = (httpServer) => {
   const io = new Server(httpServer, {
@@ -89,19 +90,20 @@ const socketConnection = (httpServer) => {
         newChannelMessage({ channel_id, sender_id, message, type })
           .then(async (res) => {
             if (res?.data) {
+              const channel = res.data;
               //The data is a whole channel with latest message
               //Send an emit to client where the channel id was listened
-              io.to(res?.data?.channel_id).emit("new_message", {
-                data: res.data,
+              io.to(channel?.channel_id).emit("new_message", {
+                data: channel,
               });
               io.to(socket.id).emit("send_new_message", {
-                data: res?.data?.channel_id,
+                data: channel?.channel_id,
               });
-              const members = res.data?.members;
+              const members = channel?.members;
               if (members.length >= 1) {
                 for await (const member of members) {
                   io.to(member.user_id).emit("channel_message", {
-                    data: res.data,
+                    data: channel,
                   });
                 }
               }
@@ -123,14 +125,15 @@ const socketConnection = (httpServer) => {
         createNewGroup({ group_name, message, sender_id, type, members })
           .then(async (res) => {
             if (res?.data) {
+              const channel = res.data;
               io.to(socket.id).emit("create_group", {
-                data: res.data,
+                data: channel,
               });
-              const members = res.data?.members;
+              const members = channel?.members;
               if (members.length >= 1) {
                 for await (const member of members) {
                   io.to(member.user_id).emit("channel_message", {
-                    data: res.data,
+                    data: channel,
                   });
                 }
               }
@@ -149,17 +152,18 @@ const socketConnection = (httpServer) => {
       seenControl({ channel_id, user_id })
         .then(async (res) => {
           if (res?.data) {
+            const channel = res.data;
             io.to(socket.id).emit("seen", {
-              data: res?.data,
+              data: channel,
             });
-            io.to(res.data?.channel_id).emit("seen_channel", {
-              data: res.data,
+            io.to(channel?.channel_id).emit("seen_channel", {
+              data: channel,
             });
-            const members = res.data?.members;
+            const members = channel?.members;
             if (members.length >= 1) {
               for await (const member of members) {
                 io.to(member.user_id).emit("message_seen", {
-                  data: res.data,
+                  data: channel,
                 });
               }
             }
@@ -177,21 +181,22 @@ const socketConnection = (httpServer) => {
       addToGroup({ user_id, channel_id })
         .then(async (res) => {
           if (res?.data) {
+            const channel = res.data;
             io.to(socket.id).emit("add_to_group", {
-              data: res?.data,
+              data: channel,
             });
-            const channelId = res.data?.channel_id;
-            io.to(channelId).emit("new_message", {
-              data: res.data,
+
+            io.to(channel?.channel_id).emit("new_message", {
+              data: channel,
             });
-            const members = res.data?.members;
+            const members = channel?.members;
             if (members.length >= 1) {
               for await (const member of members) {
                 io.to(member.user_id).emit("channel_message", {
-                  data: res.data,
+                  data: channel,
                 });
                 io.to(member.user_id).emit("add_member", {
-                  data: res.data,
+                  data: channel,
                 });
               }
             }
@@ -209,27 +214,27 @@ const socketConnection = (httpServer) => {
       removeFromGroup({ user_id, channel_id, type })
         .then(async (res) => {
           if (res?.data) {
+            const channel = res.data;
             io.to(socket.id).emit("leave_group", {
-              data: res?.data,
+              data: channel,
             });
-            const channelId = res.data?.channel_id;
-            io.to(channelId).emit("new_message", {
-              data: res.data,
-            });
-            const members = res?.data?.members;
 
+            io.to(channel?.channel_id).emit("new_message", {
+              data: channel,
+            });
+            const members = channel?.members;
             if (members.length >= 1) {
               for await (const member of members) {
                 if (member.is_deleted) {
                   io.to(member.user_id).emit("remove_channel", {
-                    data: res.data,
+                    data: channel,
                   });
                 } else {
                   io.to(member.user_id).emit("channel_message", {
-                    data: res.data,
+                    data: channel,
                   });
                   io.to(member.user_id).emit("remove_member", {
-                    data: res.data,
+                    data: channel,
                   });
                 }
               }
@@ -262,9 +267,42 @@ const socketConnection = (httpServer) => {
       io.to(user_id).emit("remove_channel", {
         data: channel,
       });
-      io.to(user_id).emit("delete_channel", {
+      io.to(socket.id).emit("delete_channel", {
         data: channel,
       });
+    });
+
+    //Handle change group name
+
+    socket.on("change_group_name", async ({ channelId, name, userId }) => {
+      changeGroupName({ channelId, name, userId })
+        .then(async (res) => {
+          if (res?.data) {
+            const channel = res?.data;
+            const members = channel?.members;
+            io.to(socket.id).emit("change_group_name", {
+              data: channel,
+            });
+            io.to(channelId).emit("new_message", {
+              data: res.data,
+            });
+            if (members.length >= 1) {
+              for await (const member of members) {
+                io.to(member.user_id).emit("new_group_name", {
+                  data: channel,
+                });
+                io.to(member.user_id).emit("channel_message", {
+                  data: res.data,
+                });
+              }
+            }
+          }
+        })
+        .catch((error) => {
+          io.to(socket.id).emit("leave_group", {
+            error: error.error,
+          });
+        });
     });
   });
 };
