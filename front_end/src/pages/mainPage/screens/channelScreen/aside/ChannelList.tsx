@@ -62,8 +62,15 @@ export default function ChannelList({ handleAside }: Props) {
               const newMessages = channel?.messages;
               //Update members data of channel to desplay channel seen
               const newMembers = channel?.members;
+
+              const newGroupName = channel?.group_name;
               // Update the channel with the new messages array
-              return { ...c, members: newMembers, messages: newMessages };
+              return {
+                ...c,
+                group_name: newGroupName,
+                members: newMembers,
+                messages: newMessages,
+              };
             }
             return c;
           }
