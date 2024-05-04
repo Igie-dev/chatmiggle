@@ -66,7 +66,7 @@ const uploadImage = multer({
         console.log(err);
       }
     });
-    return res.status(500).json({ message: "Failed to upload files!" });
+    return res.status(500).json({ error: "Failed to upload files!" });
   },
 });
 
@@ -138,10 +138,10 @@ const uploadAvatar = asyncHandler(async (req, res) => {
             },
           });
           if (!updateAvatar?.id) {
-            return res.status(500).json({ message: "Something went wrong" });
+            return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ message: "Upload success" });
+          return res.status(201).json({ error: "Upload success" });
         } else {
           const updateAvatar = await prisma.avatar.update({
             where: { user_avatar_id: avatarId },
@@ -152,14 +152,14 @@ const uploadAvatar = asyncHandler(async (req, res) => {
           });
 
           if (!updateAvatar?.id) {
-            return res.status(500).json({ message: "Something went wrong" });
+            return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ message: "Upload success" });
+          return res.status(201).json({ error: "Upload success" });
         }
       } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Something went wrong" });
+        return res.status(500).json({ error: "Something went wrong" });
       }
     }
 
@@ -184,10 +184,10 @@ const uploadAvatar = asyncHandler(async (req, res) => {
           });
 
           if (!saveImage?.id) {
-            return res.status(500).json({ message: "Something went wrong" });
+            return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ message: "Upload success" });
+          return res.status(201).json({ error: "Upload success" });
         } else {
           const newId = uuid();
           await prisma.user.update({
@@ -205,25 +205,25 @@ const uploadAvatar = asyncHandler(async (req, res) => {
           });
 
           if (!saveImage?.id) {
-            return res.status(500).json({ message: "Something went wrong" });
+            return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ message: "Upload success" });
+          return res.status(201).json({ error: "Upload success" });
         }
       } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Something went wrong" });
+        return res.status(500).json({ error: "Something went wrong" });
       }
     }
     //?
 
     if (!foundChannel?.id && !foundUser?.id) {
-      return res.status(404).json({ message: "User or Channel not found" });
+      return res.status(404).json({ error: "User or Channel not found" });
     }
   } catch (error) {
     deleteFile();
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -242,7 +242,7 @@ const getAvatar = asyncHandler(async (req, res) => {
     });
 
     if (!foundUserAvatar?.id && !foundGroupAvatar?.id) {
-      return res.status(404).json({ message: "Avatar not found" });
+      return res.status(404).json({ error: "Avatar not found" });
     }
 
     if (foundGroupAvatar?.id) {
@@ -259,7 +259,7 @@ const getAvatar = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -272,7 +272,7 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     });
 
     if (!foundAvatar?.id) {
-      return res.status(404).json({ message: "Avatar not found" });
+      return res.status(404).json({ error: "Avatar not found" });
     }
 
     const deleteAvatar = await prisma.avatar.delete({
@@ -280,12 +280,12 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     });
 
     if (!deleteAvatar?.id) {
-      return res.status(500).json({ message: "Something went wrong" });
+      return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ message: "Avatar removed" });
+    return res.status(200).json({ error: "Avatar removed" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -299,7 +299,7 @@ const imageAsAMessage = asyncHandler(async (req, res) => {
     });
 
     if (!saveImage?.id) {
-      return res.status(500).json({ message: "Failed to save image" });
+      return res.status(500).json({ error: "Failed to save image" });
     }
 
     const foundImage = await prisma.avatar.findUnique({
@@ -310,7 +310,7 @@ const imageAsAMessage = asyncHandler(async (req, res) => {
     return res.status(200).json({ url: url });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 export { uploadImage, uploadAvatar, getAvatar, deleteAvatar, imageAsAMessage };

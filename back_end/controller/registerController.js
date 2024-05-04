@@ -9,7 +9,7 @@ const saltRounds = Number(process.env.SALTROUND);
 const requestVerifyEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    return res.status(400).json({ message: "All field are required!" });
+    return res.status(400).json({ error: "All field are required!" });
   }
   try {
     const foundDuplicateEmail = await prisma.user.findUnique({
@@ -19,7 +19,7 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
     if (foundDuplicateEmail?.id) {
       return res
         .status(409)
-        .json({ message: "This email already has an account" });
+        .json({ error: "This email already has an account" });
     }
 
     const foundOtpExist = await prisma.otp.findUnique({ where: { email } });
@@ -42,11 +42,11 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
 
     return res.status(200).json({
       email,
-      message: "Otp sent",
+      error: "Otp sent",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -54,19 +54,19 @@ const register = asyncHandler(async (req, res) => {
   const { first_name, last_name, email, password, otp } = req.body;
 
   if (!first_name || !last_name || !email || !password || !otp) {
-    return res.status(400).json({ message: "All field are required!" });
+    return res.status(400).json({ error: "All field are required!" });
   }
   try {
     const foundOtpExist = await prisma.otp.findUnique({ where: { email } });
 
     if (!foundOtpExist?.id) {
-      return res.status(400).json({ message: "Invalid provided otp" });
+      return res.status(400).json({ error: "Invalid provided otp" });
     }
 
     const compareOtp = await bcrypt.compare(otp, foundOtpExist?.otp);
 
     if (!compareOtp) {
-      return res.status(400).json({ message: "Invalid Otp!" });
+      return res.status(400).json({ error: "Invalid Otp!" });
     }
 
     const today = dateNow();
@@ -77,9 +77,7 @@ const register = asyncHandler(async (req, res) => {
       (today.getMinutes() > otpDate.getMinutes() + 5);
 
     if (isExpired) {
-      return res
-        .status(400)
-        .json({ message: "Otp expired! Please try again!" });
+      return res.status(400).json({ error: "Otp expired! Please try again!" });
     }
 
     const decriptPass = await bcrypt.hash(password, Number(saltRounds));
@@ -102,14 +100,14 @@ const register = asyncHandler(async (req, res) => {
     });
 
     if (!createUser?.id) {
-      return res.status(500).json({ message: "Something went wrong" });
+      return res.status(500).json({ error: "Something went wrong" });
     }
 
     await prisma.otp.delete({ where: { email } });
-    return res.status(201).json({ email, message: "Registered" });
+    return res.status(201).json({ email, error: "Registered" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 

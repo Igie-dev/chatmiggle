@@ -32,13 +32,13 @@ const getUsers = asyncHandler(async (req, res) => {
     const users = await prisma.user.findMany(query);
 
     if (users?.length <= 0) {
-      return res.status(404).json({ message: "No users found" });
+      return res.status(404).json({ error: "No users found" });
     }
     const newCursor = users[users?.length - 1]?.id;
     return res.status(200).json({ cursor: newCursor, users: users });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -61,13 +61,13 @@ const getUser = asyncHandler(async (req, res) => {
     });
 
     if (!foundUser?.id) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     return res.status(200).json(foundUser);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -75,7 +75,7 @@ const updateUser = asyncHandler(async (req, res) => {
   const { user_id, first_name, last_name } = req.body;
 
   if (!user_id || !first_name || !last_name) {
-    return res.status(400).json({ message: "All field are required" });
+    return res.status(400).json({ error: "All field are required" });
   }
   try {
     const update = await prisma.user.update({
@@ -84,12 +84,12 @@ const updateUser = asyncHandler(async (req, res) => {
     });
 
     if (!update?.id) {
-      return res.status(500).json({ message: "Something went wrong" });
+      return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ message: "Successfully updated user" });
+    return res.status(200).json({ error: "Successfully updated user" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -100,18 +100,18 @@ const deleteUser = asyncHandler(async (req, res) => {
     const foundUser = await prisma.user.findUnique({ where: { user_id } });
 
     if (!foundUser?.id) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const deletedUser = await prisma.user.delete({ where: { user_id } });
 
     if (!deletedUser?.id) {
-      return res.status(500).json({ message: "Something went wrong" });
+      return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ message: "Successfully deleted user" });
+    return res.status(200).json({ error: "Successfully deleted user" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -130,7 +130,7 @@ const getUserFriends = asyncHandler(async (req, res) => {
     });
 
     if (!foundUser?.id || foundUser?.membered_channel?.length <= 0) {
-      return res.status(404).json({ message: "No friends found" });
+      return res.status(404).json({ error: "No friends found" });
     }
     const userChannels = [];
     for await (const channel of foundUser?.membered_channel) {
@@ -165,7 +165,7 @@ const getUserFriends = asyncHandler(async (req, res) => {
     }
 
     if (userChannels?.length <= 0) {
-      return res.status(404).json({ message: "No friends found" });
+      return res.status(404).json({ error: "No friends found" });
     }
 
     userChannels?.sort(
@@ -181,13 +181,13 @@ const getUserFriends = asyncHandler(async (req, res) => {
     }
 
     if (mates?.length <= 0) {
-      return res.status(404).json({ message: "No friends found" });
+      return res.status(404).json({ error: "No friends found" });
     }
 
     return res.status(200).json(mates);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 export { getUsers, updateUser, deleteUser, getUser, getUserFriends };

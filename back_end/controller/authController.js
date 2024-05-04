@@ -9,20 +9,20 @@ const signIn = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   if (!email | !password) {
-    return res.status(400).json({ message: "Please provide all fields" });
+    return res.status(400).json({ error: "Please provide all fields" });
   }
 
   try {
     const foundUser = await prisma.user.findUnique({ where: { email } });
 
     if (!foundUser?.id) {
-      return res.status(401).json({ message: "Invalid login credintials" });
+      return res.status(401).json({ error: "Invalid login credintials" });
     }
 
     const isCorrectPass = await bcrypt.compare(password, foundUser?.password);
 
     if (!isCorrectPass) {
-      return res.status(401).json({ message: "Invalid login credintials" });
+      return res.status(401).json({ error: "Invalid login credintials" });
     }
 
     const accessToken = jwt.sign(
@@ -59,14 +59,14 @@ const signIn = asyncHandler(async (req, res) => {
     return res.status(200).json({ accessToken });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
 const refresh = asyncHandler(async (req, res) => {
   const cookies = req.cookies;
   if (!cookies?.jwt) {
-    return res.status(401).json({ message: "Unauthorized!" });
+    return res.status(401).json({ error: "Unauthorized!" });
   }
   try {
     const refreshToken = cookies.jwt;
@@ -75,11 +75,11 @@ const refresh = asyncHandler(async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
       async (error, decoded) => {
         if (error) {
-          return res.status(403).json({ message: "Forbidden!" });
+          return res.status(403).json({ error: "Forbidden!" });
         }
         const userId = decoded.user_id;
         if (!userId) {
-          return res.status(401).json({ message: "Unauthorized!" });
+          return res.status(401).json({ error: "Unauthorized!" });
         }
         const foundUser = await prisma.user.findUnique({
           where: { user_id: userId },
@@ -90,7 +90,7 @@ const refresh = asyncHandler(async (req, res) => {
             sameSite: "None",
             secure: true,
           });
-          return res.status(401).json({ message: "Cookie cleared!" });
+          return res.status(401).json({ error: "Cookie cleared!" });
         }
 
         const accessToken = jwt.sign(
@@ -111,7 +111,7 @@ const refresh = asyncHandler(async (req, res) => {
     );
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -122,10 +122,10 @@ const signOut = asyncHandler(async (req, res) => {
       return res.sendStatus(204);
     }
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-    return res.json({ message: "Cookie cleared!" });
+    return res.json({ error: "Cookie cleared!" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 

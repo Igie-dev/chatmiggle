@@ -24,7 +24,7 @@ const getUserChannels = asyncHandler(async (req, res) => {
     });
 
     if (!foundUser?.id || foundUser?.membered_channel?.length <= 0) {
-      return res.status(404).json({ message: "No channel found" });
+      return res.status(404).json({ error: "No channel found" });
     }
 
     const userChannels = [];
@@ -95,7 +95,7 @@ const getUserChannels = asyncHandler(async (req, res) => {
     return res.status(200).json(channels);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -117,17 +117,17 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
     });
 
     if (!foundChannel?.id) {
-      return res.status(404).json({ message: "Channel not found" });
+      return res.status(404).json({ error: "Channel not found" });
     }
 
     if (foundChannel?.members?.length <= 0) {
-      return res.status(401).json({ message: "Unauthorized!" });
+      return res.status(401).json({ error: "Unauthorized!" });
     }
 
     return res.status(200).json({ channel_id: channel_id });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -172,7 +172,7 @@ const getChannelMessages = asyncHandler(async (req, res) => {
     const foundChannel = await prisma.channel.findUnique(query);
 
     if (!foundChannel?.id) {
-      return res.status(404).json({ message: "Channel not found" });
+      return res.status(404).json({ error: "Channel not found" });
     }
 
     const nextCursorId =
@@ -185,7 +185,7 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       .json({ messages: foundChannel.messages, cursor: nextCursorId });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -204,13 +204,13 @@ const getChannel = asyncHandler(async (req, res) => {
     });
 
     if (!foundChannel?.id) {
-      return res.status(404).json({ message: "Channel not found" });
+      return res.status(404).json({ error: "Channel not found" });
     }
 
     return res.status(200).json(foundChannel);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -229,7 +229,7 @@ const getUserGroups = asyncHandler(async (req, res) => {
     });
 
     if (!foundUser?.id || foundUser?.membered_channel?.length <= 0) {
-      return res.status(404).json({ message: "No channel found" });
+      return res.status(404).json({ error: "No channel found" });
     }
 
     const userChannels = [];
@@ -282,7 +282,7 @@ const getUserGroups = asyncHandler(async (req, res) => {
     return res.status(200).json(userChannels);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
@@ -301,7 +301,7 @@ const deleteChannel = asyncHandler(async (req, res) => {
     });
 
     if (!foundUser?.id) {
-      return res.status(404).json({ message: "User not admin" });
+      return res.status(404).json({ error: "User not admin" });
     }
 
     const foundChannel = await prisma.channel.findUnique({
@@ -333,7 +333,7 @@ const deleteChannel = asyncHandler(async (req, res) => {
     });
 
     if (!foundChannel?.id) {
-      return res.status(404).json({ message: "Channel not found" });
+      return res.status(404).json({ error: "Channel not found" });
     }
 
     //Channel is private
@@ -370,9 +370,7 @@ const deleteChannel = asyncHandler(async (req, res) => {
 
     //Channel is group
     if (!foundUser?.is_admin) {
-      return res
-        .status(500)
-        .json({ message: "Failed to delete user not admin" });
+      return res.status(500).json({ error: "Failed to delete user not admin" });
     }
 
     //Delete channel if channel is group
@@ -388,7 +386,7 @@ const deleteChannel = asyncHandler(async (req, res) => {
     return res.status(200).json(channel);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 });
 
