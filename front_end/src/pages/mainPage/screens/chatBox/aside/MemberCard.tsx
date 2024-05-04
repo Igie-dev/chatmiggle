@@ -25,6 +25,7 @@ export default function MemberCard({
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserByIdQuery(userId);
 
+  console.log(data);
   if (isError) return null;
   return isFetching ? (
     <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
@@ -66,6 +67,7 @@ export default function MemberCard({
           lastName={data?.last_name}
           channelAvatarId={channelAvatarId}
           type="remove"
+          userAvatarId={data?.avatar_id as string}
         >
           <Button
             size="icon"
