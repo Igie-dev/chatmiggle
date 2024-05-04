@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import prisma from "../lib/prisma.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { dateNow, formatDate } from "../lib/formatDate.js";
+import { dateNow, formatDate } from "../utils/dateUtil.js";
 import otpEmail from "../lib/otpMailer.js";
 const saltRounds = Number(process.env.SALTROUND);
 
