@@ -22,12 +22,10 @@ export default function MessageCard({ message, lastMessage }: Props) {
       {message?.type === EMessageTypes.TYPE_NOTIF ? (
         <li
           id={message.message_id}
-          className="flex flex-col items-center justify-center w-full h-16"
+          className="flex flex-col items-center justify-center w-full h-16 opacity-70"
         >
-          <Bell size={20} strokeWidth={1} className="opacity-50" />
-          <p className="text-[10px] font-light opacity-50">
-            {message?.message}
-          </p>
+          <Bell size={20} strokeWidth={1} />
+          <p className="text-[10px] font-light ">{message?.message}</p>
         </li>
       ) : message?.type === EMessageTypes.TYPE_TEXT ||
         message.type === EMessageTypes.TYPE_IMG ? (
