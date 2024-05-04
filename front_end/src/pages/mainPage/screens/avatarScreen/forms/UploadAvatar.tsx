@@ -66,7 +66,7 @@ export default function UploadAvatar() {
       </div>
       {isError ? (
         <p className="text-sm text-destructive ">
-          Error: {error?.data?.message}
+          Error: {error?.data?.error ?? "Something went wrong"}
         </p>
       ) : null}
       {preview ? (

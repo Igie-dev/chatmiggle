@@ -66,7 +66,7 @@ export default function VerifyOtp() {
           </p>
         </div>
         {isError ? (
-          <p className="text-sm text-destructive">{error?.data?.message}</p>
+          <p className="text-sm text-destructive">{error?.data?.error}</p>
         ) : null}
       </header>
       <main className="flex flex-col items-center w-full gap-8">

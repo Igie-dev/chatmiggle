@@ -7,7 +7,7 @@ import { Outlet, useParams } from "react-router-dom";
 export default function ChatBoxGuard() {
   const { user_id } = useAppSelector(getCurrentUser);
   const { channelId } = useParams();
-  const { data, isFetching, isError } = useVerifyUserInChannelQuery({
+  const { data, isFetching, isError, error } = useVerifyUserInChannelQuery({
     channel_id: channelId as string,
     user_id,
   });
@@ -19,7 +19,9 @@ export default function ChatBoxGuard() {
   ) : (
     <div className="flex items-center justify-start w-full h-full pt-[20%] lg:pt-[15%] flex-col gap-1">
       <Hand size={50} className="opacity-70" />
-      <p className="mt-2 text-lg font-semibold opacity-70">Unauthorized</p>
+      <p className="mt-2 text-lg font-semibold opacity-70">
+        {error?.data?.error ?? "Unauthorize"}
+      </p>
       <p className="text-xs opacity-70">
         It appears that you are not allowed to view this conversation
       </p>

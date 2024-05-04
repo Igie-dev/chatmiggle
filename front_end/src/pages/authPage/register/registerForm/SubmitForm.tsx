@@ -43,7 +43,7 @@ export default function SubmitForm() {
           isError ? "text-destructive" : ""
         } `}
       >
-        {error?.data?.message}
+        {error?.data?.error}
       </p>
 
       <div className="flex flex-col items-center w-full gap-2">

@@ -49,7 +49,9 @@ export default function RemoveAvatar() {
       </div>
 
       {isError ? (
-        <p className="text-sm text-destructive ">Error: {error.data.message}</p>
+        <p className="text-sm text-destructive ">
+          Error: {error?.data?.error ?? "Something went wrong"}
+        </p>
       ) : null}
       <div className="border border-border overflow-hidden w-full h-[25rem] rounded-md flex items-center justify-center">
         {isFetching ? (

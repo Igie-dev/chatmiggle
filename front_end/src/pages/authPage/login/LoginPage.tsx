@@ -53,7 +53,7 @@ export default function LoginPage() {
       >
         <h1 className="text-2xl font-bold">Welcome to ChatMiggle</h1>
         <h3 className="text-lg font-semibold">Log In</h3>
-        <p className="my-2 text-sm text-destructive">{error?.data?.message}</p>
+        <p className="my-2 text-sm text-destructive">{error?.data?.error}</p>
         <main className="flex flex-col items-start w-full gap-2">
           <div className="relative w-[95%] flex flex-col pb-4  pl-4 ">
             <Label htmlFor="email" className="text-sm font-semibold">
