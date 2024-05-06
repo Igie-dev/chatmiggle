@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
 import MessageCard from "./MessageCard";
 import { MessageSquare } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { socket } from "@/socket";
 import { useGetChannelMessagesMutation } from "@/service/slices/channel/channelApiSlice";
 export default function MessageList() {
@@ -58,7 +58,7 @@ export default function MessageList() {
     };
   }, [getMessages, channelId]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     //handle scroll to bottom
     if (targetScroll) {
       const targetEl = document.getElementById(targetScroll) as HTMLElement;
