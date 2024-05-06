@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import Header from "@/components/shared/Header";
+import Header from "./Header";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import NewChannelButtons from "./newChannel/NewChannelButtons";
@@ -17,7 +17,7 @@ export default function AsideNav() {
   return (
     <aside
       ref={asideRef}
-      className="absolute top-0 left-0 z-50 w-full h-full bg-background/90 transition-all lg:static lg:translate-x-0 lg:w-[22rem]"
+      className="absolute top-0 left-0 z-50 w-full h-full  bg-background/90 rounded-md transition-all lg:border lg:static lg:translate-x-0 lg:w-[22rem]"
     >
       {/* Close nav button */}
       <Button
@@ -28,7 +28,7 @@ export default function AsideNav() {
       >
         <ChevronRight size={20} />
       </Button>
-      <div className="flex flex-col h-full w-[22rem] gap-2 py-2 px-2 bg-background/90 border-r lg:border-none lg:w-full relative ">
+      <div className="flex flex-col h-full w-[22rem] gap-2 py-2 px-2 border-r bg-background rounded-md lg:border-none lg:w-full relative ">
         {/* Open nav button */}
         <Button
           onClick={handleAside}

@@ -15,7 +15,7 @@ import {
 import SignOutBtn from "@/components/shared/SignOutBtn";
 import { useEffect } from "react";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Header() {
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
   const { data, isLoading } = useGetUserByIdQuery(user_id);
@@ -35,7 +35,7 @@ export default function Header() {
     };
   }, [user_id]);
   return (
-    <header className="flex item-center justify-center w-full h-[10%] relative p-2 rounded-md">
+    <header className="flex items-center justify-center w-full h-[10%] relative border bg-secondary p-2 rounded-md">
       <div className="flex items-center justify-between w-full h-fit">
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
@@ -61,10 +61,7 @@ export default function Header() {
                   <span className="text-xs">Profile</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="p-0 ">
-                <ModeToggle />
-              </DropdownMenuItem>
-
+              <ModeToggle />
               <DropdownMenuItem asChild>
                 <Link
                   to={`/avatar/upload/${user_id}`}

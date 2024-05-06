@@ -49,7 +49,7 @@ function Header({ channel, isFetching }: Props) {
   }, [channel]);
 
   return (
-    <header className="flex flex-col items-center justify-between w-full gap-5 px-5 py-4 border rounded-md h-fit bg-accent/50">
+    <header className="flex flex-col items-center justify-between w-full gap-5 px-5 py-4 border rounded-md bg-secondary h-fit">
       <div className="flex flex-col items-center justify-center w-full gap-2 ">
         <div className="w-16 h-16 overflow-hidden border rounded-full">
           {isFetching ? (

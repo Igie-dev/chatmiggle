@@ -40,7 +40,7 @@ export default function ChatboxAside() {
       </Button>
       <Header channel={data} isFetching={isFetching} />
       {data?.channel_id ? (
-        <div className="relative flex-1 w-full px-2 pt-5 overflow-auto border rounded-md bg-accent/50">
+        <div className="relative flex-1 w-full px-2 pt-5 overflow-auto ">
           <GroupMembers channel={data} />
         </div>
       ) : null}

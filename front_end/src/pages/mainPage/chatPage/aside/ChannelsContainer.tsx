@@ -14,14 +14,14 @@ export default function ChannelsContainer({ handleAside }: Props) {
     }, 500);
   };
   return (
-    <div className="flex flex-col h-[89%] w-full gap-2 ">
+    <div className="flex flex-col h-[89%] w-full gap-2">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
-        <h1 className="text-sm font-semibold">Chat</h1>
+        <h1 className="text-lg font-semibold">Chat</h1>
         <Input
           type="text"
           placeholder="Search..."
           onChange={(e) => handleChange(e)}
-          className="bg-accent/70 h-11"
+          className="h-12 border"
         />
       </header>
       <ChannelList searchText={defferedSearch} handleAside={handleAside} />
