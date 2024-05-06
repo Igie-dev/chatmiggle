@@ -32,23 +32,23 @@ export default function Router() {
     () => import("@/pages/authPage/register/RegisterVeryOtp")
   );
 
-  const AvatarPage = lazy(
-    () => import("@/pages/mainPage/avatarPage/AvatarPage")
-  );
+  const AvatarPage = lazy(() => import("@/pages/avatarPage/AvatarPage"));
 
   const UploadAvatar = lazy(
-    () => import("@/pages/mainPage/avatarPage/screen/UploadAvatar")
+    () => import("@/pages/avatarPage/screen/UploadAvatar")
   );
 
   const RemovedAvatar = lazy(
-    () => import("@/pages/mainPage/avatarPage/screen/RemoveAvatar")
+    () => import("@/pages/avatarPage/screen/RemoveAvatar")
   );
 
   const ChatBoxContainer = lazy(
-    () => import("@/pages/mainPage/chatPage/screens/chatBox/ChatBoxContainer")
+    () => import("@/pages/chatPage/screens/chatBox/ChatBoxContainer")
   );
 
-  const ChatPage = lazy(() => import("@/pages/mainPage/chatPage/ChatPage"));
+  const ChatPage = lazy(() => import("@/pages/chatPage/ChatPage"));
+
+  const ProfilePage = lazy(() => import("@/pages/profilePage/ProfilePage"));
 
   return (
     <Suspense fallback={<LoaderSpinner />}>
@@ -82,6 +82,8 @@ export default function Router() {
                 <Route path="/avatar/upload/:id" element={<UploadAvatar />} />
                 <Route path="/avatar/remove/:id" element={<RemovedAvatar />} />
               </Route>
+
+              <Route path="/profile/:id" element={<ProfilePage />} />
             </Route>
           </Route>
         </Routes>
