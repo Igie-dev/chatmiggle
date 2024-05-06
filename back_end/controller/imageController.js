@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import prisma from "../lib/prisma.js";
+import prisma from "../utils/prisma.js";
 import { v4 as uuid } from "uuid";
 import dotenv from "dotenv";
 dotenv.config();

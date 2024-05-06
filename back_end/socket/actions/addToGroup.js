@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import prisma from "../../utils/prisma.js";
 import { v4 as uuid } from "uuid";
 const addToGroup = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {

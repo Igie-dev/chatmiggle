@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import prisma from "../../utils/prisma.js";
 import { v4 as uuid } from "uuid";
 
 const createNewGroup = ({ group_name, members, message, sender_id, type }) => {

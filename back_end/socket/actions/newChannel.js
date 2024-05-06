@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import prisma from "../../utils/prisma.js";
 import { v4 as uuid } from "uuid";
 const createNewChannel = ({ members, message, sender_id, type }) => {
   return new Promise(async (resolve, reject) => {
