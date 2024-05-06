@@ -8,12 +8,20 @@ import {
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
+import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 export default function RemoveAvatar() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [remove, { isLoading, isError, isSuccess, error }] =
     useDeleteAvatarMutation();
-  const { data, isFetching } = useGetAvatarLinkQuery(id as string);
+  const {
+    data: user,
+    isLoading: getUserIsLoading,
+    error: getUserError,
+  } = useGetUserByIdQuery(id as string);
+  const { data, isFetching } = useGetAvatarLinkQuery(user?.avatar_id, {
+    skip: !user?.avatar_id,
+  });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!id) return;
@@ -39,7 +47,7 @@ export default function RemoveAvatar() {
           type="button"
           size="icon"
           variant="ghost"
-          disabled={isLoading}
+          disabled={isLoading || getUserIsLoading}
           onClick={() => navigate(-1)}
           className="absolute left-0"
         >
@@ -50,11 +58,14 @@ export default function RemoveAvatar() {
 
       {isError ? (
         <p className="text-sm text-destructive ">
-          Error: {error?.data?.error ?? "Something went wrong"}
+          Error:
+          {error?.data?.error ??
+            getUserError?.data?.error ??
+            "Something went wrong"}
         </p>
       ) : null}
       <div className="border border-border overflow-hidden w-full h-[25rem] rounded-md flex items-center justify-center">
-        {isFetching ? (
+        {isFetching || isLoading || getUserIsLoading ? (
           <Skeleton className="w-full h-full" />
         ) : (
           <>
@@ -68,7 +79,7 @@ export default function RemoveAvatar() {
       </div>
       <div className="flex items-center justify-end mt-5">
         <Button size="lg">
-          {isLoading ? <BtnsLoaderSpinner /> : "Remove"}
+          {isLoading || getUserIsLoading ? <BtnsLoaderSpinner /> : "Remove"}
         </Button>
       </div>
     </form>

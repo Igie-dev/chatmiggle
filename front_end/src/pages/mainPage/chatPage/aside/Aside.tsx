@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import Header from "../../../../../components/shared/Header";
+import Header from "@/components/shared/Header";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import NewChannelButtons from "@/components/shared/NewChannelButtons";
+import NewChannelButtons from "./newChannel/NewChannelButtons";
 import ChannelsContainer from "./ChannelsContainer";
 export default function AsideNav() {
   const asideRef = useRef<HTMLElement | null>(null);

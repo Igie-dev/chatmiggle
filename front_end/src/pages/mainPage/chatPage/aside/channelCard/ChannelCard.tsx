@@ -3,7 +3,7 @@ import { useAppSelector } from "@/service/store";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { isToday, formatTime, formatDate } from "@/utils/dateUtil";
 import { useNavigate, useParams } from "react-router-dom";
-import DisplayUserName from "../../../../../../components/shared/DisplayUserName";
+import DisplayUserName from "@/components/shared/DisplayUserName";
 import SeenChannel from "@/components/shared/SeenChannel";
 import { EMessageTypes } from "@/types/enums";
 type Props = {

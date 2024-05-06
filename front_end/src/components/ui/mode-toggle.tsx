@@ -11,7 +11,7 @@ export function ModeToggle() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center justify-start w-full h-10 px-2 rounded-sm hover:bg-accent/70">
+      <DropdownMenuTrigger className="flex items-center justify-start w-full px-2 rounded-sm h-9 hover:bg-accent/70">
         <span className="text-xs font-normal">Theme</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

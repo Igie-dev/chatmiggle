@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "../ui/button";
-import CreateNewGroup from "@/pages/mainPage/screens/channelScreen/newChannel/CreateNewGroup";
-import CreateNewChannel from "@/pages/mainPage/screens/channelScreen/newChannel/CreateNewChannel";
+import { Button } from "../../../../../components/ui/button";
+import CreateNewGroup from "./CreateNewGroup";
+import CreateNewChannel from "./CreateNewChannel";
 import { Plus } from "lucide-react";
 
 export default function NewChannelButtons() {
