@@ -1,24 +1,22 @@
-import { Input } from "@/components/ui/input";
 import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
-import { useEffect, useState, useDeferredValue, ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { socket } from "@/socket";
 import { useNavigate, useParams } from "react-router-dom";
 type Props = {
   handleAside: () => void;
+  searchText: string;
 };
-export default function ChannelList({ handleAside }: Props) {
+export default function ChannelList({ handleAside, searchText }: Props) {
   const [channels, setChannels] = useState<TChannelData[]>([]);
   const { user_id } = useAppSelector(getCurrentUser);
-  const [search, setSearch] = useState("");
-  const defferedSearch = useDeferredValue(search);
   const { data, isFetching, isError } = useGetUserChannelsQuery({
     user_id,
-    search: defferedSearch,
+    search: searchText,
   });
   const { channelId } = useParams();
   const navigate = useNavigate();
@@ -133,25 +131,9 @@ export default function ChannelList({ handleAside }: Props) {
       return;
     }
     return;
-  }, [channelId, channels, navigate, search]);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setTimeout(() => {
-      setSearch(value);
-    }, 500);
-  };
+  }, [channelId, channels, navigate, searchText]);
   return (
     <div className="flex flex-col h-[89%] w-full gap-2 ">
-      <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
-        <h1 className="text-sm font-semibold">Chat</h1>
-        <Input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => handleChange(e)}
-          className="bg-accent/70 h-11"
-        />
-      </header>
       <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">
         {isFetching ? (
           <LoaderUi />

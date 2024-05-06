@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import Header from "../../../../../components/shared/Header";
-import ChannelList from "./ChannelList";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import NewChannelButtons from "@/components/shared/NewChannelButtons";
+import ChannelsContainer from "./ChannelsContainer";
 export default function AsideNav() {
   const asideRef = useRef<HTMLElement | null>(null);
   const handleAside = () => {
@@ -39,7 +39,7 @@ export default function AsideNav() {
           <ChevronLeft size={20} />
         </Button>
         <Header />
-        <ChannelList handleAside={handleAside} />
+        <ChannelsContainer handleAside={handleAside} />
         <NewChannelButtons />
       </div>
     </aside>
