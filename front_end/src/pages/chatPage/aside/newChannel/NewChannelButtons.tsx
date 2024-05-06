@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "../../../../../components/ui/button";
+import { Button } from "@/components/ui/button";
 import CreateNewGroup from "./CreateNewGroup";
 import CreateNewChannel from "./CreateNewChannel";
 import { Plus } from "lucide-react";
