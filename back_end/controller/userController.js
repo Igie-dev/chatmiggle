@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import prisma from "../lib/prisma.js";
+import prisma from "../utils/prisma.js";
 
 const getUsers = asyncHandler(async (req, res) => {
   const cursor = Number(req.query.cursor);

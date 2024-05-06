@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import prisma from "../lib/prisma.js";
+import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const audience = process.env.CLIENT_URL;

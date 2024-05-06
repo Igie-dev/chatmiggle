@@ -1,5 +1,5 @@
 import asyncHandler from "express-async-handler";
-import prisma from "../lib/prisma.js";
+import prisma from "../utils/prisma.js";
 import dotenv from "dotenv";
 dotenv.config();
 const messagesLimit = process.env.MESSAGES_LIMIT;

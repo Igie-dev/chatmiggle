@@ -1,4 +1,4 @@
-import prisma from "../../lib/prisma.js";
+import prisma from "../../utils/prisma.js";
 const seenControl = ({ channel_id, user_id }) => {
   return new Promise(async (resolve, reject) => {
     try {

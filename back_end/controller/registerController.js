@@ -1,9 +1,9 @@
 import asyncHandler from "express-async-handler";
-import prisma from "../lib/prisma.js";
+import prisma from "../utils/prisma.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { dateNow, formatDate } from "../utils/dateUtil.js";
-import otpEmail from "../lib/otpMailer.js";
+import otpEmail from "../utils/otpMailer.js";
 const saltRounds = Number(process.env.SALTROUND);
 
 const requestVerifyEmail = asyncHandler(async (req, res) => {
