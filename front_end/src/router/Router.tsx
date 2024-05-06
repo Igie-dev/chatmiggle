@@ -32,25 +32,23 @@ export default function Router() {
     () => import("@/pages/authPage/register/RegisterVeryOtp")
   );
 
-  const AvatarScreen = lazy(
-    () => import("@/pages/mainPage/screens/avatarScreen/AvatarScreen")
+  const AvatarPage = lazy(
+    () => import("@/pages/mainPage/avatarPage/AvatarPage")
   );
 
   const UploadAvatar = lazy(
-    () => import("@/pages/mainPage/screens/avatarScreen/forms/UploadAvatar")
+    () => import("@/pages/mainPage/avatarPage/screen/UploadAvatar")
   );
 
   const RemovedAvatar = lazy(
-    () => import("@/pages/mainPage/screens/avatarScreen/forms/RemoveAvatar")
+    () => import("@/pages/mainPage/avatarPage/screen/RemoveAvatar")
   );
 
   const ChatBoxContainer = lazy(
-    () => import("@/pages/mainPage/screens/chatBox/ChatBoxContainer")
+    () => import("@/pages/mainPage/chatPage/screens/chatBox/ChatBoxContainer")
   );
 
-  const ChannelScreen = lazy(
-    () => import("@/pages/mainPage/screens/channelScreen/ChannelScreen")
-  );
+  const ChatPage = lazy(() => import("@/pages/mainPage/chatPage/ChatPage"));
 
   return (
     <Suspense fallback={<LoaderSpinner />}>
@@ -75,12 +73,12 @@ export default function Router() {
           <Route element={<Persist />}>
             <Route element={<RouteGuard />}>
               {/* Channel */}
-              <Route path="/c" element={<ChannelScreen />}>
+              <Route path="/c" element={<ChatPage />}>
                 <Route element={<ChatBoxGuard />}>
                   <Route path="/c/:channelId" element={<ChatBoxContainer />} />
                 </Route>
               </Route>
-              <Route path="/avatar" element={<AvatarScreen />}>
+              <Route path="/avatar" element={<AvatarPage />}>
                 <Route path="/avatar/upload/:id" element={<UploadAvatar />} />
                 <Route path="/avatar/remove/:id" element={<RemovedAvatar />} />
               </Route>
