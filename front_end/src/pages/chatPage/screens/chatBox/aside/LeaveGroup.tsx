@@ -71,7 +71,7 @@ export default function LeaveGroup({
             <DialogTitle>{cardTitle}</DialogTitle>
             <DialogDescription>{cardDescription}</DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center gap-2 my-5">
+          <div className="flex flex-col items-center justify-center gap-2 pb-2 my-5 border-b">
             <div className="w-16 h-16 overflow-hidden border rounded-full">
               <DisplayAvatar id={channelAvatarId} />
             </div>
@@ -80,7 +80,7 @@ export default function LeaveGroup({
             </span>
 
             {firstName && lastName ? (
-              <div className="flex items-center w-[90%] border p-2 rounded-md mt-5 bg-accent/70 gap-4 ">
+              <div className="flex items-center w-full gap-4 p-2 mt-5 border rounded-md bg-accent/70 ">
                 <div className="w-10 h-10">
                   <DisplayAvatar id={userAvatarId ?? ""} />
                 </div>

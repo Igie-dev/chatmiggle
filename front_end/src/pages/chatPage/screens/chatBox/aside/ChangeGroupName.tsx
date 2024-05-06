@@ -65,7 +65,7 @@ export default function ChangeGroupName({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="outline">
+        <Button size="icon" variant="ghost" className="hover:bg-background">
           <CustomTooltip title="Change group name">
             <PencilLine size={20} />
           </CustomTooltip>

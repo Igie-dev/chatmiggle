@@ -2,10 +2,11 @@ import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
-import { X } from "lucide-react";
+import { User, X } from "lucide-react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import LeaveGroup from "./LeaveGroup";
+import { useNavigate } from "react-router-dom";
 type Props = {
   userId: string;
   channelId: string;
@@ -24,6 +25,7 @@ export default function MemberCard({
 }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserByIdQuery(userId);
+  const navigate = useNavigate();
   if (isError) return null;
   return isFetching ? (
     <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
@@ -39,21 +41,35 @@ export default function MemberCard({
   ) : (
     <li
       //   onClick={handleClick}
-      className={`group relative flex items-center w-full gap-3 p-2 bg-transparent  rounded-md cursor-pointer h-14 hover:shadow-md hover:bg-accent/50 ${
+      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14 hover:shadow-md hover:bg-accent/50 ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
-      <div className="w-10 h-10">
-        <DisplayAvatar id={data?.avatar_id as string} />
+      <div className="flex items-center w-[75%] h-full gap-2">
+        <div className="w-10 h-10">
+          <DisplayAvatar id={data?.avatar_id as string} />
+        </div>
+        <div className="relative flex items-center w-[75%] ">
+          <p className="w-full max-w-full text-sm truncate max-h-6">
+            {data?.first_name + " " + data?.last_name}
+          </p>
+          <p className="absolute -bottom-4 opacity-50 left-1 text-[10px]">
+            {adminId === userId ? "Admin" : ""}
+          </p>
+        </div>
       </div>
-      <div className="flex items-center w-[70%] relative">
-        <p className="w-full max-w-full text-sm truncate max-h-6">
-          {data?.first_name + " " + data?.last_name}
-        </p>
-        <p className="absolute -bottom-4 opacity-50 left-1 text-[10px]">
-          {adminId === userId ? "Admin" : ""}
-        </p>
-      </div>
+
+      {data?.user_id !== user_id ? (
+        <Button
+          size="icon"
+          title="Profile"
+          variant="ghost"
+          onClick={() => navigate(`/profile/${data?.user_id}`)}
+          className="opacity-50 hover:opacity-100"
+        >
+          <User size={20} />
+        </Button>
+      ) : null}
       {userId !== user_id && !isPrivate && adminId === user_id ? (
         <LeaveGroup
           userId={userId}
@@ -69,8 +85,9 @@ export default function MemberCard({
         >
           <Button
             size="icon"
+            title="Remove"
             variant="ghost"
-            className="absolute opacity-0 group-hover:opacity-100 right-2"
+            className="opacity-50 hover:opacity-100"
           >
             <X size={20} />
           </Button>

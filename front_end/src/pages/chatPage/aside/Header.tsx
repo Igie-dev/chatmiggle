@@ -16,6 +16,20 @@ import SignOutBtn from "@/components/shared/SignOutBtn";
 import { useEffect } from "react";
 import { useGetUserByIdQuery } from "@/service/slices/user/userApiSlice";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Copy } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 export default function Header() {
   const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
   const { data, isLoading } = useGetUserByIdQuery(user_id);
@@ -88,17 +102,46 @@ export default function Header() {
             <p className="w-full text-sm font-medium truncate">
               {first_name + " " + last_name}
             </p>
-            <span className="flex items-center max-w-full gap-1 w-fit">
-              <p className="text-[10px] truncate opacity-70 w-[80%]">
+            <div className="flex items-center gap-2">
+              <p className="text-[10px] truncate opacity-70 w-fit max-w-[80%]">
                 {"ID: " + user_id}
               </p>
-              <button
-                onClick={handleCopyId}
-                className="text-[10px] border py-[1px] px-[5px] rounded-lg opacity-50 hover:opacity-100"
-              >
-                Copy
-              </button>
-            </span>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="flex items-center w-2 h-2 gap-1 text-[10px] font-light">
+                    Copy
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Copy ID</DialogTitle>
+                    <DialogDescription>
+                      Copy your ID and share it with whoever you want to send
+                      you a message.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex items-center space-x-2">
+                    <div className="grid flex-1 gap-2">
+                      <Label htmlFor="userId" className="sr-only">
+                        ID
+                      </Label>
+                      <Input id="userId" defaultValue={user_id} readOnly />
+                    </div>
+                    <Button size="sm" onClick={handleCopyId} className="px-3">
+                      <span className="sr-only">Copy</span>
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <DialogFooter className="sm:justify-start">
+                    <DialogClose asChild>
+                      <Button type="button" variant="secondary">
+                        Close
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </div>
       </div>

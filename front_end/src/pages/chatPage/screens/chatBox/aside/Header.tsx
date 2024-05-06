@@ -90,10 +90,10 @@ function Header({ channel, isFetching }: Props) {
             groupName={channel?.group_name as string}
             avatarId={channel?.avatar_id as string}
           />
-          <Button size="icon" variant="outline">
+          <Button size="icon" variant="ghost" className="hover:bg-background">
             <Link
               to={`/avatar/upload/${channel?.channel_id}`}
-              className="flex !justify-start w-full !px-2"
+              className="flex !justify-center w-full !px-2"
             >
               <CustomTooltip title="Change profile">
                 <Image size={20} />
@@ -110,7 +110,11 @@ function Header({ channel, isFetching }: Props) {
               type="leave"
               channelAvatarId={channel?.avatar_id as string}
             >
-              <Button size="icon" variant="outline">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="hover:bg-background"
+              >
                 <CustomTooltip title="Leave group">
                   <Trash size={20} />
                 </CustomTooltip>
