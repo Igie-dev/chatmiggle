@@ -38,9 +38,7 @@ export default function Header() {
   };
 
   useEffect(() => {
-    socket.on("connection", () => {
-      console.log("socket connected");
-    });
+    socket.on("connection", () => {});
     if (user_id) {
       socket.emit("user_join", user_id);
     }
@@ -54,7 +52,7 @@ export default function Header() {
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <div className="w-10 overflow-hidden border rounded-full h-9">
+              <div className="w-10 h-10 overflow-hidden border rounded-full">
                 {isLoading ? (
                   <Skeleton className="w-full h-full" />
                 ) : (
@@ -76,22 +74,6 @@ export default function Header() {
                 </Link>
               </DropdownMenuItem>
               <ModeToggle />
-              <DropdownMenuItem asChild>
-                <Link
-                  to={`/avatar/upload/${user_id}`}
-                  className="w-full cursor-pointer h-9 hover:bg-accent/70"
-                >
-                  <span className="text-xs">Change Avatar</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  to={`/avatar/remove/${user_id}`}
-                  className="w-full cursor-pointer h-9 hover:bg-accent/70"
-                >
-                  <span className="text-xs">Remove Avatar</span>
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="p-0 mt-5 hover:bg-transparent h-fit">
                 <SignOutBtn />
