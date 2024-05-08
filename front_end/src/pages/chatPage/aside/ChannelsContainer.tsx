@@ -21,7 +21,6 @@ export default function ChannelsContainer({ handleAside }: Props) {
           type="text"
           placeholder="Search..."
           onChange={(e) => handleChange(e)}
-          className="h-12 border"
         />
       </header>
       <ChannelList searchText={defferedSearch} handleAside={handleAside} />
