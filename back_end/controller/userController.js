@@ -73,7 +73,6 @@ const getUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const { user_id, first_name, last_name } = req.body;
-
   if (!user_id || !first_name || !last_name) {
     return res.status(400).json({ error: "All field are required" });
   }
@@ -86,7 +85,7 @@ const updateUser = asyncHandler(async (req, res) => {
     if (!update?.id) {
       return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ error: "Successfully updated user" });
+    return res.status(200).json({ message: "Successfully updated user" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
@@ -108,7 +107,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     if (!deletedUser?.id) {
       return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ error: "Successfully deleted user" });
+    return res.status(200).json({ message: "Successfully deleted user" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Something went wrong" });

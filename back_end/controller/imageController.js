@@ -155,7 +155,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
             return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ error: "Upload success" });
+          return res.status(201).json({ message: "Upload success" });
         }
       } catch (error) {
         console.log(error);
@@ -187,7 +187,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
             return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ error: "Upload success" });
+          return res.status(201).json({ message: "Upload success" });
         } else {
           const newId = uuid();
           await prisma.user.update({
@@ -208,7 +208,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
             return res.status(500).json({ error: "Something went wrong" });
           }
           deleteFile();
-          return res.status(201).json({ error: "Upload success" });
+          return res.status(201).json({ message: "Upload success" });
         }
       } catch (error) {
         console.log(error);
@@ -282,7 +282,7 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     if (!deleteAvatar?.id) {
       return res.status(500).json({ error: "Something went wrong" });
     }
-    return res.status(200).json({ error: "Avatar removed" });
+    return res.status(200).json({ message: "Avatar removed" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
