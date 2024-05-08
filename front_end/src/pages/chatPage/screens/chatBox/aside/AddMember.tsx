@@ -78,7 +78,7 @@ export default function AddMember({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="icon" variant="ghost" className="hover:bg-background">
+        <Button size="icon" variant="outline">
           <CustomTooltip title="Add member">
             <UserRoundPlus size={20} />
           </CustomTooltip>
