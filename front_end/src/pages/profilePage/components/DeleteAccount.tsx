@@ -26,7 +26,6 @@ export default function DeleteAccount({ userId }: Props) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await deletAccount(userId);
-      console.log(res);
       if (res?.data) {
         navigate("/login");
       }
