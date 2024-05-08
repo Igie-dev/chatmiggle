@@ -9,8 +9,10 @@ export default function DisplayUserName({ userId }: Props) {
     <>
       {isFetching ? (
         <Skeleton className="w-full h-full" />
-      ) : (
+      ) : data?.first_name && data?.last_name ? (
         <>{`${data?.first_name} ${data?.last_name}`}</>
+      ) : (
+        <>User</>
       )}
     </>
   );
