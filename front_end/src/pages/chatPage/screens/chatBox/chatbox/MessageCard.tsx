@@ -29,10 +29,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
         </li>
       ) : message?.type === EMessageTypes.TYPE_TEXT ||
         message.type === EMessageTypes.TYPE_IMG ? (
-        <li
-          id={message.message_id}
-          className="flex justify-start w-full h-fit "
-        >
+        <li id={message.message_id} className="flex justify-start w-full h-fit">
           {!senderMe ? (
             <div className="mr-1 w-9 h-9">
               <DisplayAvatar
@@ -41,14 +38,14 @@ export default function MessageCard({ message, lastMessage }: Props) {
             </div>
           ) : null}
           <div
-            className={`relative w-full h-fit flex justify-start  ${
+            className={`relative w-full h-fit flex justify-start ${
               senderMe ? "flex-row-reverse " : ""
             }`}
           >
             {message?.type === EMessageTypes.TYPE_TEXT ? (
               <pre
-                className={`flex flex-wrap max-w-[60%] mt-2 border p-2 rounded-md lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
-                  senderMe ? "bg-accent/70" : "bg-transparent"
+                className={`flex flex-wrap  max-w-[60%] mt-4 border p-2 rounded-lg lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
+                  senderMe ? "bg-transparent" : "bg-accent/70"
                 }`}
               >
                 {message.message}
