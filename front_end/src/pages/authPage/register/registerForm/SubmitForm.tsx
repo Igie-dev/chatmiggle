@@ -49,19 +49,19 @@ export default function SubmitForm() {
       <div className="flex flex-col items-center w-full gap-2">
         <div className="w-[90%] flex flex-col gap-1">
           <span className="text-sm font-semibold">First Name</span>
-          <p className="w-full px-2 py-3 border-b">
+          <p className="w-full px-2 py-3 border rounded-md">
             {localStorage.getItem("firstName")}
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1">
           <span className="text-sm font-semibold">Last Name</span>
-          <p className="w-full px-2 py-3 border-b">
+          <p className="w-full px-2 py-3 border rounded-md">
             {localStorage.getItem("lastName")}
           </p>
         </div>
         <div className="w-[90%] flex flex-col gap-1">
           <span className="text-sm font-semibold">Email</span>
-          <p className="w-full px-2 py-3 border-b">
+          <p className="w-full px-2 py-3 border rounded-md">
             {localStorage.getItem("email")}
           </p>
         </div>

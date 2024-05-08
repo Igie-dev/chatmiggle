@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 export default function FirstStepForm() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function FirstStepForm() {
     onSubmit: async (values) => {
       localStorage.setItem("firstName", values.firstName);
       localStorage.setItem("lastName", values.lastName);
-      navigate("/register/form/step2");
+      navigate("/register/form/email");
     },
   });
   return (
@@ -37,7 +38,7 @@ export default function FirstStepForm() {
         <Label htmlFor="firstName" className="text-sm font-semibold">
           First Name
         </Label>
-        <input
+        <Input
           ref={inputRef}
           type="text"
           id="firstName"
@@ -46,7 +47,7 @@ export default function FirstStepForm() {
           value={formik.values.firstName || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className={`w-full h-11 outline-none pl-2 pr-10   text-sm  bg-transparent border-b ${
+          className={`w-full  ${
             formik.touched.firstName && formik.errors.firstName
               ? "border-destructive"
               : "border-border"
@@ -62,7 +63,7 @@ export default function FirstStepForm() {
         <Label htmlFor="lastName" className="text-sm font-semibold">
           Last Name
         </Label>
-        <input
+        <Input
           type="text"
           id="lastName"
           autoComplete="false"
@@ -70,7 +71,7 @@ export default function FirstStepForm() {
           value={formik.values.lastName || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className={`w-full h-11 outline-none pl-2 pr-10   text-sm  bg-transparent border-b  ${
+          className={`w-full  ${
             formik.touched.lastName && formik.errors.lastName
               ? "border-destructive"
               : "border-border"

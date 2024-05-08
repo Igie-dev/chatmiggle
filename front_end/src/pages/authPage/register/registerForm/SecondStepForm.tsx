@@ -1,12 +1,14 @@
 import { Label } from "@/components/ui/label";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { encryptText } from "@/utils/helper";
+import { Input } from "@/components/ui/input";
 export default function SecondStepForm() {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (inputRef?.current) {
@@ -33,7 +35,7 @@ export default function SecondStepForm() {
       }
       localStorage.setItem("email", values.email);
       localStorage.setItem("password", encryptText(values.password));
-      navigate("/register/form/final");
+      navigate("/register/form/confirm");
     },
   });
 
@@ -49,7 +51,7 @@ export default function SecondStepForm() {
         <Label htmlFor="email" className="text-sm font-semibold">
           Email
         </Label>
-        <input
+        <Input
           type="text"
           ref={inputRef}
           id="email"
@@ -58,7 +60,7 @@ export default function SecondStepForm() {
           value={formik.values.email || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className={`w-full h-11 outline-none pl-2 pr-10   text-sm  bg-transparent  border-b     ${
+          className={`w-full  ${
             formik.touched.email && formik.errors.email
               ? "border-destructive"
               : "border-border"
@@ -74,15 +76,15 @@ export default function SecondStepForm() {
         <Label htmlFor="password" className="text-sm font-semibold">
           Create password
         </Label>
-        <input
-          type="password"
+        <Input
+          type={isShowPassword ? "text" : "password"}
           id="password"
           autoComplete="false"
           placeholder="Create your password"
           value={formik.values.password || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className={`w-full h-11 outline-none pl-2 pr-10   text-sm  bg-transparent  border-b  ${
+          className={`w-full ${
             formik.touched.password && formik.errors.password
               ? "border-destructive"
               : "border-border"
@@ -98,15 +100,15 @@ export default function SecondStepForm() {
         <Label htmlFor="confirmpass" className="text-sm font-semibold">
           Confirm password
         </Label>
-        <input
-          type="password"
+        <Input
+          type={isShowPassword ? "text" : "password"}
           id="confirmpass"
           placeholder="Confirm your password"
           autoComplete="false"
           value={formik.values.confirmpass || ""}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          className={`w-full h-11 outline-none pl-2 pr-10   text-sm bg-transparent border-b  ${
+          className={`w-full  ${
             formik.touched.confirmpass && formik.errors.confirmpass
               ? "border-destructive"
               : "border-border"
@@ -118,7 +120,22 @@ export default function SecondStepForm() {
             : null}
         </p>
       </div>
-      <div className="flex w-full gap-2 px-5 mt-10">
+      <div className="w-[90%] flex mt-2 items-center gap-2">
+        <Input
+          type="checkbox"
+          className="w-4 h-4"
+          onChange={(e) => {
+            if (e.target.checked) {
+              setIsShowPassword(true);
+            } else {
+              setIsShowPassword(false);
+            }
+          }}
+        />
+        <p className="text-sm">Show password</p>
+      </div>
+
+      <div className="flex w-full gap-2 px-5 mt-5">
         <Button
           size="lg"
           type="button"

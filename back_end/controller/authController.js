@@ -122,7 +122,7 @@ const signOut = asyncHandler(async (req, res) => {
       return res.sendStatus(204);
     }
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-    return res.json({ error: "Cookie cleared!" });
+    return res.json({ message: "Cookie cleared!" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Something went wrong" });

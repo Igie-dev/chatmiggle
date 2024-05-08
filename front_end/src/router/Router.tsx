@@ -64,8 +64,8 @@ export default function Router() {
           <Route path="/register" element={<RegisterPage />}>
             <Route path="/register/form" element={<RegisterForm />}>
               <Route path="/register/form" element={<FirstStepForm />} />
-              <Route path="/register/form/step2" element={<SecondStepForm />} />
-              <Route path="/register/form/final" element={<SubmitForm />} />
+              <Route path="/register/form/email" element={<SecondStepForm />} />
+              <Route path="/register/form/confirm" element={<SubmitForm />} />
             </Route>
             <Route path="/register/otp" element={<RegisterVerifyOtp />} />
           </Route>
