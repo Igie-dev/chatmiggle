@@ -2,7 +2,7 @@ import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { socket } from "@/socket";
@@ -21,7 +21,7 @@ export default function ChannelList({ handleAside, searchText }: Props) {
   const { channelId } = useParams();
   const navigate = useNavigate();
   //Handle data from api request
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (data) {
       setChannels(data);
     } else {
@@ -40,7 +40,7 @@ export default function ChannelList({ handleAside, searchText }: Props) {
       if (user.length === 0) return;
       const newChannelId = channel?.channel_id;
       //If channels empty, add to latest new channel
-      if (channels.length <= 0) {
+      if (channels.length <= 0 && channel?.channel_id) {
         setChannels([channel]);
         return;
       }
@@ -123,14 +123,13 @@ export default function ChannelList({ handleAside, searchText }: Props) {
   }, [channels, user_id, navigate, channelId]);
 
   //Handle auto select channel when first visit
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (channels?.length >= 1) {
       if (!channelId) {
         navigate(`/c/${channels[0]?.channel_id}`);
       }
       return;
     }
-    return;
   }, [channelId, channels, navigate, searchText]);
   return (
     <div className="flex flex-col h-[89%] w-full gap-2 ">
