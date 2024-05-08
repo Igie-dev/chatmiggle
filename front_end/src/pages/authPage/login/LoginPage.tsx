@@ -77,7 +77,7 @@ export default function LoginPage() {
             <span className="absolute p-2 right-1 bottom-5">
               <AtSign className="w-5 h-5" />
             </span>
-            <p className="absolute bottom-0 text-xs left-6 text-destructive">
+            <p className="absolute text-xs -bottom-1 left-5 text-destructive">
               {formik.touched.email && formik.errors.email
                 ? formik.errors.email
                 : null}
@@ -112,7 +112,7 @@ export default function LoginPage() {
                 <EyeOff className="w-5 h-5 pointer-events-none" />
               )}
             </button>
-            <p className="absolute bottom-0 text-xs left-6 text-destructive">
+            <p className="absolute text-xs -bottom-1 left-5 text-destructive">
               {formik.touched.password && formik.errors.password
                 ? formik.errors.password
                 : null}
