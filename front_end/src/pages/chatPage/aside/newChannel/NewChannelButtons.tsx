@@ -15,9 +15,10 @@ export default function NewChannelButtons() {
             variant="secondary"
             size="icon"
             title="New chat"
+            onClick={() => setIsShow(false)}
             className={`w-full p-2 transition-all translate-y-10  border rounded-md opacity-0 h-fit group bg-secondary/50 ${
               isShow
-                ? "translate-y-0 opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105  delay-100 "
+                ? "-translate-y-5  opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105  delay-100 "
                 : "translate-y-10 delay-200 "
             }`}
           >
@@ -29,9 +30,10 @@ export default function NewChannelButtons() {
             variant="secondary"
             title="New chat"
             size="icon"
+            onClick={() => setIsShow(false)}
             className={`w-full p-2 transition-all translate-y-10  border rounded-md opacity-0 h-fit group bg-secondary/50 ${
               isShow
-                ? "translate-y-0 opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105 delay-200 "
+                ? "-translate-y-5 opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105 delay-200 "
                 : "translate-y-10  delay-100"
             }`}
           >
