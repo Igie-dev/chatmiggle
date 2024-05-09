@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ResendOtp from "./ResendOtp";
 import { Button } from "@/components/ui/button";
 import { useRegisterMutation } from "@/service/slices/auth/authApiSlice";
-import { useSearchParams } from "react-router-dom";
 import { decryptText } from "@/utils/helper";
 import { Input } from "@/components/ui/input";
 export default function VerifyOtp() {
@@ -12,11 +11,10 @@ export default function VerifyOtp() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputOtp, setInputOtp] = useState("");
   const navigate = useNavigate();
-  const [search] = useSearchParams();
-  const first_name = search.get("firstName");
-  const last_name = search.get("lastName");
-  const email = search.get("email");
-  const password = decryptText(decodeURIComponent(search.get("password")!));
+  const first_name = sessionStorage.getItem("firstName");
+  const last_name = sessionStorage.getItem("lastName");
+  const email = sessionStorage.getItem("email");
+  const password = sessionStorage.getItem("password");
 
   useEffect(() => {
     if (!first_name || !last_name || !email || !password) {
@@ -36,10 +34,14 @@ export default function VerifyOtp() {
         first_name,
         last_name,
         email,
-        password,
+        password: decryptText(decodeURIComponent(password)),
       });
 
       if (res?.data?.email) {
+        sessionStorage.removeItem("firstName");
+        sessionStorage.removeItem("lastName");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("password");
         navigate("/login");
       }
     } catch (error) {

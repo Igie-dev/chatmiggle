@@ -18,7 +18,7 @@ export default function SecondStepForm() {
 
   const formik = useFormik({
     initialValues: {
-      email: localStorage.getItem("email") as string,
+      email: sessionStorage.getItem("email") as string,
       password: "",
       confirmpass: "",
     },
@@ -33,8 +33,8 @@ export default function SecondStepForm() {
       if (values.password !== values.confirmpass) {
         return;
       }
-      localStorage.setItem("email", values.email);
-      localStorage.setItem("password", encryptText(values.password));
+      sessionStorage.setItem("email", values.email);
+      sessionStorage.setItem("password", encryptText(values.password));
       navigate("/register/form/confirm");
     },
   });

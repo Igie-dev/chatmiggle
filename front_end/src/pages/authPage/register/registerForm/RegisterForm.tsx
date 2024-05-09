@@ -5,10 +5,10 @@ import Progress from "./Progress";
 export default function RegisterForm() {
   const navigate = useNavigate();
   const handleCancel = () => {
-    localStorage.removeItem("firstName");
-    localStorage.removeItem("lastName");
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    sessionStorage.removeItem("firstName");
+    sessionStorage.removeItem("lastName");
+    sessionStorage.removeItem("email");
+    sessionStorage.removeItem("password");
     navigate("/login");
   };
   return (

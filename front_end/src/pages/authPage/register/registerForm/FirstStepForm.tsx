@@ -16,16 +16,16 @@ export default function FirstStepForm() {
 
   const formik = useFormik({
     initialValues: {
-      firstName: localStorage.getItem("firstName") as string,
-      lastName: localStorage.getItem("lastName") as string,
+      firstName: sessionStorage.getItem("firstName") as string,
+      lastName: sessionStorage.getItem("lastName") as string,
     },
     validationSchema: new Yup.ObjectSchema({
       firstName: Yup.string().required("Please provide your First Name"),
       lastName: Yup.string().required("Please provide your Last Name"),
     }),
     onSubmit: async (values) => {
-      localStorage.setItem("firstName", values.firstName);
-      localStorage.setItem("lastName", values.lastName);
+      sessionStorage.setItem("firstName", values.firstName);
+      sessionStorage.setItem("lastName", values.lastName);
       navigate("/register/form/email");
     },
   });
