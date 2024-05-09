@@ -1,4 +1,4 @@
-import { useState, useDeferredValue, ChangeEvent } from "react";
+import { useState, useDeferredValue, ChangeEvent, useRef } from "react";
 import ChannelList from "./ChannelList";
 import { Input } from "@/components/ui/input";
 type Props = {
@@ -7,11 +7,13 @@ type Props = {
 export default function ChannelsContainer({ handleAside }: Props) {
   const [search, setSearch] = useState("");
   const defferedSearch = useDeferredValue(search);
+  const timeoutIdRef = useRef<NodeJS.Timeout>();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
-    setTimeout(() => {
+    clearTimeout(timeoutIdRef.current);
+    timeoutIdRef.current = setTimeout(() => {
       setSearch(value);
-    }, 500);
+    }, 1000);
   };
   return (
     <div className="flex flex-col h-[89%] w-full gap-2">
