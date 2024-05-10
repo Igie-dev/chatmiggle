@@ -80,11 +80,11 @@ export default function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="flex flex-col w-[80%]">
+          <div className="flex flex-col w-[80%] mt-2">
             <p className="w-full text-sm font-medium truncate">
               {first_name + " " + last_name}
             </p>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-1">
               <p className="text-[10px] truncate opacity-70 w-fit max-w-[80%]">
                 {"ID: " + user_id}
               </p>
