@@ -131,7 +131,7 @@ export default function ChatInput() {
           className="px-2 py-3 h-[3.2rem] flex-1 transition-all bg-transparent border text-sm  resize-none rounded-lg outline-none"
         />
         {preview ? (
-          <div className="absolute left-1 bottom-1 border border-border bg-background w-[12rem] h-[14.5rem] rounded-md">
+          <div className="absolute left-1 bottom-1 bg-background w-[12rem] h-[14.5rem]">
             <Button
               size="icon"
               variant="outline"
@@ -143,7 +143,7 @@ export default function ChatInput() {
             </Button>
             <img
               src={preview as string}
-              className="object-cover w-full h-full "
+              className="object-cover w-full h-full border rounded-lg border-border"
             />
           </div>
         ) : null}
