@@ -1,7 +1,7 @@
 import express from "express";
 import {
-	requestVerifyEmail,
-	register,
+  requestVerifyEmail,
+  register,
 } from "../controller/registerController.js";
 
 const router = express.Router();
