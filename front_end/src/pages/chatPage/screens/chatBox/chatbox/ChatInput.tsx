@@ -166,6 +166,7 @@ export default function ChatInput() {
           onChange={handleInputChange}
           style={{
             minHeight: "3.2rem",
+            lineHeight: 1.5,
           }}
           className="px-2 pt-3 border max-h-[12rem] whitespace-pre-wrap break-all flex-1 transition-all bg-transparent  text-sm  resize-none rounded-lg outline-none"
         />
