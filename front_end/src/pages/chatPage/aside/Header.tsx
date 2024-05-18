@@ -47,7 +47,7 @@ export default function Header() {
     };
   }, [user_id]);
   return (
-    <header className="flex items-center justify-center w-full h-[10%] relative border bg-secondary p-2 rounded-md">
+    <header className="flex items-center justify-center w-full h-[10%] relative   p-2 ">
       <div className="flex items-center justify-between w-full h-fit">
         <div className="flex items-center w-[80%] h-full gap-2">
           <DropdownMenu>

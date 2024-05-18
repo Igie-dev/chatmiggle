@@ -54,7 +54,7 @@ export default function MemberCard({
             {data?.first_name + " " + data?.last_name}
           </p>
           <p className="absolute -bottom-4 opacity-50 left-1 text-[10px]">
-            {adminId === userId ? "Admin" : ""}
+            {adminId === userId && !isPrivate ? "Admin" : ""}
           </p>
         </div>
       </div>

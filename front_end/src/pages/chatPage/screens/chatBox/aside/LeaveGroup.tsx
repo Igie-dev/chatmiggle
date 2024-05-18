@@ -96,7 +96,7 @@ export default function LeaveGroup({
 
           <DialogFooter>
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? <BtnsLoaderSpinner /> : "Remove"}
+              {isLoading ? <BtnsLoaderSpinner /> : "Leave"}
             </Button>
           </DialogFooter>
         </form>
