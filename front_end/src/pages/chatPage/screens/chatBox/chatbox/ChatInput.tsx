@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Image, SendHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
@@ -20,21 +20,23 @@ export default function ChatInput() {
 
   const handleFocus = () => {
     if (preview || imageData) return;
-    textAreaRef?.current?.classList.add("h-[10rem]");
-    textAreaRef?.current?.classList.remove("h-[3.2rem]");
-    moreRef?.current?.classList.add("hidden");
-    moreRef?.current?.classList.remove("visible");
+    if (moreRef?.current) {
+      moreRef.current.style.display = "none";
+    }
   };
 
   const handleBlur = () => {
-    if (preview || imageData) return;
-    textAreaRef?.current?.classList.add("h-[3.2rem]");
-    textAreaRef?.current?.classList.remove("h-[10rem]");
-    moreRef?.current?.classList.add("visible");
-    moreRef?.current?.classList.remove("hidden");
+    if (messageText.length >= 1) return;
+    if (textAreaRef?.current) {
+      textAreaRef.current.style.height = "0px";
+    }
+    if (moreRef?.current) {
+      moreRef.current.style.display = "flex";
+    }
   };
 
   const handleInputImage = (e: ChangeEvent<HTMLInputElement>) => {
+    handleFocus();
     const files = e?.target?.files as FileList;
     setImageData(files[0]);
     const reader = new FileReader();
@@ -43,23 +45,31 @@ export default function ChatInput() {
     };
     if (files[0]) {
       reader.readAsDataURL(files[0]);
-      textAreaRef?.current?.classList.add("h-[15rem]");
-      textAreaRef?.current?.classList.remove("h-[3.2rem]");
-      moreRef?.current?.classList.remove("visible");
-      moreRef?.current?.classList.add("hidden");
+      if (textAreaRef?.current) {
+        textAreaRef.current.style.display = "none";
+      }
     }
   };
 
   const handleRemoveImage = () => {
-    textAreaRef?.current?.classList.remove("h-[15rem]");
-    textAreaRef?.current?.classList.add("h-[3.2rem]");
-    moreRef?.current?.classList.add("visible");
-    moreRef?.current?.classList.remove("hidden");
-    setImageData(null);
-    setPreview(null);
+    if (imageInput.current) {
+      imageInput.current.value = "";
+      if (textAreaRef?.current) {
+        textAreaRef.current.style.display = "flex";
+      }
+      if (moreRef?.current) {
+        moreRef.current.style.display = "flex";
+      }
+      setImageData(null);
+      setPreview(null);
+    }
   };
 
   const handleSubmitTextMessage = async () => {
+    if (!messageText && imageData) {
+      handleSubmitImageMessage();
+      return;
+    }
     if (!channelId || !messageText) return;
     setIsLoading(true);
     const data: TSendMessage = {
@@ -73,9 +83,10 @@ export default function ChatInput() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await asyncEmit("send_new_message", data);
       if (res?.data) {
-        setTimeout(() => {
-          setMessageText("");
-        }, 500);
+        setMessageText("");
+        if (!messageText) {
+          handleBlur();
+        }
       }
     } catch (error) {
       console.log(error);
@@ -114,8 +125,36 @@ export default function ChatInput() {
       setIsLoading(false);
     }
   };
+
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    if (preview || imageData) return;
+    setMessageText(e.target.value);
+    if (textAreaRef?.current) {
+      if (messageText.length >= 1) {
+        textAreaRef.current.style.height =
+          textAreaRef.current.scrollHeight + "px";
+      } else {
+        textAreaRef.current.style.height = "0px";
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (messageText.length <= 0) {
+      if (textAreaRef?.current) {
+        textAreaRef.current.style.height = "0px";
+      }
+      if (moreRef?.current) {
+        moreRef.current.style.display = "flex";
+      }
+    } else {
+      if (moreRef?.current) {
+        moreRef.current.style.display = "none";
+      }
+    }
+  }, [messageText, textAreaRef]);
   return (
-    <div className="flex items-end w-full gap-2 px-2 pt-4 h-fit">
+    <div className="flex items-end w-full gap-2 px-2 pt-2 h-fit">
       <div className="relative flex items-center flex-1 gap-2 ">
         <textarea
           ref={textAreaRef}
@@ -124,11 +163,11 @@ export default function ChatInput() {
           disabled={isLoading}
           placeholder="Message"
           value={messageText}
-          onChange={(e) => {
-            if (preview || imageData) return;
-            setMessageText(e.target.value);
+          onChange={handleInputChange}
+          style={{
+            minHeight: "3.2rem",
           }}
-          className="px-2 py-3 h-[3.2rem] flex-1 transition-all bg-transparent border text-sm  resize-none rounded-lg outline-none"
+          className="px-2 pt-3 border max-h-[12rem] whitespace-pre-wrap break-all flex-1 transition-all bg-transparent  text-sm  resize-none rounded-lg outline-none"
         />
         {preview ? (
           <div className="absolute left-1 bottom-1 bg-background w-[12rem] h-[14.5rem]">
@@ -169,31 +208,17 @@ export default function ChatInput() {
           </Button>
         </div>
       </div>
-      {messageText.length >= 1 && !imageData ? (
-        <Button
-          size="icon"
-          variant="default"
-          disabled={isLoading || !messageText}
-          onClick={handleSubmitTextMessage}
-          className={`flex items-center h-[3rem] w-fit px-5 mb-[2px] text-white border rounded-lg bg-primary ${
-            isLoading ? "cursor-wait" : "cursor-pointer"
-          }`}
-        >
-          <SendHorizontal size={25} />
-        </Button>
-      ) : (
-        <Button
-          size="icon"
-          variant="default"
-          disabled={isLoadingSendImage || !imageData}
-          onClick={handleSubmitImageMessage}
-          className={`flex items-center h-[3rem] w-fit px-5 mb-[2px] text-white border rounded-lg bg-primary ${
-            isLoadingSendImage ? "cursor-wait" : "cursor-pointer"
-          }`}
-        >
-          <SendHorizontal size={25} />
-        </Button>
-      )}
+      <Button
+        size="icon"
+        variant="default"
+        disabled={isLoading || isLoadingSendImage}
+        onClick={handleSubmitTextMessage}
+        className={`flex items-center h-[3rem] w-fit px-5 mb-[2px] text-white border rounded-lg bg-primary ${
+          isLoading || isLoadingSendImage ? "cursor-wait" : "cursor-pointer"
+        }`}
+      >
+        <SendHorizontal size={25} />
+      </Button>
     </div>
   );
 }
