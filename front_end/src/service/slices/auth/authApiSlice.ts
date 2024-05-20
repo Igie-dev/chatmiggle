@@ -3,7 +3,6 @@ import { apiSlice } from "../api/apiSlice";
 import { logOut, setCredentials } from "./authSlice";
 import { setCurrentUser, removeCurrentUser } from "../user/userSlice";
 import jwtDecode from "jwt-decode";
-
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     //Login
@@ -31,7 +30,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     signOut: builder.mutation({
       query: () => ({
         url: "/auth/signout",
-        method: "GET",
+        method: "POST",
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -48,7 +47,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     refresh: builder.mutation({
       query: () => ({
         url: "/auth/refresh",
-        method: "GET",
+        method: "POST",
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {

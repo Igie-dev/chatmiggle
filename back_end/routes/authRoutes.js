@@ -6,7 +6,7 @@ import { signIn, refresh, signOut } from "../controller/authController.js";
 const router = express.Router();
 
 router.route("/signin").post(loginLimiter, signIn);
-router.route("/refresh").get(refresh);
-router.route("/signout").get(signOut);
+router.route("/refresh").post(refresh);
+router.route("/signout").post(signOut);
 
 export default router;
