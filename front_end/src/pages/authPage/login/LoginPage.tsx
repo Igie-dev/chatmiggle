@@ -51,6 +51,15 @@ export default function LoginPage() {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-[30rem] flex flex-col items-center gap-5  px-2 py-5 rounded-md md:px-5 md:py-10 relative border"
       >
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => navigate("/")}
+          type="button"
+          className="absolute top-2 left-2"
+        >
+          Home
+        </Button>
         <h1 className="text-2xl font-bold">Welcome to ChatMiggle</h1>
         <h3 className="text-lg font-semibold">Log In</h3>
         <p className="my-2 text-sm text-destructive">{error?.data?.error}</p>

@@ -18,7 +18,7 @@ export default function ChannelsContainer({ handleAside }: Props) {
   return (
     <div className="flex flex-col h-[89%] w-full gap-2">
       <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
-        <h1 className="text-lg font-semibold">Chat</h1>
+        <span className="text-sm font-semibold">Chat</span>
         <Input
           type="text"
           placeholder="Search..."

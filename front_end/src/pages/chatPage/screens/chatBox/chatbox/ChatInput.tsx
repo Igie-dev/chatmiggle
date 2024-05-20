@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { Image, SendHorizontal, X } from "lucide-react";
+import { Image, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "@/service/store";
@@ -214,11 +214,11 @@ export default function ChatInput() {
         variant="default"
         disabled={isLoading || isLoadingSendImage}
         onClick={handleSubmitTextMessage}
-        className={`flex items-center h-[3rem] w-fit px-5 mb-[2px] text-white border rounded-lg bg-primary ${
+        className={`flex items-center h-[3rem] w-fit px-5 mb-[2px]  border rounded-lg bg-primary ${
           isLoading || isLoadingSendImage ? "cursor-wait" : "cursor-pointer"
         }`}
       >
-        <SendHorizontal size={25} />
+        <Send size={25} />
       </Button>
     </div>
   );

@@ -28,7 +28,7 @@ export default function ChannelCard({ channel, handleAside }: Props) {
       className={`group flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
         channelId === channel?.channel_id
           ? "bg-accent/70 border-border/70"
-          : "bg-transparent border-transparent hover:shadow-md hover:bg-accent/70"
+          : "bg-transparent border-transparent  hover:bg-accent/70"
       }`}
     >
       <div className="w-9 h-9">

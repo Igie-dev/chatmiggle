@@ -34,7 +34,7 @@ export default function AsideNav() {
           onClick={handleAside}
           size="icon"
           variant="outline"
-          className="absolute z-50 right-1 top-2 bg-accent/70 lg:hidden"
+          className="absolute z-50 -right-12 top-2 bg-accent/70 lg:hidden"
         >
           <ChevronLeft size={20} />
         </Button>
