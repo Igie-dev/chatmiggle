@@ -132,8 +132,8 @@ export default function ChannelList({ handleAside, searchText }: Props) {
     }
   }, [channelId, channels, navigate, searchText]);
   return (
-    <div className="flex flex-col h-[89%] w-full gap-2 ">
-      <ul className="flex flex-col w-full h-[92%] gap-[2px] overflow-y-auto py-2 px-0">
+    <div className="flex flex-col h-[82%] w-full gap-2  overflow-y-auto">
+      <ul className="flex flex-col w-full h-fit  gap-[2px]  py-2 px-0">
         {isFetching ? (
           <LoaderUi />
         ) : (

@@ -31,7 +31,7 @@ export default function ChannelCard({ channel, handleAside }: Props) {
           : "bg-transparent border-transparent  hover:bg-accent/70"
       }`}
     >
-      <div className="w-9 h-9">
+      <div className="w-8 h-8">
         {channel.is_private ? (
           <DisplayAvatar id={mate[0]?.user?.avatar_id as string} />
         ) : (

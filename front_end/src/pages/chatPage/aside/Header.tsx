@@ -27,7 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+import { Copy, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 export default function Header() {
@@ -50,38 +50,44 @@ export default function Header() {
     <header className="flex flex-col items-center justify-center w-full h-[13%] relative px-2 ">
       <div className="flex items-center justify-between w-full h-fit">
         <span className="text-lg font-semibold">ChatMiggle</span>
-        <ModeToggle />
+
+        <div className="flex items-center gap-2">
+          <ModeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="icon" variant="ghost">
+                <Settings size={20} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-[12rem] p-2 text-xs">
+              <DropdownMenuLabel className="opacity-70">
+                My Account
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link
+                  to={`/profile/${data?.user_id}`}
+                  className="w-full cursor-pointer h-9 hover:bg-accent/70"
+                >
+                  <span className="text-xs">Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="p-0 mt-5 hover:bg-transparent h-fit">
+                <SignOutBtn />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="flex items-center w-full h-full gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="w-10 h-10 overflow-hidden border rounded-full">
-              {isLoading ? (
-                <Skeleton className="w-full h-full" />
-              ) : (
-                <DisplayAvatar id={data?.avatar_id} />
-              )}
-            </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="min-w-[12rem] p-2 text-xs">
-            <DropdownMenuLabel className="opacity-70">
-              My Account
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                to={`/profile/${data?.user_id}`}
-                className="w-full cursor-pointer h-9 hover:bg-accent/70"
-              >
-                <span className="text-xs">Profile</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="p-0 mt-5 hover:bg-transparent h-fit">
-              <SignOutBtn />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="w-10 h-10 overflow-hidden border rounded-full">
+          {isLoading ? (
+            <Skeleton className="w-full h-full" />
+          ) : (
+            <DisplayAvatar id={data?.avatar_id} />
+          )}
+        </div>
         <div className="flex flex-col w-[80%] mt-2">
           <p className="w-full text-sm font-medium truncate">
             {first_name + " " + last_name}

@@ -31,7 +31,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
         message.type === EMessageTypes.TYPE_IMG ? (
         <li id={message.message_id} className="flex justify-start w-full h-fit">
           {!senderMe ? (
-            <div className="mr-1 w-9 h-9">
+            <div className="w-8 h-8 mr-1">
               <DisplayAvatar
                 id={(senderData[0]?.user?.avatar_id as string) ?? ""}
               />

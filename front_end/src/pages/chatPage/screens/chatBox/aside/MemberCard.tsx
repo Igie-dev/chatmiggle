@@ -46,7 +46,7 @@ export default function MemberCard({
       }`}
     >
       <div className="flex items-center w-[75%] h-full gap-2">
-        <div className="w-10 h-10">
+        <div className="w-8 h-8">
           <DisplayAvatar id={data?.avatar_id as string} />
         </div>
         <div className="relative flex items-center w-[75%] ">

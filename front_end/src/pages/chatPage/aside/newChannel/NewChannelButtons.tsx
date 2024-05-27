@@ -19,7 +19,7 @@ export default function NewChannelButtons() {
             className={`w-full p-2 transition-all translate-y-10  border rounded-md opacity-0 h-fit group bg-secondary/50 ${
               isShow
                 ? "-translate-y-5  opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105  delay-100 "
-                : "translate-y-10 delay-200 "
+                : "translate-y-10 pointer-events-none  delay-200 "
             }`}
           >
             <p className="text-xs font-light ">New Chat</p>
@@ -34,7 +34,7 @@ export default function NewChannelButtons() {
             className={`w-full p-2 transition-all translate-y-10  border rounded-md opacity-0 h-fit group bg-secondary/50 ${
               isShow
                 ? "-translate-y-5 opacity-50 hover:opacity-100 hover:bg-secondary hover:scale-105 delay-200 "
-                : "translate-y-10  delay-100"
+                : "translate-y-10 pointer-events-none  delay-100"
             }`}
           >
             <p className="text-xs font-light ">New Group</p>
