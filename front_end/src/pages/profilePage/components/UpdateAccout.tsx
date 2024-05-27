@@ -49,9 +49,8 @@ export default function UpdateAccout({ user }: Props) {
         if (res?.data) {
           setOpen(false);
         }
-      } catch (error) {
-        console.log(error);
-      }
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
     },
   });
 

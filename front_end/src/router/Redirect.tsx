@@ -17,9 +17,8 @@ export default function Redirect() {
         if (res?.data) {
           navigate("/c");
         }
-      } catch (error) {
-        console.log(error);
-      }
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
     };
     if (!token) refresher();
   }, [token, refresh, navigate]);

@@ -34,9 +34,8 @@ export default function UploadAvatar() {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await upload({ data: formData, id: id });
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
 
   useEffect(() => {

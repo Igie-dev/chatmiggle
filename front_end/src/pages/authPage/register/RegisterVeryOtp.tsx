@@ -44,9 +44,8 @@ export default function VerifyOtp() {
         sessionStorage.removeItem("password");
         navigate("/login");
       }
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
 
   useEffect(() => {

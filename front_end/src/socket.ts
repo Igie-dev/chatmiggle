@@ -13,9 +13,8 @@ export const socket: Socket = io(URL, {
       if (token) {
         cb({ token: `${token}` });
       }
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   },
 });
 export const asyncEmit = (emitName: string, emitData: any) => {

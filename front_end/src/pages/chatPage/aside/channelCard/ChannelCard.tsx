@@ -50,20 +50,18 @@ export default function ChannelCard({ channel, handleAside }: Props) {
           </p>
         )}
 
-        <div className="flex items-end w-full">
+        <div className="flex items-end w-full text-muted-foreground">
           {channel?.messages[0]?.type === EMessageTypes.TYPE_TEXT ||
           channel?.messages[0]?.type === EMessageTypes.TYPE_NOTIF ? (
-            <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
+            <p className="w-fit max-w-[50%] text-xs truncate  max-h-6">
               {channel?.messages[0]?.sender_id === user_id
                 ? `You: ${channel?.messages[0]?.message}`
                 : `${channel?.messages[0]?.message}`}
             </p>
           ) : channel?.messages[0]?.type === EMessageTypes.TYPE_IMG ? (
-            <p className="w-fit max-w-[50%] text-xs truncate opacity-70 max-h-6">
-              Image
-            </p>
+            <p className="w-fit max-w-[50%] text-xs truncate  max-h-6">Image</p>
           ) : null}
-          <p className="ml-2 text-xs opacity-40">
+          <p className="ml-2 text-xs ">
             {today
               ? `${formatTime(channel?.messages[0]?.createdAt)}`
               : `${formatDate(channel?.messages[0]?.createdAt)} ${formatTime(

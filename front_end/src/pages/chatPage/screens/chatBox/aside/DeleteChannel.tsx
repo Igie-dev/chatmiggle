@@ -52,10 +52,8 @@ export default function DeleteChannel({
         }
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error);
-    }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-empty
+    } catch (error: any) {}
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

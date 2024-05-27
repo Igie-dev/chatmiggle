@@ -17,9 +17,8 @@ export default function SubmitForm() {
       if (res?.data?.email) {
         navigate("/register/otp");
       }
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
 
   const handlePrevious = () => {

@@ -33,9 +33,8 @@ export default function ResendOtp({ email }: Props) {
         setDisable(true);
         setTimer(60);
       }
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
   return (
     <div className="flex items-center gap-2 text-xs">

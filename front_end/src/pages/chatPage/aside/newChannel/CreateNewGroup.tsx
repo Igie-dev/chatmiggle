@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { Button } from "@/components/ui/button";
@@ -37,15 +39,12 @@ export default function CreateNewGroup({ children }: Props) {
     if (!isOpen || members.length >= 1) return;
     (async () => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res: any = await getUser(user_id);
         if (res?.data) {
           const user = res.data as TUser;
           setMembers((prev) => [...prev, user]);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   }, [getUser, isOpen, user_id, members]);
 
@@ -79,9 +78,7 @@ export default function CreateNewGroup({ children }: Props) {
         } else {
           setSearchError("User not found");
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   };
 
@@ -108,7 +105,6 @@ export default function CreateNewGroup({ children }: Props) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await asyncEmit("create_group", newGroupData);
-      console.log(res?.data);
       if (res?.data) {
         setSearchId("");
         setIsOpenSearch(false);
@@ -123,7 +119,6 @@ export default function CreateNewGroup({ children }: Props) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error);
-      console.log(error);
     }
   };
   return (

@@ -12,9 +12,8 @@ const Persist = () => {
     const refresher = async () => {
       try {
         await refresh(null);
-      } catch (error: any) {
-        console.log(error);
-      }
+        // eslint-disable-next-line no-empty
+      } catch (error: any) {}
     };
     if (!token) refresher();
   }, [token, refresh]);

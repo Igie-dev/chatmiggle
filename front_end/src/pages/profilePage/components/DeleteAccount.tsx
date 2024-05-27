@@ -29,9 +29,8 @@ export default function DeleteAccount({ userId }: Props) {
       if (res?.data) {
         navigate("/login");
       }
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>

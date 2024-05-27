@@ -22,7 +22,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
       {message?.type === EMessageTypes.TYPE_NOTIF ? (
         <li
           id={message.message_id}
-          className="flex flex-col items-center justify-center w-full h-16 opacity-70"
+          className="flex flex-col items-center justify-center w-full h-16 text-muted-foreground"
         >
           <Bell size={20} strokeWidth={1} />
           <p className="text-[10px] font-light ">{message?.message}</p>
@@ -53,7 +53,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
             ) : message?.type === EMessageTypes.TYPE_IMG ? (
               <ImageMessage message={message} />
             ) : null}
-            <div className="absolute flex -bottom-4 w-fit opacity-80">
+            <div className="absolute flex -bottom-5 w-fit text-muted-foreground">
               {lastMessage ? <SeenMessage message={message} /> : null}
               <p className="font-thin text-[10px]">
                 {isToday(message.createdAt)

@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { Image, Send, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -89,7 +90,6 @@ export default function ChatInput() {
         }
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +120,6 @@ export default function ChatInput() {
         }
       }
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoading(false);
     }

@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -48,9 +49,7 @@ export default function AddMember({
       if (res.data) {
         setNewMember(res.data);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -69,7 +68,6 @@ export default function AddMember({
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
       setError(error);
     } finally {
       setIsLoading(false);

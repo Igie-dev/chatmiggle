@@ -56,7 +56,6 @@ export default function LeaveGroup({
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
       setError(error);
     } finally {
       setIsLoading(false);

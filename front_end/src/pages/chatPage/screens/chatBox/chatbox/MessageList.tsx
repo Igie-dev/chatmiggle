@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { useParams } from "react-router-dom";
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
 import MessageCard from "./MessageCard";
@@ -46,9 +47,7 @@ export default function MessageList() {
             }
           }
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
 
     return () => {
@@ -110,9 +109,7 @@ export default function MessageList() {
             }
           }
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   };
 

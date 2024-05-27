@@ -27,9 +27,8 @@ export default function RemoveAvatar() {
     if (!id) return;
     try {
       await remove(id);
-    } catch (error) {
-      console.log(error);
-    }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
   useEffect(() => {
     if (isSuccess) {

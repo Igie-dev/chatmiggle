@@ -1,3 +1,5 @@
+/* eslint-disable no-empty */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -34,15 +36,12 @@ export default function CreateNewChannel({ children }: Props) {
     if (!id) return;
     (async () => {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const res: any = await getUser(id);
         if (res?.data) {
           const user = res.data as TUser;
           setMate(user);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     })();
   };
 
@@ -59,7 +58,7 @@ export default function CreateNewChannel({ children }: Props) {
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await asyncEmit("create_new_channel", newChannelData);
-      console.log(res?.data);
+
       if (res?.data) {
         setMessage("");
         setId("");
@@ -70,7 +69,6 @@ export default function CreateNewChannel({ children }: Props) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(error);
-      console.log(error);
     }
   };
 

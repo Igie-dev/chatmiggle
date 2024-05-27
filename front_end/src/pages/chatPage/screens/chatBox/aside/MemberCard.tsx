@@ -41,7 +41,7 @@ export default function MemberCard({
   ) : (
     <li
       //   onClick={handleClick}
-      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14 hover:shadow-md hover:bg-accent/50 ${
+      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14  hover:bg-accent/50 ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
@@ -53,7 +53,7 @@ export default function MemberCard({
           <p className="w-full max-w-full text-sm truncate max-h-6">
             {data?.first_name + " " + data?.last_name}
           </p>
-          <p className="absolute -bottom-4 opacity-50 left-1 text-[10px]">
+          <p className="absolute -bottom-4 text-muted-foreground left-1 text-[10px]">
             {adminId === userId && !isPrivate ? "Admin" : ""}
           </p>
         </div>

@@ -40,9 +40,8 @@ export default function LoginPage() {
         if (res?.data?.accessToken) {
           navigate("/c");
         }
-      } catch (error) {
-        console.log(error);
-      }
+        // eslint-disable-next-line no-empty
+      } catch (error) {}
     },
   });
   return (
@@ -133,7 +132,7 @@ export default function LoginPage() {
               title="Log In"
               size="lg"
               disabled={isLoading}
-              className="w-[92%]   mt-5 rounded-md"
+              className="w-[92%] mt-5 rounded-md"
             >
               {isLoading ? <BtnLoader /> : "Log in"}
             </Button>
