@@ -94,7 +94,6 @@ const getUserChannels = asyncHandler(async (req, res) => {
 
     return res.status(200).json(channels);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -126,7 +125,6 @@ const verifyUserInChannel = asyncHandler(async (req, res) => {
 
     return res.status(200).json({ channel_id: channel_id });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -184,7 +182,6 @@ const getChannelMessages = asyncHandler(async (req, res) => {
       .status(200)
       .json({ messages: foundChannel.messages, cursor: nextCursorId });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -209,7 +206,6 @@ const getChannel = asyncHandler(async (req, res) => {
 
     return res.status(200).json(foundChannel);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -281,7 +277,6 @@ const getUserGroups = asyncHandler(async (req, res) => {
 
     return res.status(200).json(userChannels);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -385,7 +380,6 @@ const deleteChannel = asyncHandler(async (req, res) => {
 
     return res.status(200).json(channel);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });

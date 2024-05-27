@@ -37,7 +37,6 @@ const getUsers = asyncHandler(async (req, res) => {
     const newCursor = users[users?.length - 1]?.id;
     return res.status(200).json({ cursor: newCursor, users: users });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -66,7 +65,6 @@ const getUser = asyncHandler(async (req, res) => {
 
     return res.status(200).json(foundUser);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -87,7 +85,6 @@ const updateUser = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({ message: "Successfully updated user" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -109,7 +106,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({ message: "Successfully deleted user" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -185,7 +181,6 @@ const getUserFriends = asyncHandler(async (req, res) => {
 
     return res.status(200).json(mates);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });

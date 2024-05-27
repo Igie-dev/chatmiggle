@@ -58,7 +58,6 @@ const signIn = asyncHandler(async (req, res) => {
     });
     return res.status(200).json({ accessToken });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -110,7 +109,6 @@ const refresh = asyncHandler(async (req, res) => {
       }
     );
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -124,7 +122,6 @@ const signOut = asyncHandler(async (req, res) => {
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
     return res.json({ message: "Cookie cleared!" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });

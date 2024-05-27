@@ -62,7 +62,6 @@ const otpEmail = (email, otp) => {
 
     transporter.sendMail(mail_config, (err, info) => {
       if (err) {
-        console.log(err);
         return reject({ message: "Something wrong in mailer!" });
       }
       return resolve({ message: "Email sent succesfully!" });

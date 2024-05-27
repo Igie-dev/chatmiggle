@@ -28,7 +28,6 @@ const storageFiles = multer.diskStorage({
       }
       cb(null, destinationPath);
     } catch (err) {
-      console.log(err);
       cb(err, null);
     }
   },
@@ -60,10 +59,8 @@ const uploadImage = multer({
   },
   storage: storageFiles,
   onError: function (err, next) {
-    console.log(err);
     fs.unlink(`${imageData.filePath}`, function (err) {
       if (err) {
-        console.log(err);
       }
     });
     return res.status(500).json({ error: "Failed to upload files!" });
@@ -93,7 +90,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
     if (fs.existsSync(imageData.filePath)) {
       fs.unlink(`${imageData.filePath}`, function (err) {
         if (err) {
-          console.log(err);
         }
       });
     }
@@ -158,7 +154,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
           return res.status(201).json({ message: "Upload success" });
         }
       } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Something went wrong" });
       }
     }
@@ -211,7 +206,6 @@ const uploadAvatar = asyncHandler(async (req, res) => {
           return res.status(201).json({ message: "Upload success" });
         }
       } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: "Something went wrong" });
       }
     }
@@ -222,7 +216,7 @@ const uploadAvatar = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     deleteFile();
-    console.log(error);
+
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -258,7 +252,6 @@ const getAvatar = asyncHandler(async (req, res) => {
       return res.status(200).json({ url: url });
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -284,7 +277,6 @@ const deleteAvatar = asyncHandler(async (req, res) => {
     }
     return res.status(200).json({ message: "Avatar removed" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -309,7 +301,6 @@ const imageAsAMessage = asyncHandler(async (req, res) => {
     const url = bufferToDataURL(buffer, foundImage?.mimetype);
     return res.status(200).json({ url: url });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });

@@ -45,7 +45,6 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
       message: "Otp sent",
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });
@@ -106,7 +105,6 @@ const register = asyncHandler(async (req, res) => {
     await prisma.otp.delete({ where: { email } });
     return res.status(201).json({ email, message: "Registered" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 });

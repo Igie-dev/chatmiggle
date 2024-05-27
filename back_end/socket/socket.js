@@ -40,7 +40,7 @@ const socketConnection = (httpServer) => {
 
   //Connection
   io.on("connection", (socket) => {
-    // console.log("Socket connnected");
+    console.log("Socket connnected");
     socket.on("user_join", (user_id) => {
       socket.join(user_id);
     });
@@ -74,7 +74,6 @@ const socketConnection = (httpServer) => {
             }
           })
           .catch((error) => {
-            console.log(error);
             //Return to sender
             io.to(socket.id).emit("create_new_channel", {
               error: error.error,
@@ -110,7 +109,6 @@ const socketConnection = (httpServer) => {
             }
           })
           .catch((error) => {
-            console.log(error);
             //Return to sender
             io.to(socket.id).emit("new_chat", {
               error: error.error,
