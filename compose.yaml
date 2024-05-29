@@ -27,6 +27,9 @@ services:
         action: sync
       - path: ./back_end/package*.json
         action: rebuild
+    networks:
+       webchat:
+        ipv4_address: 172.3.0.5
 
   postgres:
     image: postgres:latest
@@ -38,6 +41,9 @@ services:
     environment:
         POSTGRES_PASSWORD: postgres
         POSTGRES_DB: webchat
+    networks:
+       webchat:
+        ipv4_address: 172.3.0.4
 
 
   pgadmin: 
@@ -46,6 +52,7 @@ services:
       - postgres
     ports:
       - "5050:5050"
+
     environment:
       PGADMIN_LISTEN_PORT: 5050
       PGADMIN_DEFAULT_EMAIL: jrpogiyanyow@gmail.com
@@ -54,7 +61,16 @@ services:
       SESSION_COOKIE_SECURE : False
       CSRF_COOKIE_SECURE : False
       SERVER_MODE : False
+    networks:
+       webchat:
+        ipv4_address: 172.3.0.6
 
+networks:
+  webchat:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.3.0.0/16
 
 volumes:
   webchat:
