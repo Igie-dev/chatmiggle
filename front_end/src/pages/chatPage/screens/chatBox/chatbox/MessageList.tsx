@@ -114,7 +114,7 @@ export default function MessageList() {
   };
 
   return (
-    <div className="relative flex-1 w-full overflow-auto rounded-md">
+    <div className="relative flex-1 w-full overflow-auto">
       {cursor ? (
         <div className="flex items-center justify-center w-full py-1">
           <button

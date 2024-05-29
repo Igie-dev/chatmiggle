@@ -50,8 +50,8 @@ function Header({ channel, isFetching }: Props) {
   }, [channel]);
 
   return (
-    <header className="flex flex-col items-center justify-between w-full gap-2 px-5 py-4 border rounded-md h-fit bg-accent/50">
-      <div className="flex flex-col items-center justify-center w-full gap-2">
+    <header className="flex flex-col items-center justify-between w-full gap-2 px-5 py-4 border rounded-md h-fit bg-primary-foreground">
+      <div className="flex flex-col items-center justify-center w-full space-y-4">
         <div className="w-16 h-16 overflow-hidden border rounded-full">
           {isFetching ? (
             <Skeleton className="w-full h-full" />

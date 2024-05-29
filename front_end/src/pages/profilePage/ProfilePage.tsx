@@ -96,7 +96,7 @@ export default function ProfilePage() {
               </>
             ) : null}
           </div>
-          <div className="flex flex-col w-full gap-4 p-4 py-8 mt-5 border rounded-md bg-accent/30">
+          <div className="flex flex-col w-full gap-4 p-4 py-8 mt-5 border rounded-md bg-primary-foreground">
             <div className="flex flex-col items-start w-full gap-1 px-2 pb-2 border-b">
               {isFetching ? (
                 <>

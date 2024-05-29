@@ -27,8 +27,8 @@ export default function ChannelCard({ channel, handleAside }: Props) {
       onClick={handleClick}
       className={`group flex items-start w-full gap-3 p-2 transition-all border rounded-md relative cursor-pointer h-fit ${
         channelId === channel?.channel_id
-          ? "bg-accent/70 border-border/70"
-          : "bg-transparent border-transparent  hover:bg-accent/70"
+          ? "bg-primary-foreground border"
+          : "bg-transparent border-transparent  hover:bg-primary-foreground"
       }`}
     >
       <div className="w-8 h-8">

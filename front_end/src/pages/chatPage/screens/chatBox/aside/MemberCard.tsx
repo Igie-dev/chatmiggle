@@ -41,7 +41,7 @@ export default function MemberCard({
   ) : (
     <li
       //   onClick={handleClick}
-      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14  hover:bg-accent/50 ${
+      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14  hover:bg-primary-foreground ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
