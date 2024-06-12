@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import DisplayAvatar from "./DisplayAvatar";
+import DisplayAvatar from "@/components/shared/DisplayAvatar";
 type Props = {
   members: TChannelMemberData[];
   senderId: string;

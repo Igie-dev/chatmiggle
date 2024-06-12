@@ -4,7 +4,7 @@ type Props = {
 function Container({ children }: Props) {
   return (
     <section className="flex items-center justify-center w-screen h-screen lg:px-10 lg:py-2 xl:px-10 bg-background/50">
-      <div className="relative flex items-center justify-center w-full h-full overflow-hidden lg:rounded-2xl lg:py-2 xl:py-4 xl:gap-2 bg-background/50">
+      <div className="relative flex items-center justify-center w-full h-full gap-1 overflow-hidden lg:rounded-2xl lg:py-2 xl:py-4 xl:gap-2 bg-background/50">
         {children}
       </div>
     </section>

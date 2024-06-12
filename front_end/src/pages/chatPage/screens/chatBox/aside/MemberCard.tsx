@@ -40,8 +40,7 @@ export default function MemberCard({
     </li>
   ) : (
     <li
-      //   onClick={handleClick}
-      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-14  hover:bg-primary-foreground ${
+      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-fit  hover:bg-primary-foreground ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
@@ -49,11 +48,11 @@ export default function MemberCard({
         <div className="w-8 h-8">
           <DisplayAvatar id={data?.avatar_id as string} />
         </div>
-        <div className="relative flex items-center w-[75%] ">
-          <p className="w-full max-w-full text-sm truncate max-h-6">
+        <div className="items-start w-[75%]  flex flex-col">
+          <p className="w-full max-w-full text-xs truncate max-h-6">
             {data?.first_name + " " + data?.last_name}
           </p>
-          <p className="absolute -bottom-4 text-muted-foreground left-1 text-[10px]">
+          <p className="text-muted-foreground text-[10px]">
             {adminId === userId && !isPrivate ? "Admin" : ""}
           </p>
         </div>

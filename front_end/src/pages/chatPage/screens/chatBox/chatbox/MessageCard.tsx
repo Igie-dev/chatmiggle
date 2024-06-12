@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import { isToday, formatDate, formatTime } from "@/utils/dateUtil";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
-import SeenMessage from "@/components/shared/SeenMessage";
+import SeenMessage from "./SeenMessage";
 import { Bell } from "lucide-react";
 import ImageMessage from "./ImageMessage";
 import { EMessageTypes } from "@/types/enums";
