@@ -21,7 +21,7 @@ export default function SignOutBtn() {
       size="sm"
       variant="ghost"
       onClick={handleSignout}
-      className="flex justify-start w-full text-xs"
+      className="flex justify-start w-full px-2 text-xs"
     >
       {isLoading ? <BtnsLoaderSpinner /> : "SignOut"}
     </Button>

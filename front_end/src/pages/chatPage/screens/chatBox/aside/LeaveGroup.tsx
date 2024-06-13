@@ -12,6 +12,8 @@ import { Button } from "@/components/ui/button";
 import { asyncEmit } from "@/socket";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
+import { useAppSelector } from "@/service/store";
+import { getCurrentUser } from "@/service/slices/user/userSlice";
 type Props = {
   userId: string;
   channelId: string;
@@ -41,6 +43,7 @@ export default function LeaveGroup({
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { user_id } = useAppSelector(getCurrentUser);
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -95,7 +98,11 @@ export default function LeaveGroup({
 
           <DialogFooter>
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? <BtnsLoaderSpinner /> : "Leave"}
+              {isLoading ? (
+                <BtnsLoaderSpinner />
+              ) : (
+                `${userId === user_id ? "Leave" : "Remove"}`
+              )}
             </Button>
           </DialogFooter>
         </form>
