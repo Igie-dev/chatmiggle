@@ -1,7 +1,7 @@
 # Chatmiggle
 
-Chatmiggle is a web-based chat application built with Express.js, Socket.io, React, PostgreSQL, Prisma, and Nodemailer.  
-The application is designed to provide real-time chat functionality with a robust backend and modern frontend.  
+Chatmiggle is a web-based chat application built with Express.js, Socket.io, React, PostgreSQL, Prisma, and Nodemailer.
+The application is designed to provide real-time chat functionality with a robust backend and modern frontend.
 The entire project is containerized using Docker for ease of deployment and management.
 
 # Features
