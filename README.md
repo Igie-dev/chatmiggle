@@ -4,7 +4,7 @@ Chatmiggle is a web-based chat application built with Express.js, Socket.io, Rea
 The application is designed to provide real-time chat functionality with a robust backend and modern frontend.
 The entire project is containerized using Docker for ease of deployment and management.
 
-# Features
+## Features
 
 - Real-time messaging
 - User authentication and authorization
@@ -12,7 +12,7 @@ The entire project is containerized using Docker for ease of deployment and mana
 - Chat rooms and direct messaging
 - Email notifications using Nodemailer
 
-# Tech Stack
+## Tech Stack
 
 - **Frontend:** React
 - **Backend:** Express.js, Socket.io
@@ -21,22 +21,22 @@ The entire project is containerized using Docker for ease of deployment and mana
 - **Email Service:** Nodemailer
 - **Containerization:** Docker
 
-# Prerequisites
+## Prerequisites
 
 - Docker and Docker Compose installed on your machine
 - Node.js and npm installed on your machine
 - PostgreSQL installed and running (if not using Docker)
 
-# Installation
+## Installation
 
 git clone [https://github.com/yourusername/chatmiggle.git](https://github.com/Igie-dev/chatmiggle.git)  
 cd chatmiggle  
 npm install  
 docker compose up
 
-# env
+## env
 
-**BackEnd**
+**BackEnd**  
 PORT=  
 CLIENT_URL=  
 SERVER_URL=  
@@ -48,7 +48,7 @@ APP_NAME=
 SALTROUND=  
 MESSAGES_LIMIT=
 
-**FrontEnd**
+**FrontEnd**  
 VITE_SERVER_URL=  
 VITE_SECRET_KEY=  
 VITE_MESSAGES_LIMIT=
