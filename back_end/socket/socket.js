@@ -66,6 +66,9 @@ const socketConnection = (httpServer) => {
               io.to(socket.id).emit("create_new_channel", {
                 data: res?.data?.channel_id,
               });
+              io.to(res?.data?.channel_id).emit("new_message", {
+                data: res.data,
+              });
               for await (const member of members) {
                 io.to(member.user_id).emit("channel_message", {
                   data: res.data,
