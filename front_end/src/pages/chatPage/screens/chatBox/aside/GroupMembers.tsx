@@ -46,7 +46,7 @@ export default function GroupMembers({ channel }: Props) {
   return (
     <div className="absolute top-0 left-0 flex flex-col w-full h-full gap-2 p-2 pt-5">
       <div className="w-full h-[95%] overflow-y-auto ">
-        <ul className="flex flex-col w-full pb-5 h-fit">
+        <ul className="flex flex-col w-full gap-1 pb-5 h-fit">
           {members?.length >= 1
             ? members.map((member) => {
                 return (

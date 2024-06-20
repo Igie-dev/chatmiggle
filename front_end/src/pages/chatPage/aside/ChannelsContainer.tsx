@@ -17,11 +17,12 @@ export default function ChannelsContainer({ handleAside }: Props) {
   };
   return (
     <div className="flex flex-col h-[89%] w-full gap-2">
-      <header className="flex flex-col items-start w-full gap-1 rounded-sm h-fit">
-        <span className="text-sm font-semibold">Chat</span>
+      <header className="flex flex-col items-start w-full gap-1 pb-2 border-b h-fit">
+        <span className="ml-1 text-sm font-semibold">Chat</span>
         <Input
           type="text"
           placeholder="Search..."
+          className="h-12 bg-transparent"
           onChange={(e) => handleChange(e)}
         />
       </header>

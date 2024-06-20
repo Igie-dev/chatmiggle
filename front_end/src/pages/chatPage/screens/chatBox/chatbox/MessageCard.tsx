@@ -44,7 +44,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
           >
             {message?.type === EMessageTypes.TYPE_TEXT ? (
               <pre
-                className={`flex flex-wrap  max-w-[60%] mt-4 border p-2 rounded-lg lg:max-w-[50%] font-sans text-sm whitespace-pre-wrap w-fit break-all ${
+                className={`flex flex-wrap  max-w-[70%] mt-4 border p-2 rounded-lg  font-sans text-sm whitespace-pre-wrap w-fit break-all ${
                   senderMe ? "bg-background" : "bg-accent"
                 }`}
               >

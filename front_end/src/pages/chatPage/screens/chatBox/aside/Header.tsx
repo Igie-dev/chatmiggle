@@ -50,9 +50,9 @@ function Header({ channel, isFetching }: Props) {
   }, [channel]);
 
   return (
-    <header className="flex flex-col items-center justify-between w-full gap-2 px-5 py-4 border rounded-md h-fit bg-primary-foreground">
+    <header className="flex flex-col items-center justify-between w-full gap-5 px-5 py-4 h-fit">
       <div className="flex flex-col items-center justify-center w-full space-y-2">
-        <div className="w-16 h-16 overflow-hidden border rounded-full">
+        <div className="overflow-hidden border rounded-full w-14 h-14">
           {isFetching ? (
             <Skeleton className="w-full h-full" />
           ) : channel && channel?.is_private ? (
@@ -66,7 +66,7 @@ function Header({ channel, isFetching }: Props) {
             <Skeleton className="w-full h-full" />
           </div>
         ) : (
-          <span className="font-normal truncate text-medium">
+          <span className="text-sm font-semibold truncate">
             {channel && channel?.is_private ? (
               <DisplayUserName userId={mate[0]?.user_id} />
             ) : (
@@ -76,7 +76,7 @@ function Header({ channel, isFetching }: Props) {
         )}
       </div>
 
-      <div className="flex items-center justify-center w-full gap-1">
+      <div className="flex items-center justify-center w-full gap-1 ">
         {adminId === user_id && !channel?.is_private ? (
           <AddMember
             channelId={channel?.channel_id}

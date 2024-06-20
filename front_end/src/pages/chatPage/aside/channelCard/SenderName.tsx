@@ -6,9 +6,15 @@ type Props = {
   senderId?: string;
 };
 export default function SenderName({ isPrivate, groupName, senderId }: Props) {
-  return isPrivate && senderId ? (
+  if (!senderId && isPrivate)
+    return (
+      <p className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
+        User
+      </p>
+    );
+  return isPrivate ? (
     <span className="w-full max-w-full text-sm truncate opacity-90 max-h-6">
-      <DisplayUserName userId={senderId} />
+      <DisplayUserName userId={senderId ?? ""} />
     </span>
   ) : (
     <p className="w-full max-w-full text-sm truncate opacity-90 max-h-6">

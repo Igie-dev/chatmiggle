@@ -82,7 +82,7 @@ export default function ImageInput({ setMessageType, messageType }: Props) {
 
   if (!imageData?.name)
     return (
-      <div className="flex items-center min-w-[20%] rounded-lg border h-full ">
+      <div className="flex items-center h-full bg-transparent w-fit">
         <div className="flex items-center h-12 px-1 w-fit">
           <div className="flex items-center h-full ">
             <input
@@ -106,7 +106,7 @@ export default function ImageInput({ setMessageType, messageType }: Props) {
       </div>
     );
   return (
-    <div className="bg-background w-[14rem] h-[16rem] relative mr-2">
+    <div className="bg-background w-fit h-[16rem] relative mr-2">
       <Button
         size="icon"
         variant="outline"

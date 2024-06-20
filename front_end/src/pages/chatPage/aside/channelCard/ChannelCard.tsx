@@ -25,10 +25,10 @@ export default function ChannelCard({ channel, handleAside }: Props) {
   return (
     <li
       onClick={handleClick}
-      className={`group flex items-start w-full gap-3 p-2 py-3 transition-all border rounded-md relative cursor-pointer h-fit ${
+      className={`group flex items-start w-full gap-3 p-2 py-3 transition-all  relative cursor-pointer h-fit ${
         channelId === channel?.channel_id
-          ? "bg-primary-foreground border"
-          : "bg-transparent border-transparent  hover:bg-primary-foreground"
+          ? "bg-secondary/80"
+          : "bg-transparent  hover:bg-secondary/80"
       }`}
     >
       <ChannelAvatar

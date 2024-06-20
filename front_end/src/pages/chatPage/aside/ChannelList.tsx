@@ -37,11 +37,12 @@ export default function ChannelList({ handleAside, searchText }: Props) {
       const channel = res?.data as TChannelData;
       if (!channel?.channel_id) return;
       const user = channel?.members.filter((m) => m.user_id === user_id);
-      if (user.length === 0) return;
+      if (user.length <= 0) return;
       const newChannelId = channel?.channel_id;
-      //If channels empty, add to latest new channel
+      // //If channels empty, add to latest new channel
+
       if (channels.length <= 0 && channel?.channel_id) {
-        setChannels([channel]);
+        setChannels((prev) => [...prev, channel]);
         return;
       }
 
@@ -85,8 +86,7 @@ export default function ChannelList({ handleAside, searchText }: Props) {
         //Not exist
         //Unshift channel to list
         //Or add the new channel to top
-        const newChannel = [channel] as TChannelData[];
-        setChannels((prev) => [...newChannel, ...prev]);
+        setChannels((prev) => [channel, ...prev]);
       }
     });
 
@@ -132,8 +132,8 @@ export default function ChannelList({ handleAside, searchText }: Props) {
     }
   }, [channelId, channels, navigate, searchText]);
   return (
-    <div className="flex flex-col h-[82%] w-full gap-2  overflow-y-auto">
-      <ul className="flex flex-col w-full h-fit  gap-[2px]  py-2 px-0">
+    <div className="flex flex-col h-[82%] w-full gap-2 overflow-y-auto">
+      <ul className="flex flex-col w-full h-fit  gap-[2px]  px-0">
         {isFetching ? (
           <LoaderUi />
         ) : (

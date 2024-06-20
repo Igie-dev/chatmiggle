@@ -52,8 +52,10 @@ export default function TextInput({ setMessageType, messageType }: Props) {
       const res: any = await asyncEmit("send_new_message", data);
       if (res?.data) {
         setMessageText("");
-        if (!messageText) {
-          handleBlur();
+        if (textAreaRef.current) {
+          console.log("must hide");
+          textAreaRef.current.style.height = "0px";
+          textAreaRef.current.value = "";
         }
       }
     } catch (error) {
@@ -85,7 +87,7 @@ export default function TextInput({ setMessageType, messageType }: Props) {
           minHeight: "3.2rem",
           lineHeight: 1.5,
         }}
-        className="px-2 pt-3 max-h-[12rem] whitespace-pre-wrap break-all flex-1 rounded-lg  transition-all bg-transparent border text-sm  resize-none outline-none"
+        className="px-4 pt-[.8rem] max-h-[12rem] whitespace-pre-wrap break-all flex-1 rounded-lg  transition-all bg-transparent border text-sm  resize-none outline-none"
       />
       {messageText.length >= 1 ? (
         <Button

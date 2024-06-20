@@ -20,7 +20,7 @@ export default function ChatboxAside() {
   return (
     <aside
       ref={asideRef}
-      className=" h-full flex flex-col p-1 gap-1 z-40 w-full absolute top-0 right-0 xl:static bg-background  xl:translate-x-0 transition-all translate-x-full xl:w-[22rem] 2xl:w-[24rem]"
+      className="h-full flex flex-col p-1 gap-1 z-40 w-full absolute top-0 right-0 xl:static  xl:border-l bg-background xl:translate-x-0 transition-all translate-x-full xl:w-[22rem] 2xl:w-[24rem]"
     >
       <Button
         onClick={handleAside}

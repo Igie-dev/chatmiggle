@@ -28,7 +28,7 @@ export default function MemberCard({
   const navigate = useNavigate();
   if (isError) return null;
   return isFetching ? (
-    <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70">
+    <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit">
       <div className="overflow-hidden rounded-full w-11 h-11">
         <Skeleton className="w-full h-full" />
       </div>
@@ -40,7 +40,7 @@ export default function MemberCard({
     </li>
   ) : (
     <li
-      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-fit  hover:bg-primary-foreground ${
+      className={`group relative flex items-center w-full justify-between gap-1 p-2 bg-transparent  rounded-md cursor-pointer h-fit  hover:bg-secondary/50 ${
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >

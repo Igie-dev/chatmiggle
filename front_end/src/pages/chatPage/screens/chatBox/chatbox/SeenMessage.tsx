@@ -48,16 +48,16 @@ export default function SeenMessage({ message }: Props) {
   }, [user_id, message, message.sender_id]);
   return user_id === message.sender_id ? (
     <>
-      {membersSeen.length > 1 && message?.channel?.is_private ? (
+      {membersSeen.length <= 2 && message.channel.is_private ? (
         <p className="mr-2  font-semibold text-[10px] opacity-50   rounded-lg">
           Seen
         </p>
-      ) : null}
+      ) : (
+        <DisplayGroupMemberSeen
+          members={membersSeen}
+          senderId={message.sender_id}
+        />
+      )}
     </>
-  ) : !message.channel.is_private && membersSeen.length > 1 ? (
-    <DisplayGroupMemberSeen
-      members={membersSeen}
-      senderId={message.sender_id}
-    />
   ) : null;
 }

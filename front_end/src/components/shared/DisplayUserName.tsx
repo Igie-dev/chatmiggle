@@ -5,14 +5,15 @@ type Props = {
 };
 export default function DisplayUserName({ userId }: Props) {
   const { data, isFetching } = useGetUserByIdQuery(userId);
+
   return (
     <>
       {isFetching ? (
         <Skeleton className="w-full h-full" />
-      ) : data?.first_name && data?.last_name ? (
-        <>{`${data?.first_name} ${data?.last_name}`}</>
+      ) : !data ? (
+        "User"
       ) : (
-        <>User</>
+        <>{`${data?.first_name} ${data?.last_name}`}</>
       )}
     </>
   );
