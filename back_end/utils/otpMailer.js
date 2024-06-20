@@ -30,22 +30,20 @@ const otpEmail = (email, otp) => {
       
       <body>
           <!-- partial:index.partial.html -->
-          <div style="font-family: Helvetica,Arial,sans-serif;width:100%;font-size:1em; max-width: 50rem;overflow:auto;line-height:1;display:flex; align-items:start;">
-              <div style="margin:5px auto;width:100%; padding:2rem;">
+          <div style="font-family: Helvetica,Arial,sans-serif;width:100%;
+                      overflow:auto;
+                      display:flex; align-items:center;">
+              <div style="margin:5px auto; width:100%; padding:2rem; max-width: 50rem; border:1px solid #eee; border-radius: 10px;">
               
               <div style="border-bottom:1px solid #eee; padding-top: 1em; padding-bottom: 1em;">
-                      <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">chatMiggle</a>
+                      <a href="" style="font-size:1.5em; color: #00466a;text-decoration:none;">${appName}</a>
                   </div>
-
-                  <p>Hello, Welcome to chatMiggle</p>
-      
-                  <h2 style="font-weight:300">Your Otp code:</h2>
-                  <h2 style="background: #00466a;margin: 0;width: max-content;padding: 1rem 3rem;color: #fff;border-radius: 4px;">${otp}</h2>
-                  <p style=" margin-top: 2rem; font-weight:300;">This code will expire in 5 minutes.</p>
-                  <p >Regards,<br />Faculty</p>
+                  <p>Hello, Welcome to ${appName}</p>
+                  <p style="margin: 2rem 0;">Your Otp code: ${otp}</h2>
+                  <p style="margin-top: 2rem; font-weight:300;">This code will expire in 5 minutes.</p>
+                  <p style="font-size:.9em;">Regards,<br />${appName}</p>
                   <hr style="border:none;border-top:1px solid #eee" />
-      
-                  <div style="float:left;padding:8px 0;color:#aaa;line-height:1;font-weight:300">
+                  <div style="color:#aaa;font-weight:300;font-size:.9em;">
                       <p>${appName}</p>
                       <p>Manila </p>
                       <p>Philippines</p>
