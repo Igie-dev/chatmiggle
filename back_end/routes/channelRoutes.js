@@ -1,26 +1,41 @@
 import express from "express";
 import verifyJWT from "../middleware/verifyJWT.js";
 import {
-  getUserChannels,
-  verifyUserInChannel,
-  getChannelMessages,
+  createChannel,
+  createGroupChannel,
+  userChannels,
   getChannel,
-  getUserGroups,
   deleteChannel,
-} from "../controller/channelController.js";
+  channelMessages,
+  sendMessage,
+  addToGroup,
+  seenChannel,
+  changeGroupName,
+  removeFromChannel,
+} from "../controller/channelsController.js";
 const router = express.Router();
 router.use(verifyJWT);
 
-router.route("/userchannel/:userId").get(getUserChannels);
+router.route("/").post(createChannel);
 
-router.route("/usergroup/:userId").get(getUserGroups);
+router.route("/group").post(createGroupChannel);
+
+router.route("/userchannel/:userId").get(userChannels);
 
 router.route("/:channelId").get(getChannel);
 
-router.route("/verifyuser/:channelId/:userId").get(verifyUserInChannel);
+router.route("/messages/:channelId").get(channelMessages);
 
-router.route("/messages/:channelId").get(getChannelMessages);
+router.route("/delete").delete(deleteChannel);
 
-router.route("/:channelId/:userId").delete(deleteChannel);
+router.route("/newmessage").post(sendMessage);
+
+router.route("/seen").post(seenChannel);
+
+router.route("/group/changename").post(changeGroupName);
+
+router.route("/group/add").post(addToGroup);
+
+router.route("/group/remove").delete(removeFromChannel);
 
 export default router;

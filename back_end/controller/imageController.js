@@ -9,7 +9,7 @@ import sharp from "sharp";
 import fs from "fs";
 import { promises as fsPromises } from "fs";
 import path from "path";
-
+import { emitNewMessage } from "../socket/socket.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const acceptMimetype = ["image/jpeg", "image/png"];
 const destinationPath = path.join(__dirname, "..", "uploads");
@@ -283,6 +283,8 @@ const deleteAvatar = asyncHandler(async (req, res) => {
 
 const imageAsAMessage = asyncHandler(async (req, res) => {
   try {
+    const { channel_id, sender_id } = req.body;
+
     const saveImage = await prisma.avatar.create({
       data: {
         data: fs.readFileSync(`${imageData.filePath}`),
@@ -299,7 +301,65 @@ const imageAsAMessage = asyncHandler(async (req, res) => {
     });
     const buffer = Buffer.from(foundImage?.data, "binary");
     const url = bufferToDataURL(buffer, foundImage?.mimetype);
-    return res.status(200).json({ url: url });
+
+    const saveMessage = await prisma.message.create({
+      data: {
+        message_id: uuid(),
+        channel_id,
+        message: url,
+        type: "image",
+        sender_id,
+      },
+    });
+    if (!saveMessage?.id) {
+      return res.status(500).json({ message: "Failed to save message!" });
+    }
+
+    if (!url) {
+      throw new Error("Something went wrong");
+    }
+
+    const channel = await prisma.channel.findUnique({
+      where: { channel_id },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+          include: {
+            channel: {
+              include: {
+                members: {
+                  where: {
+                    is_deleted: false,
+                  },
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        members: {
+          where: {
+            is_deleted: false,
+          },
+          include: {
+            user: true,
+          },
+        },
+      },
+    });
+    if (!channel?.id) {
+      res.status(500).json({ message: "Something went wrong!" });
+    }
+
+    for await (let member of channel.members) {
+      emitNewMessage(member.user_id, channel);
+    }
+    return res.status(200).json({ data: channel });
   } catch (error) {
     return res.status(500).json({ error: "Something went wrong" });
   }

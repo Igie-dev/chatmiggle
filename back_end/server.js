@@ -1,23 +1,21 @@
 import express from "express";
-import http from "http";
 import { fileURLToPath } from "url";
 import path from "path";
 import dotenv from "dotenv";
 import cors from "cors";
 import corsOptions from "./config/corsOptions.js";
 import cookieParser from "cookie-parser";
-import socketConnection from "./socket/socket.js";
 import root from "./routes/root.js";
 import authRoutes from "./routes/authRoutes.js";
 import registerRoutes from "./routes/registerRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import imageRoutes from "./routes/imageRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
+import { server, app } from "./socket/socket.js";
+
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT;
-const app = express();
-const httpServer = http.createServer(app);
 
 app.use(cors(corsOptions));
 
@@ -50,9 +48,6 @@ app.all("*", (req, res) => {
   }
 });
 
-httpServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-//Socket
-socketConnection(httpServer);
