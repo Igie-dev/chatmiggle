@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/dialog";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
-import { useDeleteChannelMutation } from "@/service/slices/channel/channelApiSlice";
-import { asyncEmit } from "@/socket";
 import { Trash } from "lucide-react";
 import CustomTooltip from "@/components/shared/CustomTooltip";
+import { useDeleteChannelMutation } from "@/service/slices/channel/channelApiSlice";
 type Props = {
   channelId: string;
   channelAvatarId: string;
@@ -36,20 +35,12 @@ export default function DeleteChannel({
     e.preventDefault();
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await deleteChannel({ channelId, userId });
+      const res: any = await deleteChannel({
+        channelId,
+        userId,
+      });
       if (res?.data) {
-        const channel = res.data;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const emitRes: any = await asyncEmit(
-          `${isPrivate ? "delete_channel" : "delete_group"}`,
-          {
-            user_id: userId,
-            channel: channel,
-          }
-        );
-        if (emitRes?.data?.channel_id === channelId) {
-          setOpen(false);
-        }
+        setOpen(false);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-empty

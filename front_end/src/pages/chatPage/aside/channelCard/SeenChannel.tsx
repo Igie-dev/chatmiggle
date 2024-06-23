@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { socket } from "@/socket";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import useListenMessageSeen from "@/hooks/useListenMessageSeen";
 type Props = {
   members: TChannelMemberData[];
   senderId: string;
@@ -10,35 +10,35 @@ type Props = {
 export default function SeenChannel({ members, senderId, messageId }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [isSeen, setIsSeen] = useState(false);
+  const seenChannel = useListenMessageSeen();
 
   useEffect(() => {
-    const usersSeen = members?.filter(
-      (m) => m.user_id === user_id && m.is_seen && !m.is_deleted
+    const isUserSeen = members.filter(
+      (m) => m.is_seen && !m.is_deleted && m.user_id === user_id
     );
-    setIsSeen(usersSeen.length >= 1);
-  }, [user_id, members, messageId, senderId]);
+    if (isUserSeen.length >= 1) {
+      setIsSeen(true);
+    } else {
+      setIsSeen(false);
+    }
+  }, [members, user_id]);
 
   useEffect(() => {
     if (isSeen) return;
-    socket.on("seen_channel", (res: { data: TChannelData }) => {
-      if (res?.data) {
-        if (!isSeen) {
-          const foundUser = res?.data?.members.filter(
-            (m) => m.user_id === user_id && m.is_seen && !m.is_deleted
-          );
-          setIsSeen(foundUser.length >= 1);
-        }
+    if (seenChannel) {
+      if (seenChannel.messages[0].message_id !== messageId) return;
+      const foundUser = seenChannel.members.filter(
+        (m) => m.user_id === user_id && m.is_seen && !m.is_deleted
+      );
+      if (foundUser.length >= 1) {
+        setIsSeen(true);
       }
-    });
-    return () => {
-      socket.off("seen_channel");
-    };
-  }, [members, isSeen, user_id]);
-  return senderId !== user_id ? (
-    <>
-      {isSeen ? null : (
-        <p className="absolute top-1 right-2 text-[10px] opacity-50">New</p>
-      )}
-    </>
-  ) : null;
+    }
+  }, [isSeen, user_id, seenChannel, messageId]);
+
+  if (senderId !== user_id && !isSeen) {
+    return <p className="absolute top-1 right-2 text-[10px] opacity-50">New</p>;
+  }
+
+  return null;
 }

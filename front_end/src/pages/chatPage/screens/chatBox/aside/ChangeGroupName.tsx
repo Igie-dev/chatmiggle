@@ -11,12 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
-import { asyncEmit } from "@/socket";
 import { PencilLine } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import CustomTooltip from "@/components/shared/CustomTooltip";
+import { useChangeGroupNameMutation } from "@/service/slices/channel/channelApiSlice";
 type Props = {
   channelId: string;
   avatarId: string;
@@ -28,17 +28,16 @@ export default function ChangeGroupName({
   groupName,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [newGroupName, setNewGroupName] = useState("");
   const { user_id } = useAppSelector(getCurrentUser);
+  const [mutate, { isLoading }] = useChangeGroupNameMutation();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("change_group_name", {
-        channelId,
+      const res: any = await mutate({
+        channelId: channelId,
         name: newGroupName,
         userId: user_id,
       });
@@ -47,8 +46,6 @@ export default function ChangeGroupName({
       }
     } catch (error) {
       setErrMsg("Failed to change name");
-    } finally {
-      setIsLoading(false);
     }
   };
 

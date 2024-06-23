@@ -5,7 +5,7 @@ import { EMessageTypes } from "@/types/enums";
 import { Send } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { asyncEmit } from "@/socket";
+import { useSendMessageMutation } from "@/service/slices/channel/channelApiSlice";
 type Props = {
   messageType: EMessageTypes | null;
   setMessageType: Dispatch<SetStateAction<EMessageTypes | null>>;
@@ -15,8 +15,7 @@ export default function TextInput({ setMessageType, messageType }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [messageText, setMessageText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [mutate, { isLoading }] = useSendMessageMutation();
   const handleBlur = () => {
     if (messageText.length >= 1) return;
     if (textAreaRef?.current) {
@@ -39,7 +38,6 @@ export default function TextInput({ setMessageType, messageType }: Props) {
 
   const handleSend = async () => {
     if (!channelId || !messageText) return;
-    setIsLoading(true);
     const data: TSendMessage = {
       channel_id: channelId,
       sender_id: user_id,
@@ -49,11 +47,10 @@ export default function TextInput({ setMessageType, messageType }: Props) {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("send_new_message", data);
+      const res: any = await mutate(data);
       if (res?.data) {
         setMessageText("");
         if (textAreaRef.current) {
-          console.log("must hide");
           textAreaRef.current.style.height = "0px";
           textAreaRef.current.value = "";
         }
@@ -61,7 +58,6 @@ export default function TextInput({ setMessageType, messageType }: Props) {
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoading(false);
       setMessageType(null);
     }
   };

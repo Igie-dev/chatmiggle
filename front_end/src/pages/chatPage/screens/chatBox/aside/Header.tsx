@@ -7,12 +7,12 @@ import DisplayUserName from "@/components/shared/DisplayUserName";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
-import { socket } from "@/socket";
 import ChangeGroupName from "./ChangeGroupName";
 import AddMember from "./AddMember";
 import LeaveGroup from "./LeaveGroup";
 import DeleteChannel from "./DeleteChannel";
 import CustomTooltip from "@/components/shared/CustomTooltip";
+import useListenChangeGroupName from "@/hooks/useListenChangeGroupName";
 type Props = {
   channel: TChannelData;
   isFetching: boolean;
@@ -22,6 +22,7 @@ function Header({ channel, isFetching }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [groupName, setGroupName] = useState("");
   const [adminId, setAdminId] = useState("");
+  const newGroupName = useListenChangeGroupName(channel.channel_id);
   const mate: TChannelMemberData[] = channel?.members.filter(
     (m) => m.user_id !== user_id
   );
@@ -29,15 +30,10 @@ function Header({ channel, isFetching }: Props) {
   const isUserAMember = channel?.members.filter((m) => m.user_id === user_id);
   useLayoutEffect(() => {
     setGroupName(channel?.group_name as string);
-    socket.on("new_group_name", (res) => {
-      if (res?.data) {
-        const groupName = res?.data?.group_name;
-        if (groupName) {
-          setGroupName(groupName);
-        }
-      }
-    });
-  }, [channel?.group_name]);
+    if (newGroupName) {
+      setGroupName(newGroupName);
+    }
+  }, [channel?.group_name, newGroupName]);
 
   useLayoutEffect(() => {
     if (!channel?.channel_id) return;

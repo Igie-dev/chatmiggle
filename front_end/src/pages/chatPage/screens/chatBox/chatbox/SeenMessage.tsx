@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
-import { asyncEmit, socket } from "@/socket";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import DisplayGroupMemberSeen from "./DisplayGroupMemberSeen";
+import { useSeenChannelMutation } from "@/service/slices/channel/channelApiSlice";
+import useListenMessageSeen from "@/hooks/useListenMessageSeen";
 type Props = {
   message: TMessageData;
 };
 export default function SeenMessage({ message }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
-  const [membersSeen, setMembersSeen] = useState<TChannelMemberData[]>([]);
-
-  useEffect(() => {
-    const members = message.channel.members;
-    const matesSeen = members.filter((m) => m.is_seen && !m.is_deleted);
-    setMembersSeen(matesSeen);
-  }, [user_id, message]);
+  const [membersSeen, setMembersSeen] = useState<TChannelMemberData[]>(
+    message.channel.members.filter((m) => m.is_seen && !m.is_deleted)
+  );
+  const [mutate] = useSeenChannelMutation();
+  const seenChannel = useListenMessageSeen();
 
   useEffect(() => {
     const interval: NodeJS.Timeout = setInterval(async () => {
@@ -23,41 +22,49 @@ export default function SeenMessage({ message }: Props) {
         clearInterval(interval);
         return;
       }
-      await asyncEmit("seen", {
+      await mutate({
         channel_id: message.channel_id,
         user_id,
       });
     }, 1000);
-
     return () => {
       clearInterval(interval);
     };
-  }, [membersSeen, message, user_id]);
+  }, [membersSeen, message, user_id, mutate]);
 
   useEffect(() => {
-    socket.on("message_seen", (res: { data: TChannelData }) => {
-      if (res?.data) {
-        const channel = res?.data;
-        setMembersSeen(channel?.members);
-      }
-    });
+    if (seenChannel) {
+      if (seenChannel.channel_id !== message.channel_id) return;
+      const memberSeenNew = seenChannel.members.filter(
+        (m) => m.is_seen && !m.is_deleted
+      );
+      const prevMemberSeen = membersSeen.filter(
+        (m) => m.is_seen && !m.is_deleted
+      );
+      if (memberSeenNew.length === prevMemberSeen.length) return;
+      setMembersSeen(memberSeenNew);
+    }
+  }, [seenChannel, user_id, membersSeen, message]);
 
-    return () => {
-      socket.off("message_seen");
-    };
-  }, [user_id, message, message.sender_id]);
-  return user_id === message.sender_id ? (
-    <>
-      {membersSeen.length <= 2 && message.channel.is_private ? (
-        <p className="mr-2  font-semibold text-[10px] opacity-50   rounded-lg">
-          Seen
-        </p>
-      ) : (
-        <DisplayGroupMemberSeen
-          members={membersSeen}
-          senderId={message.sender_id}
-        />
-      )}
-    </>
-  ) : null;
+  const mateSeen = membersSeen.length >= 2;
+
+  if (!mateSeen) return null;
+
+  if (message.channel.is_private && message.sender_id === user_id)
+    return (
+      <p className="mr-2  font-semibold text-[10px] opacity-50   rounded-lg">
+        Seen
+      </p>
+    );
+
+  if (!message.channel.is_private && message.sender_id === user_id) {
+    return (
+      <DisplayGroupMemberSeen
+        members={membersSeen}
+        senderId={message.sender_id}
+      />
+    );
+  }
+
+  return null;
 }

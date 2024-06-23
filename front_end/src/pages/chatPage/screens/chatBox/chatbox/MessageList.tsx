@@ -6,11 +6,13 @@ import { MessageSquare } from "lucide-react";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { socket } from "@/socket";
 import { useGetChannelMessagesMutation } from "@/service/slices/channel/channelApiSlice";
+import useListenNewMessage from "@/hooks/useListenNewMessage";
 export default function MessageList() {
   const { channelId } = useParams();
   const [messages, setMessages] = useState<TMessageData[]>([]);
   const [cursor, setCursor] = useState<number | null>(null);
   const [getMessages, { isError, isLoading }] = useGetChannelMessagesMutation();
+  const newMessage = useListenNewMessage();
   const [targetScroll, setTargetScroll] = useState("");
   //Join to socket
   useEffect(() => {
@@ -69,18 +71,13 @@ export default function MessageList() {
 
   //Handle data from socket
   useEffect(() => {
-    socket.on("new_message", (res: { data: TChannelData }) => {
-      if (res?.data) {
-        if (res?.data?.channel_id != channelId) return;
-        const newMessage = res?.data.messages[0] as TMessageData;
-        setMessages((prev: TMessageData[]) => [...prev, newMessage]);
-        setTargetScroll(newMessage?.message_id);
-      }
-    });
-    return () => {
-      socket.off("new_message");
-    };
-  }, [channelId]);
+    if (newMessage) {
+      if (newMessage.channel_id != channelId) return;
+      const message = newMessage.messages[0] as TMessageData;
+      setMessages((prev: TMessageData[]) => [...prev, message]);
+      setTargetScroll(message?.message_id);
+    }
+  }, [channelId, newMessage]);
 
   //Messages pagination
   //Requst another messages with the cursor to paginate

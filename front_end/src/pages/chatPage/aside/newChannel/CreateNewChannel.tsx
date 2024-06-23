@@ -16,8 +16,7 @@ import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
-import { asyncEmit } from "@/socket";
-
+import { useCreateChannelMutation } from "@/service/slices/channel/channelApiSlice";
 //*This component accept children as a Dialog trigger
 //*children props must be button trigger
 type Props = {
@@ -31,7 +30,7 @@ export default function CreateNewChannel({ children }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [getUser, { isLoading }] = useGetUserByIdMutMutation();
   const [mate, setMate] = useState<TUser | null>(null);
-
+  const [mutate, { isLoading: createIsLoading }] = useCreateChannelMutation();
   const handleSeachUser = () => {
     if (!id) return;
     (async () => {
@@ -57,7 +56,7 @@ export default function CreateNewChannel({ children }: Props) {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("create_new_channel", newChannelData);
+      const res: any = await mutate(newChannelData);
 
       if (res?.data) {
         setMessage("");
@@ -158,7 +157,7 @@ export default function CreateNewChannel({ children }: Props) {
                   type="button"
                   variant="secondary"
                   size="lg"
-                  disabled={isLoading}
+                  disabled={isLoading || createIsLoading}
                 >
                   Cancel
                 </Button>
@@ -166,7 +165,13 @@ export default function CreateNewChannel({ children }: Props) {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isLoading || !id || !mate?.user_id || !message}
+                disabled={
+                  isLoading ||
+                  createIsLoading ||
+                  !id ||
+                  !mate?.user_id ||
+                  !message
+                }
               >
                 Send
               </Button>

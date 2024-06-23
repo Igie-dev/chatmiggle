@@ -2,18 +2,30 @@ import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
-import { socket } from "@/socket";
 import { useNavigate, useParams } from "react-router-dom";
+import useListenNewMessage from "@/hooks/useListenNewMessage";
+import useListenLeaveGroup from "@/hooks/useListenLeaveGroup";
+import useListenRemoveUserFromGroup from "@/hooks/useListenRemoveUserFromGroup";
+
+//TODO
+//* Debug here tommorrow
+
 type Props = {
   handleAside: () => void;
   searchText: string;
 };
 export default function ChannelList({ handleAside, searchText }: Props) {
-  const [channels, setChannels] = useState<TChannelData[]>([]);
   const { user_id } = useAppSelector(getCurrentUser);
+  const newMessage = useListenNewMessage();
+  const { channelId: removedChannelId, userId: removeUserId } =
+    useListenRemoveUserFromGroup();
+
+  const { channelId: leaveGroupChannelId, userId: leaveGroupUserId } =
+    useListenLeaveGroup();
+
   const { data, isFetching, isError } = useGetUserChannelsQuery({
     user_id,
     search: searchText,
@@ -21,106 +33,123 @@ export default function ChannelList({ handleAside, searchText }: Props) {
   const { channelId } = useParams();
   const navigate = useNavigate();
   //Handle data from api request
-  useLayoutEffect(() => {
-    if (data) {
-      setChannels(data);
-    } else {
-      setChannels([]);
+
+  const channels = useMemo((): TChannelData[] => {
+    let channels: TChannelData[] = [];
+    //Inital channels
+    if (channels.length <= 0 && data?.length >= 1) {
+      channels = data;
     }
-  }, [data]);
 
-  //Handle data from socket when new message was sent
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    socket.on("channel_message", (res: { data: TChannelData }) => {
-      if (!res?.data) return;
-      const channel = res?.data as TChannelData;
-      if (!channel?.channel_id) return;
-      const user = channel?.members.filter((m) => m.user_id === user_id);
-      if (user.length <= 0) return;
-      const newChannelId = channel?.channel_id;
-      // //If channels empty, add to latest new channel
-
-      if (channels.length <= 0 && channel?.channel_id) {
-        setChannels((prev) => [...prev, channel]);
-        return;
-      }
+    //New message
+    if (newMessage) {
+      const newChannelId = newMessage.channel_id;
+      const messageId = newMessage.messages[0].message_id;
 
       //If channels not empty
       //Check if channel is exist on the list
       const existChannel = channels.filter(
         (c) => c.channel_id === newChannelId
       );
+
       //if is exist
       //Modified current list to update message
       if (existChannel.length >= 1) {
-        const updatedChannels: TChannelData[] = channels.map(
-          (c: TChannelData) => {
-            if (c.channel_id === channel?.channel_id) {
-              //Update messages data of channel
-              const newMessages = channel?.messages;
-              //Update members data of channel to desplay channel seen
-              const newMembers = channel?.members;
+        const existMessage =
+          existChannel[0]?.messages.filter(
+            (msg) => msg.message_id === messageId
+          ).length > 0;
 
-              const newGroupName = channel?.group_name;
-              // Update the channel with the new messages array
-              return {
-                ...c,
-                group_name: newGroupName,
-                members: newMembers,
-                messages: newMessages,
-              };
+        if (!existMessage) {
+          const updatedChannels: TChannelData[] = channels.map(
+            (c: TChannelData) => {
+              if (c.channel_id === newChannelId) {
+                //Update messages data of channel
+                const newMessages = newMessage?.messages;
+                //Update members data of channel to desplay channel seen
+                const newMembers = newMessage?.members;
+
+                const newGroupName = newMessage?.group_name;
+                // Update the channel with the new messages array
+                return {
+                  ...c,
+                  group_name: newGroupName,
+                  members: newMembers,
+                  messages: newMessages,
+                };
+              }
+              return c;
             }
-            return c;
-          }
-        );
-        const channelLatestMessage = updatedChannels.filter(
-          (c) => c.channel_id === channel?.channel_id
-        );
-        const channelsOldMessage = updatedChannels.filter(
-          (c) => c.channel_id !== channel?.channel_id
-        );
+          );
+          const channelLatestMessage = updatedChannels.filter(
+            (c) => c.channel_id === newChannelId
+          );
 
-        setChannels([...channelLatestMessage, ...channelsOldMessage]);
+          const removeOld = channels.filter(
+            (c) => c.channel_id !== channelLatestMessage[0].channel_id
+          );
+
+          channels = [...channelLatestMessage, ...removeOld];
+        }
       } else {
         //Not exist
         //Unshift channel to list
         //Or add the new channel to top
-        setChannels((prev) => [channel, ...prev]);
+        channels = [{ ...newMessage }, ...channels];
       }
-    });
+    }
 
-    socket.on("remove_channel", (res: { data: TChannelData }) => {
-      if (res?.data) {
-        const members = res.data?.members;
-        const isUserRemove = members.filter(
-          (m) => m.user_id === user_id && m.is_deleted
+    //Remove from channel
+    if (removeUserId === user_id) {
+      const checkChannelExist = channels.filter(
+        (c) => c.channel_id === removedChannelId
+      );
+      if (checkChannelExist.length >= 1) {
+        const newChannels = channels.filter(
+          (c) => c.channel_id !== removedChannelId
         );
-        if (isUserRemove.length === 0) return;
-        const channel_id = res.data?.channel_id;
-        const channelExist = channels.filter(
-          (c) => c.channel_id === channel_id
-        );
-        if (channelExist.length >= 1) {
-          const removeChannel = channels.filter(
-            (c) => c.channel_id !== channel_id
-          );
-          setChannels(removeChannel);
-          if (removeChannel.length >= 1) {
-            if (channelId === channel_id) {
-              navigate(`/c/${removeChannel[0]?.channel_id}`);
-            }
-          } else {
-            navigate("/c");
-          }
-        }
+        channels = newChannels;
+        removeChannelNavigate(removedChannelId);
       }
-    });
-    return () => {
-      socket.off("channel_message");
-      socket.off("remove_channel");
-    };
-  }, [channels, user_id, navigate, channelId]);
+    }
+
+    //Leave channel
+    if (leaveGroupChannelId && leaveGroupUserId) {
+      const channelExist = channels.filter(
+        (c) => c.channel_id === leaveGroupChannelId
+      );
+      if (channelExist.length >= 1) {
+        const removeChannel = channels.filter(
+          (c) => c.channel_id !== leaveGroupChannelId
+        );
+        channels = removeChannel;
+        removeChannelNavigate(leaveGroupChannelId);
+      }
+    }
+
+    //Navigate if channel in first list
+    function removeChannelNavigate(compareId: string) {
+      if (channels.length >= 1) {
+        if (channelId === compareId) {
+          navigate(`/c/${channels[0]?.channel_id}`);
+        }
+      } else {
+        navigate("/c");
+      }
+    }
+
+    return channels;
+  }, [
+    data,
+    removeUserId,
+    user_id,
+    removedChannelId,
+    channelId,
+    leaveGroupChannelId,
+    navigate,
+    newMessage,
+    leaveGroupUserId,
+  ]);
 
   //Handle auto select channel when first visit
   useLayoutEffect(() => {
@@ -131,6 +160,7 @@ export default function ChannelList({ handleAside, searchText }: Props) {
       return;
     }
   }, [channelId, channels, navigate, searchText]);
+
   return (
     <div className="flex flex-col h-[82%] w-full gap-2 overflow-y-auto">
       <ul className="flex flex-col w-full h-fit  gap-[2px]  px-0">
@@ -167,7 +197,7 @@ const LoaderUi = () => {
     loader.push(
       <li
         key={i}
-        className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit border-border/70"
+        className="flex items-center w-full gap-3 p-2 cursor-pointer h-fit border-border/70"
       >
         <div className="overflow-hidden rounded-full w-11 h-11">
           <Skeleton className="w-full h-full" />

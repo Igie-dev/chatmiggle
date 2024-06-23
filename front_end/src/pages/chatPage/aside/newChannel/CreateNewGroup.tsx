@@ -15,9 +15,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
-import { asyncEmit } from "@/socket";
 import { Plus, Search, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
+import { useCreateGroupMutation } from "@/service/slices/channel/channelApiSlice";
 //*This component accept children as a Dialog trigger
 //*children props must be button trigger
 type Props = {
@@ -34,7 +34,7 @@ export default function CreateNewGroup({ children }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const [isOpenSearch, setIsOpenSearch] = useState(false);
   const [getUser, { isLoading }] = useGetUserByIdMutMutation();
-
+  const [mutate, { isLoading: createLoading }] = useCreateGroupMutation();
   useEffect(() => {
     if (!isOpen || members.length >= 1) return;
     (async () => {
@@ -104,7 +104,7 @@ export default function CreateNewGroup({ children }: Props) {
     };
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("create_group", newGroupData);
+      const res: any = await mutate(newGroupData);
       if (res?.data) {
         setSearchId("");
         setIsOpenSearch(false);
@@ -274,7 +274,7 @@ export default function CreateNewGroup({ children }: Props) {
                   type="button"
                   variant="secondary"
                   size="lg"
-                  disabled={isLoading}
+                  disabled={isLoading || createLoading}
                 >
                   Cancel
                 </Button>
@@ -282,7 +282,9 @@ export default function CreateNewGroup({ children }: Props) {
               <Button
                 type="submit"
                 size="lg"
-                disabled={isLoading || members.length <= 0 || !message}
+                disabled={
+                  isLoading || createLoading || members.length <= 0 || !message
+                }
               >
                 Send
               </Button>

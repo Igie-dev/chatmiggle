@@ -9,11 +9,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { asyncEmit } from "@/socket";
 import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
+import { useRemoveFromGroupMutation } from "@/service/slices/channel/channelApiSlice";
 type Props = {
   userId: string;
   channelId: string;
@@ -41,15 +41,14 @@ export default function LeaveGroup({
   userAvatarId,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const { user_id } = useAppSelector(getCurrentUser);
+  const [remove, { isLoading, error }] = useRemoveFromGroupMutation();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("leave_group", {
+      const res: any = await remove({
         channel_id: channelId,
         user_id: userId,
         type,
@@ -59,9 +58,7 @@ export default function LeaveGroup({
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
+      /* empty */
     }
   };
   return (

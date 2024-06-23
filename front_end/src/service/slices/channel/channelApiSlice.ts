@@ -5,24 +5,12 @@ const channelApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserChannels: builder.query({
       query: ({ user_id, search }: { user_id: string; search: string }) => ({
-        url: `/channel/userchannel/${user_id}${
-          search ? `?search=${search}` : ""
-        }`,
+        url: `/channel/userchannel/${user_id}${search ? `?search=${search}` : ""
+          }`,
         method: "GET",
       }),
     }),
-    verifyUserInChannel: builder.query({
-      query: ({
-        channel_id,
-        user_id,
-      }: {
-        channel_id: string;
-        user_id: string;
-      }) => ({
-        url: `/channel/verifyuser/${channel_id}/${user_id}`,
-        method: "GET",
-      }),
-    }),
+
     getChannelMessages: builder.mutation({
       query: ({
         channelId,
@@ -31,9 +19,8 @@ const channelApiSlice = apiSlice.injectEndpoints({
         channelId: string;
         cursor?: number | null;
       }) => ({
-        url: `/channel/messages/${channelId}?take=${messagesLimit}${
-          cursor ? `&cursor=${cursor}` : ""
-        }`,
+        url: `/channel/messages/${channelId}?take=${messagesLimit}${cursor ? `&cursor=${cursor}` : ""
+          }`,
         method: "GET",
       }),
     }),
@@ -43,6 +30,7 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
     deleteChannel: builder.mutation({
       query: ({
         channelId,
@@ -51,17 +39,80 @@ const channelApiSlice = apiSlice.injectEndpoints({
         channelId: string;
         userId: string;
       }) => ({
-        url: `/channel/${channelId}/${userId}`,
+        url: `/channel/delete`,
         method: "DELETE",
+        body: {
+          channelId,
+          userId,
+        }
       }),
+    }),
+
+    sendMessage: builder.mutation({
+      query: (newmessage: TSendMessage) => ({
+        url: "/channel/newmessage",
+        method: "POST",
+        body: newmessage
+      })
+    }),
+
+    createChannel: builder.mutation({
+      query: (data: TCreateNewPrivateChannel) => ({
+        url: "/channel",
+        method: "POST",
+        body: data
+      })
+    }),
+
+    createGroup: builder.mutation({
+      query: (data: TCreateNewPrivateChannel) => ({
+        url: "/channel/group",
+        method: "POST",
+        body: data
+      })
+    }),
+
+    changeGroupName: builder.mutation({
+      query: (data: { channelId: string, name: string, userId: string }) => ({
+        url: "/channel/group/changename",
+        method: "POST",
+        body: data
+      })
+    }),
+    addToGroup: builder.mutation({
+      query: (data: { channel_id: string, user_id: string }) => ({
+        url: "/channel/group/add",
+        method: "POST",
+        body: data
+      })
+    }),
+    removeFromGroup: builder.mutation({
+      query: (data: { channel_id: string, type: string, user_id: string }) => ({
+        url: "/channel/group/remove",
+        method: "DELETE",
+        body: data
+      })
+    }),
+    seenChannel: builder.mutation({
+      query: (data: { channel_id: string, user_id: string }) => ({
+        url: "/channel/seen",
+        method: "POST",
+        body: data
+      })
     }),
   }),
 });
 
 export const {
   useGetUserChannelsQuery,
-  useVerifyUserInChannelQuery,
   useGetChannelMessagesMutation,
   useGetChannelQuery,
   useDeleteChannelMutation,
+  useSendMessageMutation,
+  useAddToGroupMutation,
+  useChangeGroupNameMutation,
+  useCreateChannelMutation,
+  useCreateGroupMutation,
+  useRemoveFromGroupMutation,
+  useSeenChannelMutation
 } = channelApiSlice;

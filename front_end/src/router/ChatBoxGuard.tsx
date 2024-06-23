@@ -1,5 +1,5 @@
 import LoaderSpinner from "@/components/loader/LoaderSpinner";
-import { useVerifyUserInChannelQuery } from "@/service/slices/channel/channelApiSlice";
+import { useGetChannelQuery } from "@/service/slices/channel/channelApiSlice";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import { Hand } from "lucide-react";
@@ -7,14 +7,11 @@ import { Outlet, useParams } from "react-router-dom";
 export default function ChatBoxGuard() {
   const { user_id } = useAppSelector(getCurrentUser);
   const { channelId } = useParams();
-  const { data, isFetching, isError, error } = useVerifyUserInChannelQuery({
-    channel_id: channelId as string,
-    user_id,
-  });
+  const { data, isFetching, isError, error } = useGetChannelQuery(channelId!);
 
   return isFetching ? (
     <LoaderSpinner />
-  ) : data?.channel_id && !isError ? (
+  ) : data?.members.filter((m: TUser) => m.user_id === user_id) && !isError ? (
     <Outlet />
   ) : (
     <div className="flex items-center justify-start w-full h-full pt-[20%] lg:pt-[15%] flex-col gap-1">

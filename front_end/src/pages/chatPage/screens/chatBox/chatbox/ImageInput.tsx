@@ -13,7 +13,6 @@ import {
   useState,
 } from "react";
 import { useParams } from "react-router-dom";
-import { asyncEmit } from "@/socket";
 
 type Props = {
   messageType: EMessageTypes | null;
@@ -55,24 +54,18 @@ export default function ImageInput({ setMessageType, messageType }: Props) {
     if (!channelId || !imageData) return;
     try {
       const formData = new FormData();
+
+      formData.append("channel_id", channelId);
+      formData.append("sender_id", user_id);
       formData.append("sendimage", imageData);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const sendRes: any = await sendImage(formData);
-      if (sendRes?.data?.url) {
-        const data = {
-          channel_id: channelId,
-          sender_id: user_id,
-          message: sendRes?.data?.url,
-          type: "image",
-        };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const res: any = await asyncEmit("send_new_message", data);
-        if (res?.data) {
-          setTimeout(() => {
-            handleRemoveImage();
-          }, 500);
-        }
+
+      if (sendRes?.data) {
+        setTimeout(() => {
+          handleRemoveImage();
+        }, 500);
       }
     } catch (error) {
       /* empty */

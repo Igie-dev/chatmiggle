@@ -16,8 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useGetUserByIdMutMutation } from "@/service/slices/user/userApiSlice";
 import BtnsLoaderSpinner from "@/components/loader/BtnLoader";
-import { asyncEmit } from "@/socket";
 import CustomTooltip from "@/components/shared/CustomTooltip";
+import { useAddToGroupMutation } from "@/service/slices/channel/channelApiSlice";
 type Props = {
   channelId: string;
   channelAvatarId: string;
@@ -33,6 +33,7 @@ export default function AddMember({
   const [newMember, setNewMember] = useState<TUser | null>(null);
   const [getUser, { isLoading: isLoadingGetUser, error: errorGetUser }] =
     useGetUserByIdMutMutation();
+  const [mutate, { isLoading: addLoading }] = useAddToGroupMutation();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function AddMember({
     setIsLoading(true);
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const res: any = await asyncEmit("add_to_group", {
+      const res: any = await mutate({
         user_id: newMember?.user_id as string,
         channel_id: channelId,
       });
@@ -139,7 +140,7 @@ export default function AddMember({
                     onClick={handleSearch}
                     size="icon"
                   >
-                    {isLoadingGetUser || isLoading ? (
+                    {isLoadingGetUser || isLoading || addLoading ? (
                       <BtnsLoaderSpinner />
                     ) : (
                       <Search size={20} />
@@ -152,7 +153,7 @@ export default function AddMember({
           <DialogFooter>
             <Button
               type="submit"
-              disabled={isLoadingGetUser || !newMember}
+              disabled={isLoadingGetUser || addLoading || !newMember}
               className="w-full"
             >
               Add
