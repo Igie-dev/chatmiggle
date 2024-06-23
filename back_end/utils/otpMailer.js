@@ -39,7 +39,7 @@ const otpEmail = (email, otp) => {
                       <a href="" style="font-size:1.5em; color: #00466a;text-decoration:none;">${appName}</a>
                   </div>
                   <p>Hello, Welcome to ${appName}</p>
-                  <p style="margin: 2rem 0;">Your Otp code: ${otp}</h2>
+                  <p style="margin: 2rem 0; font-weight: 600;">Your otp code: ${otp}</p>
                   <p style="margin-top: 2rem; font-weight:300;">This code will expire in 5 minutes.</p>
                   <p style="font-size:.9em;">Regards,<br />${appName}</p>
                   <hr style="border:none;border-top:1px solid #eee" />
