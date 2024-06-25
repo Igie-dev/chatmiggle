@@ -385,9 +385,9 @@ const getChannel = asyncHandler(async (req, res) => {
 });
 
 const deleteChannel = asyncHandler(async (req, res) => {
-  const { channelId, userId, type } = req.body;
+  const { channelId, userId } = req.body;
   try {
-    if (!channelId || !userId || !type) {
+    if (!channelId || !userId) {
       return res.status(400).json({ message: "All field are required" });
     }
 
