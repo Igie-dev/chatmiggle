@@ -10,8 +10,12 @@ export default function useListenNewMessage() {
             const channel = res.data;
             const members = channel.members;
             const user = members.filter((m) => m.user_id === user_id);
-            if (user.length <= 0) return;
-            setNewMessage(channel)
+            if (user.length <= 0) {
+                setNewMessage(null)
+            } else {
+                setNewMessage(channel)
+            }
+
         })
 
     }, [user_id])
