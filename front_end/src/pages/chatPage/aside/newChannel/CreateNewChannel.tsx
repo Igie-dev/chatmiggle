@@ -17,6 +17,7 @@ import DisplayAvatar from "@/components/shared/DisplayAvatar";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useCreateChannelMutation } from "@/service/slices/channel/channelApiSlice";
+import { encryptText } from "@/utils/helper";
 //*This component accept children as a Dialog trigger
 //*children props must be button trigger
 type Props = {
@@ -48,7 +49,7 @@ export default function CreateNewChannel({ children }: Props) {
     e.preventDefault();
 
     const newChannelData: TCreateNewPrivateChannel = {
-      message: message,
+      message: encryptText(message),
       sender_id: user_id,
       type: "text",
       members: [{ user_id: mate?.user_id }, { user_id: user_id }],

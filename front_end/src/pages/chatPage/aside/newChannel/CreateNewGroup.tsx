@@ -18,6 +18,7 @@ import { useAppSelector } from "@/service/store";
 import { Plus, Search, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { useCreateGroupMutation } from "@/service/slices/channel/channelApiSlice";
+import { encryptText } from "@/utils/helper";
 //*This component accept children as a Dialog trigger
 //*children props must be button trigger
 type Props = {
@@ -96,7 +97,7 @@ export default function CreateNewGroup({ children }: Props) {
       };
     });
     const newGroupData: TCreateNewPrivateChannel & { group_name: string } = {
-      message: message,
+      message: encryptText(message),
       sender_id: user_id,
       type: "text",
       members: groupMembers,

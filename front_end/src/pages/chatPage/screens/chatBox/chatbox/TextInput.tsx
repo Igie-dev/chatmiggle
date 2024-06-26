@@ -6,6 +6,7 @@ import { Send } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSendMessageMutation } from "@/service/slices/channel/channelApiSlice";
+import { encryptText } from "@/utils/helper";
 type Props = {
   messageType: EMessageTypes | null;
   setMessageType: Dispatch<SetStateAction<EMessageTypes | null>>;
@@ -41,10 +42,9 @@ export default function TextInput({ setMessageType, messageType }: Props) {
     const data: TSendMessage = {
       channel_id: channelId,
       sender_id: user_id,
-      message: messageText,
+      message: encryptText(messageText),
       type: "text",
     };
-
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await mutate(data);
