@@ -28,7 +28,7 @@ export default function AsideNav() {
       >
         <ChevronRight size={20} />
       </Button>
-      <div className="flex flex-col h-full w-[22rem] gap-2 py-2 px-1  border-r bg-secondary  lg:w-full relative lg:bg-transparent">
+      <div className="flex flex-col h-full w-[22rem] gap-2 py-2 px-1  border-r bg-secondary lg:w-full relative lg:bg-transparent">
         {/* Open nav button */}
         <Button
           onClick={handleAside}
