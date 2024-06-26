@@ -6,31 +6,40 @@ type Props = {
   channel: TChannelData;
 };
 export default function GroupMembers({ channel }: Props) {
-  const [members, setMembers] = useState<TChannelMemberData[]>([]);
   const [adminId, setAdminId] = useState("");
-  const newMembers = useListenAddGroupMember(channel.channel_id);
+  const [members, setMembers] = useState<TChannelMemberData[]>([]);
+  const newMembers = useListenAddGroupMember();
   const { channelId: removedChannelId, userId: removeUserId } =
     useListenRemoveUserFromGroup();
 
   useEffect(() => {
-    if (members.length >= 1 || members[0]?.channel_id === channel?.channel_id)
-      return;
-    setMembers(channel?.members.filter((m) => !m.is_deleted));
-    const getAdmin = channel.members.filter((m) => !m.is_deleted && m.is_admin);
-    if (getAdmin.length >= 1) {
-      setAdminId(getAdmin[0].user_id);
+    if (channel.members.length >= 1) {
+      setMembers(channel.members.filter((m) => !m.is_deleted));
+      const getAdmin = channel.members.filter(
+        (m) => !m.is_deleted && m.is_admin
+      );
+      if (getAdmin.length >= 1) {
+        setAdminId(getAdmin[0].user_id);
+      }
     }
-  }, [channel, members]);
+  }, [channel]);
 
   useEffect(() => {
-    if (!newMembers?.length) return;
-    setMembers(newMembers);
+    if (newMembers?.length) {
+      setMembers(newMembers.filter((m) => !m.is_deleted));
+    }
   }, [newMembers]);
 
   useEffect(() => {
-    if (removedChannelId !== channel.channel_id) return;
-    setMembers((prev) => prev.filter((m) => m.user_id !== removeUserId));
-  }, [channel.channel_id, removeUserId, removedChannelId]);
+    if (removedChannelId === channel.channel_id) {
+      const isExistUser = channel.members.filter(
+        (m) => m.user_id === removeUserId
+      );
+      if (isExistUser) {
+        setMembers((prev) => prev.filter((m) => m.user_id !== removeUserId));
+      }
+    }
+  }, [channel, removedChannelId, removeUserId]);
 
   return (
     <div className="absolute top-0 left-0 flex flex-col w-full h-full gap-2 p-2 pt-5">
