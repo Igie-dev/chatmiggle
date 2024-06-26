@@ -26,6 +26,7 @@ export default function MemberCard({
   const { user_id } = useAppSelector(getCurrentUser);
   const { data, isFetching, isError } = useGetUserByIdQuery(userId);
   const navigate = useNavigate();
+
   if (isError) return null;
   return isFetching ? (
     <li className="flex items-center w-full gap-3 p-2 border rounded-md cursor-pointer h-fit">
@@ -44,7 +45,7 @@ export default function MemberCard({
         isFetching ? "hover:cursor-wait" : "hover:cursor-pointer"
       }`}
     >
-      <div className="flex items-center w-[75%] h-full gap-2">
+      <div className="flex items-center flex-1 h-full gap-2">
         <div className="w-8 h-8">
           <DisplayAvatar id={data?.avatar_id as string} />
         </div>
@@ -57,7 +58,6 @@ export default function MemberCard({
           </p>
         </div>
       </div>
-
       {data?.user_id !== user_id ? (
         <Button
           size="icon"
@@ -69,7 +69,7 @@ export default function MemberCard({
           <User size={20} />
         </Button>
       ) : null}
-      {userId !== user_id && !isPrivate && adminId === user_id ? (
+      {adminId === user_id && adminId !== userId ? (
         <LeaveGroup
           userId={userId}
           channelId={channelId}
