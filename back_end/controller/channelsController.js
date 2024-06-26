@@ -604,7 +604,6 @@ const sendMessage = asyncHandler(async (req, res) => {
             is_seen: member.user_id === sender_id,
           },
         });
-        console.log(member.user_id === sender_id);
       }
     }
 
@@ -818,7 +817,7 @@ const removeFromChannel = asyncHandler(async (req, res) => {
       return res.status(200).json({ data: { user_id, channel_id } });
     }
 
-    for await (const member of foundChannel?.members) {
+    for await (let member of foundChannel?.members) {
       if (member.user_id === user_id) {
         const removeUserFromChannel = await prisma.userChannelMember.update({
           where: {
@@ -900,8 +899,11 @@ const removeFromChannel = asyncHandler(async (req, res) => {
         channel_id: foundUpdatedChannel.channel_id,
         user_id,
       });
-      emitNewMessage(member.user_id, foundUpdatedChannel);
+      if (!member.is_deleted) {
+        emitNewMessage(member.user_id, foundUpdatedChannel);
+      }
     }
+
     return res.status(200).json(foundUpdatedChannel);
   } catch (error) {
     return res.status(500).json({ message: "Something went wrong!" });
