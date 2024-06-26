@@ -10,9 +10,14 @@ export default function useListenLeaveGroup() {
 
     useEffect(() => {
         socket.on("leave_channel", (res: { data: { channel_id: string, user_id: string } }) => {
-            if (user_id !== res.data.user_id) return;
-            setChannelId(res.data.channel_id);
-            setUserId(res.data.user_id)
+            if (user_id !== res.data.user_id) {
+                setChannelId(res.data.channel_id);
+                setUserId(res.data.user_id)
+            } else {
+                setChannelId("");
+                setUserId("")
+            }
+
         })
 
     }, [user_id])
