@@ -2,17 +2,13 @@ import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
-import { useLayoutEffect, useMemo } from "react";
+import { useLayoutEffect, useEffect, useState } from "react";
 import { useAppSelector } from "@/service/store";
 import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import useListenNewMessage from "@/hooks/useListenNewMessage";
 import useListenLeaveGroup from "@/hooks/useListenLeaveGroup";
 import useListenRemoveUserFromGroup from "@/hooks/useListenRemoveUserFromGroup";
-
-//TODO
-//* Debug here tommorrow
-
 type Props = {
   handleAside: () => void;
   searchText: string;
@@ -20,6 +16,8 @@ type Props = {
 export default function ChannelList({ handleAside, searchText }: Props) {
   const { user_id } = useAppSelector(getCurrentUser);
   const newMessage = useListenNewMessage();
+  const { channelId } = useParams();
+  const navigate = useNavigate();
   const { channelId: removedChannelId, userId: removeUserId } =
     useListenRemoveUserFromGroup();
 
@@ -30,21 +28,27 @@ export default function ChannelList({ handleAside, searchText }: Props) {
     user_id,
     search: searchText,
   });
-  const { channelId } = useParams();
-  const navigate = useNavigate();
+
+  const [channels, setChannels] = useState<TChannelData[]>([]);
+
   //Handle data from api request
-
-  const channels = useMemo((): TChannelData[] => {
-    let channels: TChannelData[] = [];
-    //Inital channels
-    if (channels.length <= 0 && data?.length >= 1) {
-      channels = data;
+  useEffect(() => {
+    if (data?.length >= 1) {
+      setChannels(data);
     }
+  }, [data]);
 
-    //New message
+  //new Message
+  useEffect(() => {
     if (newMessage) {
       const newChannelId = newMessage.channel_id;
-      const messageId = newMessage.messages[0].message_id;
+      const newMessageId = newMessage.messages[0].message_id;
+
+      const existUserAsMember = newMessage.members.filter(
+        (m) => m.user_id === user_id && !m.is_deleted
+      );
+
+      if (existUserAsMember.length === 0) return;
 
       //If channels not empty
       //Check if channel is exist on the list
@@ -57,106 +61,80 @@ export default function ChannelList({ handleAside, searchText }: Props) {
       if (existChannel.length >= 1) {
         const existMessage =
           existChannel[0]?.messages.filter(
-            (msg) => msg.message_id === messageId
+            (msg) => msg.message_id === newMessageId
           ).length > 0;
 
         if (!existMessage) {
-          const updatedChannels: TChannelData[] = channels.map(
-            (c: TChannelData) => {
-              if (c.channel_id === newChannelId) {
-                //Update messages data of channel
-                const newMessages = newMessage?.messages;
-                //Update members data of channel to desplay channel seen
-                const newMembers = newMessage?.members;
+          const updateChannelMessage = channels.map((c: TChannelData) => {
+            if (c.channel_id === newChannelId) {
+              //Update messages data of channel
+              const newMessages = newMessage?.messages;
+              //Update members data of channel to desplay channel seen
+              const newMembers = newMessage?.members;
 
-                const newGroupName = newMessage?.group_name;
-                // Update the channel with the new messages array
-                return {
-                  ...c,
-                  group_name: newGroupName,
-                  members: newMembers,
-                  messages: newMessages,
-                };
-              }
-              return c;
+              const newGroupName = newMessage?.group_name;
+              // Update the channel with the new messages array
+              return {
+                ...c,
+                group_name: newGroupName,
+                members: newMembers,
+                messages: newMessages,
+              };
             }
-          );
-          const channelLatestMessage = updatedChannels.filter(
+            return c;
+          });
+
+          const latestChannel = updateChannelMessage.filter(
             (c) => c.channel_id === newChannelId
           );
 
-          const removeOld = channels.filter(
-            (c) => c.channel_id !== channelLatestMessage[0].channel_id
-          );
-
-          channels = [...channelLatestMessage, ...removeOld];
+          setChannels((prev) => [
+            { ...latestChannel[0] },
+            ...prev.filter((c) => c.channel_id !== newChannelId),
+          ]);
         }
       } else {
         //Not exist
         //Unshift channel to list
         //Or add the new channel to top
-        channels = [{ ...newMessage }, ...channels];
+        setChannels((prev) => [{ ...newMessage }, ...prev]);
       }
     }
+  }, [newMessage, user_id]);
 
-    //Remove from channel
+  //remove from group
+  useEffect(() => {
     if (removeUserId === user_id) {
-      const checkChannelExist = channels.filter(
-        (c) => c.channel_id === removedChannelId
+      setChannels((prev) =>
+        prev.filter((c) => c.channel_id !== removedChannelId)
       );
-      if (checkChannelExist.length >= 1) {
-        const newChannels = channels.filter(
-          (c) => c.channel_id !== removedChannelId
-        );
-        channels = newChannels;
-        removeChannelNavigate(removedChannelId);
-      }
     }
+  }, [removeUserId, removedChannelId, user_id]);
 
+  //Leave from group
+  useEffect(() => {
     //Leave channel
     if (leaveGroupChannelId && leaveGroupUserId) {
-      const channelExist = channels.filter(
-        (c) => c.channel_id === leaveGroupChannelId
+      setChannels((prev) =>
+        prev.filter((c) => c.channel_id !== leaveGroupChannelId)
       );
-      if (channelExist.length >= 1) {
-        const removeChannel = channels.filter(
-          (c) => c.channel_id !== leaveGroupChannelId
-        );
-        channels = removeChannel;
-        removeChannelNavigate(leaveGroupChannelId);
-      }
     }
-
-    //Navigate if channel in first list
-    function removeChannelNavigate(compareId: string) {
-      if (channels.length >= 1) {
-        if (channelId === compareId) {
-          navigate(`/c/${channels[0]?.channel_id}`);
-        }
-      } else {
-        navigate("/c");
-      }
-    }
-
-    return channels;
-  }, [
-    data,
-    removeUserId,
-    user_id,
-    removedChannelId,
-    channelId,
-    leaveGroupChannelId,
-    navigate,
-    newMessage,
-    leaveGroupUserId,
-  ]);
+  }, [leaveGroupChannelId, leaveGroupUserId]);
 
   //Handle auto select channel when first visit
   useLayoutEffect(() => {
     if (channels?.length >= 1) {
       if (!channelId) {
         navigate(`/c/${channels[0]?.channel_id}`);
+      } else {
+        const channelExists = channels.filter(
+          (c) => c.channel_id === channelId
+        );
+        if (channelExists.length === 0) {
+          navigate(`/c/${channels[0]?.channel_id}`);
+        }
       }
+
       return;
     }
   }, [channelId, channels, navigate, searchText]);
