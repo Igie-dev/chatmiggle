@@ -11,7 +11,7 @@ export default function useListenRemoveUserFromGroup() {
     useEffect(() => {
         socket.on("remove_group_member", (res: { data: { channel_id: string, user_id: string } }) => {
             setChannelId(res.data.channel_id);
-            setUserId(res.data.user_id)
+            setUserId(res.data.user_id);
         })
     }, [user_id])
 
