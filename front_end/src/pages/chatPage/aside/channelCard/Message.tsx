@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/service/slices/user/userSlice";
 import { useAppSelector } from "@/service/store";
 import { EMessageTypes } from "@/types/enums";
 import { isToday, formatTime, formatDate } from "@/utils/dateUtil";
+import { decryptText } from "@/utils/helper";
 type Props = {
   channel: TChannelData;
 };
@@ -27,8 +28,8 @@ const MessageContent = ({ message }: { message: TMessageData }) => {
     message.type === EMessageTypes.TYPE_NOTIF ? (
     <p className="w-fit max-w-[50%] text-xs truncate  max-h-6">
       {message?.sender_id === user_id
-        ? `You: ${message?.message}`
-        : `${message?.message}`}
+        ? `You: ${decryptText(message?.message)}`
+        : `${decryptText(message?.message)}`}
     </p>
   ) : message?.type === EMessageTypes.TYPE_IMG ? (
     <p className="w-fit max-w-[50%] text-xs truncate  max-h-6">Image</p>

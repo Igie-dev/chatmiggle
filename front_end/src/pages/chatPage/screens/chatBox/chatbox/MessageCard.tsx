@@ -6,6 +6,7 @@ import SeenMessage from "./SeenMessage";
 import { Bell } from "lucide-react";
 import ImageMessage from "./ImageMessage";
 import { EMessageTypes } from "@/types/enums";
+import { decryptText } from "@/utils/helper";
 type Props = {
   message: TMessageData;
   lastMessage?: boolean;
@@ -48,7 +49,7 @@ export default function MessageCard({ message, lastMessage }: Props) {
                   senderMe ? "bg-primary/80 text-white " : "bg-background "
                 }`}
               >
-                {message.message}
+                {decryptText(message?.message)}
               </pre>
             ) : message?.type === EMessageTypes.TYPE_IMG ? (
               <ImageMessage message={message} />
