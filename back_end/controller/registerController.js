@@ -50,9 +50,9 @@ const requestVerifyEmail = asyncHandler(async (req, res) => {
 });
 
 const register = asyncHandler(async (req, res) => {
-  const { first_name, last_name, email, password, otp } = req.body;
+  const { firstName, lastName, email, password, otp } = req.body;
 
-  if (!first_name || !last_name || !email || !password || !otp) {
+  if (!firstName || !lastName || !email || !password || !otp) {
     return res.status(400).json({ error: "All field are required!" });
   }
   try {
@@ -83,14 +83,14 @@ const register = asyncHandler(async (req, res) => {
 
     const generatedRandomId = `${crypto
       .randomInt(100000, 999999)
-      .toString()}${first_name.slice(0, 2).toUpperCase()}${last_name
+      .toString()}${firstName.slice(0, 2).toUpperCase()}${lastName
       .slice(0, 2)
       .toUpperCase()}${Math.floor(Math.random() * 100000)}`;
 
     const data = {
       user_id: generatedRandomId,
-      first_name,
-      last_name,
+      first_name: firstName,
+      last_name: lastName,
       email,
       password: decriptPass,
     };
