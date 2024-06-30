@@ -8,7 +8,7 @@ export default function DisplayGroupMemberSeen({ members, senderId }: Props) {
   const [seenMembers, setSeenMembers] = useState<TChannelMemberData[]>([]);
 
   useEffect(() => {
-    const removeSender = members.filter((m) => m.user_id !== senderId);
+    const removeSender = members.filter((m) => m.userId !== senderId);
     if (removeSender.length >= 0) {
       const limit =
         removeSender.length >= 4 ? removeSender.slice(0, 4) : removeSender;
@@ -19,10 +19,10 @@ export default function DisplayGroupMemberSeen({ members, senderId }: Props) {
   return (
     <div className="relative flex h-4 mr-1 min-w-8 max-w-12">
       {seenMembers.map((m: TChannelMemberData, i: number) => {
-        if (m.user_id === senderId) return null;
+        if (m.userId === senderId) return null;
         return (
           <div
-            key={m.user_id}
+            key={m.userId}
             className="absolute bottom-0 w-4 h-4 border rounded-full"
             style={{
               left:
@@ -35,7 +35,7 @@ export default function DisplayGroupMemberSeen({ members, senderId }: Props) {
                   : `${i + 15}px`,
             }}
           >
-            <DisplayAvatar id={m.user?.avatar_id as string} />
+            <DisplayAvatar id={m.user?.avatarId as string} />
           </div>
         );
       })}

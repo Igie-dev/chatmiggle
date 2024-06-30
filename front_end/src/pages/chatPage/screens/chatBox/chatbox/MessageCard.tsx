@@ -12,17 +12,17 @@ type Props = {
   lastMessage?: boolean;
 };
 export default function MessageCard({ message, lastMessage }: Props) {
-  const { user_id } = useAppSelector(getCurrentUser);
-  const senderMe = user_id === message.sender_id;
+  const { userId: currentUserId } = useAppSelector(getCurrentUser);
+  const senderMe = currentUserId === message.senderId;
   const senderData = message.channel.members.filter(
-    (m) => m.user_id === message.sender_id
+    (m) => m.userId === message.senderId
   );
 
   return (
     <>
       {message?.type === EMessageTypes.TYPE_NOTIF ? (
         <li
-          id={message.message_id}
+          id={message.messageId}
           className="flex flex-col items-center justify-center w-full h-16 text-muted-foreground"
         >
           <Bell size={20} strokeWidth={1} />
@@ -30,11 +30,11 @@ export default function MessageCard({ message, lastMessage }: Props) {
         </li>
       ) : message?.type === EMessageTypes.TYPE_TEXT ||
         message.type === EMessageTypes.TYPE_IMG ? (
-        <li id={message.message_id} className="flex justify-start w-full h-fit">
+        <li id={message.messageId} className="flex justify-start w-full h-fit">
           {!senderMe ? (
             <div className="w-8 h-8 mr-1">
               <DisplayAvatar
-                id={(senderData[0]?.user?.avatar_id as string) ?? ""}
+                id={(senderData[0]?.user?.avatarId as string) ?? ""}
               />
             </div>
           ) : null}

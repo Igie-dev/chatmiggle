@@ -11,28 +11,28 @@ export default function VerifyOtp() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [inputOtp, setInputOtp] = useState("");
   const navigate = useNavigate();
-  const first_name = sessionStorage.getItem("firstName");
-  const last_name = sessionStorage.getItem("lastName");
+  const firstName = sessionStorage.getItem("firstName");
+  const lastName = sessionStorage.getItem("lastName");
   const email = sessionStorage.getItem("email");
   const password = sessionStorage.getItem("password");
 
   useEffect(() => {
-    if (!first_name || !last_name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       navigate("/register/form");
     }
-  }, [email, first_name, last_name, navigate, password]);
+  }, [email, firstName, lastName, navigate, password]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!first_name || !last_name || !email || !password) {
+    if (!firstName || !lastName || !email || !password) {
       return;
     }
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const res: any = await register({
         otp: inputOtp,
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         email,
         password: decryptText(decodeURIComponent(password)),
       });

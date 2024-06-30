@@ -1,6 +1,5 @@
 import ChannelCard from "./channelCard/ChannelCard";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Library } from "lucide-react";
 import { useGetUserChannelsQuery } from "@/service/slices/channel/channelApiSlice";
 import { useLayoutEffect, useEffect, useState } from "react";
 import { useAppSelector } from "@/service/store";
@@ -14,7 +13,7 @@ type Props = {
   searchText: string;
 };
 export default function ChannelList({ handleAside, searchText }: Props) {
-  const { user_id } = useAppSelector(getCurrentUser);
+  const { userId: currentUserId } = useAppSelector(getCurrentUser);
   const newMessage = useListenNewMessage();
   const { channelId } = useParams();
   const navigate = useNavigate();
@@ -25,7 +24,7 @@ export default function ChannelList({ handleAside, searchText }: Props) {
     useListenLeaveGroup();
 
   const { data, isFetching, isError } = useGetUserChannelsQuery({
-    user_id,
+    userId: currentUserId,
     search: searchText,
   });
 
@@ -41,42 +40,41 @@ export default function ChannelList({ handleAside, searchText }: Props) {
   //new Message
   useEffect(() => {
     if (newMessage) {
-      const newChannelId = newMessage.channel_id;
-      const newMessageId = newMessage.messages[0].message_id;
+      const newChannelId = newMessage.channelId;
+
+      const newMessageId = newMessage?.messages[0]?.messageId as string;
 
       const existUserAsMember = newMessage.members.filter(
-        (m) => m.user_id === user_id && !m.is_deleted
+        (m) => m.userId === currentUserId && m.joinApproved
       );
 
       if (existUserAsMember.length === 0) return;
 
       //If channels not empty
       //Check if channel is exist on the list
-      const existChannel = channels.filter(
-        (c) => c.channel_id === newChannelId
-      );
+      const existChannel = channels.filter((c) => c.channelId === newChannelId);
 
       //if is exist
       //Modified current list to update message
       if (existChannel.length >= 1) {
         const existMessage =
           existChannel[0]?.messages.filter(
-            (msg) => msg.message_id === newMessageId
+            (msg) => msg.messageId === newMessageId
           ).length > 0;
 
         if (!existMessage) {
           const updateChannelMessage = channels.map((c: TChannelData) => {
-            if (c.channel_id === newChannelId) {
+            if (c.channelId === newChannelId) {
               //Update messages data of channel
               const newMessages = newMessage?.messages;
               //Update members data of channel to desplay channel seen
               const newMembers = newMessage?.members;
 
-              const newGroupName = newMessage?.group_name;
+              const newChannelName = newMessage?.channelName;
               // Update the channel with the new messages array
               return {
                 ...c,
-                group_name: newGroupName,
+                group_name: newChannelName,
                 members: newMembers,
                 messages: newMessages,
               };
@@ -85,12 +83,12 @@ export default function ChannelList({ handleAside, searchText }: Props) {
           });
 
           const latestChannel = updateChannelMessage.filter(
-            (c) => c.channel_id === newChannelId
+            (c) => c.channelId === newChannelId
           );
 
           setChannels((prev) => [
             { ...latestChannel[0] },
-            ...prev.filter((c) => c.channel_id !== newChannelId),
+            ...prev.filter((c) => c.channelId !== newChannelId),
           ]);
         }
       } else {
@@ -100,23 +98,23 @@ export default function ChannelList({ handleAside, searchText }: Props) {
         setChannels((prev) => [{ ...newMessage }, ...prev]);
       }
     }
-  }, [newMessage, user_id]);
+  }, [newMessage, currentUserId]);
 
   //remove from group
   useEffect(() => {
-    if (removeUserId === user_id) {
+    if (removeUserId === currentUserId) {
       setChannels((prev) =>
-        prev.filter((c) => c.channel_id !== removedChannelId)
+        prev.filter((c) => c.channelId !== removedChannelId)
       );
     }
-  }, [removeUserId, removedChannelId, user_id]);
+  }, [removeUserId, removedChannelId, currentUserId]);
 
   //Leave from group
   useEffect(() => {
     //Leave channel
     if (leaveGroupChannelId && leaveGroupUserId) {
       setChannels((prev) =>
-        prev.filter((c) => c.channel_id !== leaveGroupChannelId)
+        prev.filter((c) => c.channelId !== leaveGroupChannelId)
       );
     }
   }, [leaveGroupChannelId, leaveGroupUserId]);
@@ -125,13 +123,11 @@ export default function ChannelList({ handleAside, searchText }: Props) {
   useLayoutEffect(() => {
     if (channels?.length >= 1) {
       if (!channelId) {
-        navigate(`/c/${channels[0]?.channel_id}`);
+        navigate(`/c/${channels[0]?.channelId}`);
       } else {
-        const channelExists = channels.filter(
-          (c) => c.channel_id === channelId
-        );
+        const channelExists = channels.filter((c) => c.channelId === channelId);
         if (channelExists.length === 0) {
-          navigate(`/c/${channels[0]?.channel_id}`);
+          navigate(`/c/${channels[0]?.channelId}`);
         }
       }
 
@@ -141,16 +137,13 @@ export default function ChannelList({ handleAside, searchText }: Props) {
 
   return (
     <div className="flex flex-col h-[82%] w-full gap-2 overflow-y-auto">
-      <ul className="flex flex-col w-full h-fit  gap-[2px]  px-0">
+      <ul className="flex flex-col w-full h-fit items-center  gap-[2px]  px-0">
         {isFetching ? (
           <LoaderUi />
         ) : (
           <>
             {isError || channels?.length <= 0 ? (
-              <div className="flex flex-col items-center w-full mt-5 opacity-60">
-                <Library size={30} />
-                <p className="text-sm font-semibold">Empty</p>
-              </div>
+              <p className="mt-10 text-sm">Empty</p>
             ) : (
               channels?.map((c: TChannelData) => {
                 return (

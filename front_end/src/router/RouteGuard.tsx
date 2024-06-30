@@ -7,8 +7,8 @@ export default function RouteGuard() {
   const token = useAppSelector(getCurrentToken);
   const user = useAppSelector(getCurrentUser);
 
-  if (!token || !user.user_id) {
-    return <Navigate to="/logion" state={{ from: location }} replace />;
+  if (!token || !user.userId) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return <Outlet />;
 }

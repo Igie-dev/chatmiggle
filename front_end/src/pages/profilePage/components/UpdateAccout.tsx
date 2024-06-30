@@ -32,15 +32,15 @@ export default function UpdateAccout({ user }: Props) {
     }),
     onSubmit: async (values) => {
       if (
-        user?.first_name === values.firstName &&
-        user?.last_name === values.lastName
+        user?.firstName === values.firstName &&
+        user?.lastName === values.lastName
       )
         return;
 
       const data = {
-        user_id: user.user_id,
-        first_name: values.firstName,
-        last_name: values.lastName,
+        userId: user.userId,
+        firstName: values.firstName,
+        lastName: values.lastName,
       };
 
       try {
@@ -58,8 +58,8 @@ export default function UpdateAccout({ user }: Props) {
     if (open) {
       if (!formik.values.firstName && !formik.values.lastName) {
         formik.setValues({
-          firstName: user.first_name,
-          lastName: user.last_name,
+          firstName: user.firstName,
+          lastName: user.lastName,
         });
       }
     } else {
@@ -137,8 +137,8 @@ export default function UpdateAccout({ user }: Props) {
             <Button
               type="submit"
               disabled={
-                (user?.first_name === formik.values.firstName &&
-                  user?.last_name === formik.values.lastName) ||
+                (user?.firstName === formik.values.firstName &&
+                  user?.lastName === formik.values.lastName) ||
                 !formik.values.lastName ||
                 !formik.values.firstName ||
                 isLoading

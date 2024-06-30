@@ -19,8 +19,8 @@ export default function RemoveAvatar() {
     isLoading: getUserIsLoading,
     error: getUserError,
   } = useGetUserByIdQuery(id as string);
-  const { data, isFetching } = useGetAvatarLinkQuery(user?.avatar_id, {
-    skip: !user?.avatar_id,
+  const { data, isFetching } = useGetAvatarLinkQuery(user?.avatrId, {
+    skip: !user?.avatarId,
   });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

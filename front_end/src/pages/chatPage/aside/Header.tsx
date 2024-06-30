@@ -31,21 +31,21 @@ import { Copy, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 export default function Header() {
-  const { first_name, last_name, user_id } = useAppSelector(getCurrentUser);
-  const { data, isLoading } = useGetUserByIdQuery(user_id);
+  const { firstName, lastName, userId } = useAppSelector(getCurrentUser);
+  const { data, isLoading } = useGetUserByIdQuery(userId);
   const handleCopyId = () => {
-    navigator.clipboard.writeText(`${user_id}`);
+    navigator.clipboard.writeText(`${userId}`);
   };
 
   useEffect(() => {
     socket.on("connection", () => {});
-    if (user_id) {
-      socket.emit("user_join", user_id);
+    if (userId) {
+      socket.emit("user_join", userId);
     }
     return () => {
       socket.off("user_join");
     };
-  }, [user_id]);
+  }, [userId]);
   return (
     <header className="flex flex-col items-center justify-center w-full h-[13%] relative px-2 ">
       <div className="flex items-center justify-between w-full h-fit">
@@ -66,7 +66,7 @@ export default function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  to={`/profile/${data?.user_id}`}
+                  to={`/profile/${userId}`}
                   className="w-full cursor-pointer h-9 hover:bg-accent/70"
                 >
                   <span className="text-xs">Profile</span>
@@ -85,16 +85,16 @@ export default function Header() {
           {isLoading ? (
             <Skeleton className="w-full h-full" />
           ) : (
-            <DisplayAvatar id={data?.avatar_id} />
+            <DisplayAvatar id={data?.avatarId} />
           )}
         </div>
         <div className="flex flex-col w-[80%] mt-2">
           <p className="w-full text-sm font-medium truncate">
-            {first_name + " " + last_name}
+            {firstName + " " + lastName}
           </p>
           <div className="flex items-center gap-2 mt-1">
             <p className="text-[10px] truncate opacity-70 w-fit max-w-[80%]">
-              {"ID: " + user_id}
+              {"ID: " + userId}
             </p>
             <Dialog>
               <DialogTrigger asChild>
@@ -115,7 +115,7 @@ export default function Header() {
                     <Label htmlFor="userId" className="sr-only">
                       ID
                     </Label>
-                    <Input id="userId" defaultValue={user_id} readOnly />
+                    <Input id="userId" defaultValue={userId} readOnly />
                   </div>
                   <Button size="sm" onClick={handleCopyId} className="px-3">
                     <span className="sr-only">Copy</span>

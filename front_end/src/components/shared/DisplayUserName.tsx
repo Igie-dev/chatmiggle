@@ -13,7 +13,7 @@ export default function DisplayUserName({ userId }: Props) {
       ) : !data ? (
         "User"
       ) : (
-        <>{`${data?.first_name} ${data?.last_name}`}</>
+        <>{`${data?.firstName} ${data?.lastName}`}</>
       )}
     </>
   );

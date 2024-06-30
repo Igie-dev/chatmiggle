@@ -20,9 +20,8 @@ import {
 export default function ProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user_id } = useAppSelector(getCurrentUser);
+  const { userId: currentUserId } = useAppSelector(getCurrentUser);
   const { data, isFetching } = useGetUserByIdQuery(id as string, { skip: !id });
-
   return (
     <Container>
       <section className="flex items-center justify-center w-full h-full px-2">
@@ -41,8 +40,8 @@ export default function ProfilePage() {
                 <Skeleton className="w-full h-full" />
               ) : (
                 <>
-                  <DisplayAvatar id={data?.avatar_id} />
-                  {data?.user_id === user_id ? (
+                  <DisplayAvatar id={data?.avatarId} />
+                  {data?.userId === currentUserId ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -56,7 +55,7 @@ export default function ProfilePage() {
                       <DropdownMenuContent className="p-2 text-xs ">
                         <DropdownMenuItem asChild>
                           <Link
-                            to={`/avatar/upload/${data?.user_id}`}
+                            to={`/avatar/upload/${data?.userId}`}
                             className="flex items-center w-full gap-2 cursor-pointer h-9 hover:bg-accent/70"
                           >
                             <ImageUp size={20} />
@@ -65,7 +64,7 @@ export default function ProfilePage() {
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
                           <Link
-                            to={`/avatar/remove/${data?.user_id}`}
+                            to={`/avatar/remove/${data?.userId}`}
                             className="flex items-center w-full gap-2 cursor-pointer h-9 hover:bg-accent/70"
                           >
                             <ImageOff size={16} />{" "}
@@ -89,10 +88,10 @@ export default function ProfilePage() {
                   <Skeleton className="w-full h-full" />
                 </span>
               </>
-            ) : data?.user_id === user_id ? (
+            ) : data?.userId === currentUserId ? (
               <>
                 <UpdateAccout user={data} />
-                <DeleteAccount userId={data?.user_id} />
+                <DeleteAccount userId={data?.userId} />
               </>
             ) : null}
           </div>
@@ -110,7 +109,7 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <span className="text-xs opacity-60">ID</span>
-                  <span className="text-sm">{data?.user_id}</span>
+                  <span className="text-sm">{data?.userId}</span>
                 </>
               )}
             </div>
@@ -128,7 +127,7 @@ export default function ProfilePage() {
                 <>
                   <span className="text-xs opacity-60">Name</span>
                   <span className="text-sm">
-                    {data?.first_name + " " + data?.last_name}
+                    {data?.firstName + " " + data?.lastName}
                   </span>
                 </>
               )}

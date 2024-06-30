@@ -23,11 +23,11 @@ export default function Message({ channel }: Props) {
 }
 
 const MessageContent = ({ message }: { message: TMessageData }) => {
-  const { user_id } = useAppSelector(getCurrentUser);
+  const { userId: currentUserId } = useAppSelector(getCurrentUser);
   return message.type === EMessageTypes.TYPE_TEXT ||
     message.type === EMessageTypes.TYPE_NOTIF ? (
     <p className="w-fit max-w-[50%] text-xs truncate  max-h-6">
-      {message?.sender_id === user_id
+      {message?.senderId === currentUserId
         ? `You: ${decryptText(message?.message)}`
         : `${decryptText(message?.message)}`}
     </p>

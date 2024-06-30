@@ -36,11 +36,11 @@ export default function MessageList() {
           const newMessages = res.data?.messages as TMessageData[];
           const providedCursor = res.data?.cursor;
           if (newMessages?.length >= 1) {
-            if (newMessages[0]?.channel_id === channelId) {
+            if (newMessages[0]?.channelId === channelId) {
               setMessages(newMessages);
               //set taget scroll to bottom
               //first fetch
-              setTargetScroll(newMessages[newMessages.length - 1]?.message_id);
+              setTargetScroll(newMessages[newMessages.length - 1]?.messageId);
               if (providedCursor) {
                 setCursor(providedCursor);
               }
@@ -72,10 +72,10 @@ export default function MessageList() {
   //Handle data from socket
   useEffect(() => {
     if (newMessage) {
-      if (newMessage.channel_id != channelId) return;
+      if (newMessage.channelId != channelId) return;
       const message = newMessage.messages[0] as TMessageData;
       setMessages((prev: TMessageData[]) => [...prev, message]);
-      setTargetScroll(message?.message_id);
+      setTargetScroll(message?.messageId);
     }
   }, [channelId, newMessage]);
 
@@ -95,12 +95,12 @@ export default function MessageList() {
           const newMessages = res.data?.messages as TMessageData[];
           const providedCursor = res.data?.cursor;
           if (newMessages?.length >= 1) {
-            if (newMessages[0]?.channel_id === channelId) {
+            if (newMessages[0]?.channelId === channelId) {
               //Set the id of target element to scroll
               //To make not scroll to very bottom when data added
               //The id was the first data of this request
               //To make scroll on top of first fetch
-              setTargetScroll(newMessages[messages.length - 1]?.message_id);
+              setTargetScroll(newMessages[messages.length - 1]?.messageId);
               setMessages((prev) => [...newMessages, ...prev]);
               setCursor(providedCursor);
             }
@@ -137,7 +137,7 @@ export default function MessageList() {
               messages.map((message: TMessageData, i: number) => {
                 return (
                   <MessageCard
-                    key={message.message_id}
+                    key={message.messageId}
                     lastMessage={i === messages.length - 1}
                     message={message}
                   />

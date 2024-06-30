@@ -13,7 +13,7 @@ type Props = {
 };
 export default function TextInput({ setMessageType, messageType }: Props) {
   const { channelId } = useParams();
-  const { user_id } = useAppSelector(getCurrentUser);
+  const { userId } = useAppSelector(getCurrentUser);
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
   const [messageText, setMessageText] = useState("");
   const [mutate, { isLoading }] = useSendMessageMutation();
@@ -40,8 +40,8 @@ export default function TextInput({ setMessageType, messageType }: Props) {
   const handleSend = async () => {
     if (!channelId || !messageText) return;
     const data: TSendMessage = {
-      channel_id: channelId,
-      sender_id: user_id,
+      channelId: channelId,
+      senderId: userId,
       message: encryptText(messageText),
       type: "text",
     };
