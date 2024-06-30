@@ -16,7 +16,6 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           const { accessToken } = data;
-          console.log(accessToken)
           dispatch(setCredentials({ accessToken }));
           const decoded: any = jwtDecode(accessToken);
           const { userId, email, firstName, lastName } = decoded.User;
