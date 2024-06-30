@@ -870,7 +870,6 @@ const acceptRequestChannelJoin = asyncHandler(async (req, res) => {
     if (!foundReq?.id) {
       return res.status(404).json({ message: "Request not found!" });
     }
-    console.log(foundReq);
     await prisma.channelMember.update({
       where: {
         id: foundReq?.id,
@@ -882,7 +881,6 @@ const acceptRequestChannelJoin = asyncHandler(async (req, res) => {
 
     return res.status(200).json({ message: "Request accepted" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ message: "Something went wrong!" });
   }
 });
