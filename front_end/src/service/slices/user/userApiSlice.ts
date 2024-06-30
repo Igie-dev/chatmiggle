@@ -37,12 +37,6 @@ const userApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
-    getUserFriends: builder.query({
-      query: (id: string) => ({
-        url: `/user/friends/${id}`,
-        method: "GET",
-      }),
-    }),
   }),
 });
 
@@ -52,5 +46,4 @@ export const {
   useGetUserByIdMutMutation,
   useDeleteUserByIdMutation,
   useUpdateUserMutation,
-  useGetUserFriendsQuery,
 } = userApiSlice;
