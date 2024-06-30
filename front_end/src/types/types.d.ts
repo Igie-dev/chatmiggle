@@ -1,9 +1,9 @@
 declare global {
   type TCurrentUer = {
-    user_id: string;
+    userId: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
   };
   type TLogin = {
     email: string;
@@ -11,75 +11,81 @@ declare global {
   };
 
   type TRegister = {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     otp: string;
   };
-  type TUser = {
+
+  type TUserData = {
     id?: number;
-    user_id: string;
-    first_name: string;
-    last_name: string;
-    avatar_id?: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
+    avatarId?: string;
     email: string;
     createdAt: Date;
     updatedAt: Date;
+    channels: TChannelData[]
+    messages: TMessageData[]
   };
 
   type TUpdateUser = {
-    user_id: string;
-    first_name: string;
-    last_name: string;
+    userId: string;
+    firstName: string;
+    lastName: string;
   };
 
   type TMessageData = {
     id?: number;
-    channel_id: string;
-    message_id: string;
-    sender_id: string;
+    channelId: string;
+    messageId: string;
+    senderId: string;
     message: string;
-    channel: TChannelData;
     type: string;
     createdAt: Date;
     updatedAt?: Date;
+    user: TUserData;
+    channel: TChannelData
   };
 
   type TChannelMemberData = {
     id?: number;
-    user_id: string;
-    channel_id: string;
-    is_seen: boolean;
-    is_deleted: boolean;
-    is_admin: boolean;
-    user: TUser;
+    userId: string;
+    channelId: string;
+    isSeen: boolean;
+    joinApproved: boolean;
+    isAdmin: boolean;
+    user?: TUserData;
+    channel?: TChannelData
+
   };
   type TChannelData = {
     id?: number;
-    channel_id: string;
-    group_name?: string;
-    is_private: boolean;
-    avatar_id?: string;
-    messages: TMessageData[];
-    members: TChannelMemberData[];
+    channelId: string;
+    channelName?: string;
+    avatarId?: string;
     createdAt: string;
     updatedAt?: string;
+    messages: TMessageData[];
+    members: TChannelMemberData[];
   };
 
-  type TCreateNewPrivateChannel = {
-    sender_id: string;
+  type TCreateChannel = {
+    senderId: string;
     message: string;
     type: string;
-    members: { user_id: string }[];
+    channelName: string;
+    members: { userId: string }[];
   };
 
   type TSendMessage = {
-    channel_id: string;
-    sender_id: string;
+    channelId: string;
+    senderId: string;
     message: string;
     type: string;
   };
 }
 
-export {};
+export { };
