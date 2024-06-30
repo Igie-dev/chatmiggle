@@ -36,7 +36,7 @@ io.use(async (socket, next) => {
     },
     (err, decoded) => {
       if (err) return;
-      if (decoded.User.user_id) next();
+      if (decoded.User.userId) next();
     }
   );
 });
@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
     },
     (err, decoded) => {
       if (err) return;
-      return decoded.User.user_id;
+      return decoded.User.userId;
     }
   );
 
@@ -111,15 +111,6 @@ const emitingSeen = (receipent, data) => {
   }
 };
 
-const emitingAddGroupMember = (receipent, data) => {
-  const receipentSocketId = getRecipentSocketId(receipent);
-  if (receipentSocketId) {
-    io.to(receipentSocketId).emit("add_member", {
-      data,
-    });
-  }
-};
-
 export {
   getRecipentSocketId,
   emitNewMessage,
@@ -127,7 +118,6 @@ export {
   emitingRemoveGroupMember,
   emitingLeaveGroup,
   emitingSeen,
-  emitingAddGroupMember,
   server,
   io,
   app,
