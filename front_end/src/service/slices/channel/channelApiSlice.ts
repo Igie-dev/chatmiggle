@@ -4,8 +4,8 @@ const messagesLimit = import.meta.env.VITE_MESSAGES_LIMIT;
 const channelApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserChannels: builder.query({
-      query: ({ user_id, search }: { user_id: string; search: string }) => ({
-        url: `/channel/userchannel/${user_id}${search ? `?search=${search}` : ""
+      query: ({ userId, search }: { userId: string; search: string }) => ({
+        url: `/channel/userchannel/${userId}${search ? `?search=${search}` : ""
           }`,
         method: "GET",
       }),
@@ -24,6 +24,7 @@ const channelApiSlice = apiSlice.injectEndpoints({
         method: "GET",
       }),
     }),
+
     getChannel: builder.query({
       query: (channelId: string) => ({
         url: `/channel/${channelId}`,
@@ -57,16 +58,8 @@ const channelApiSlice = apiSlice.injectEndpoints({
     }),
 
     createChannel: builder.mutation({
-      query: (data: TCreateNewPrivateChannel) => ({
+      query: (data: TCreateChannel) => ({
         url: "/channel",
-        method: "POST",
-        body: data
-      })
-    }),
-
-    createGroup: builder.mutation({
-      query: (data: TCreateNewPrivateChannel) => ({
-        url: "/channel/group",
         method: "POST",
         body: data
       })
@@ -79,29 +72,53 @@ const channelApiSlice = apiSlice.injectEndpoints({
         body: data
       })
     }),
-    addToGroup: builder.mutation({
-      query: (data: { channel_id: string, user_id: string }) => ({
-        url: "/channel/group/add",
-        method: "POST",
-        body: data
-      })
-    }),
+
     removeFromGroup: builder.mutation({
-      query: (data: { channel_id: string, type: string, user_id: string }) => ({
+      query: (data: { channelId: string, type: string, userId: string }) => ({
         url: "/channel/group/remove",
         method: "DELETE",
         body: data
       })
     }),
+
     seenChannel: builder.mutation({
-      query: (data: { channel_id: string, user_id: string }) => ({
+      query: (data: { channelId: string, userId: string }) => ({
         url: "/channel/seen",
+        method: "POST",
+        body: data
+      })
+    }),
+    requestJoinChannel: builder.mutation({
+      query: (data: { channelId: string, userId: string }) => ({
+        url: "/channel/requestjoin",
+        method: "POST",
+        body: data
+      })
+    }),
+
+    getChannelMembers: builder.query({
+      query: (channelId: string) => ({
+        url: `/channel/getmembers/${channelId}`,
+        method: "GET",
+      }),
+    }),
+    getChannelRequestJoin: builder.query({
+      query: (channelId: string) => ({
+        url: `/channel/requestjoin/${channelId}`,
+        method: "GET",
+      }),
+    }),
+    acceptChannelJoinRequest: builder.mutation({
+      query: (data: { channelId: string, userId: string }) => ({
+        url: "/channel/acceptjoinrequest",
         method: "POST",
         body: data
       })
     }),
   }),
 });
+//TODO
+//Make req for user request join to channel
 
 export const {
   useGetUserChannelsQuery,
@@ -109,10 +126,12 @@ export const {
   useGetChannelQuery,
   useDeleteChannelMutation,
   useSendMessageMutation,
-  useAddToGroupMutation,
   useChangeGroupNameMutation,
   useCreateChannelMutation,
-  useCreateGroupMutation,
   useRemoveFromGroupMutation,
-  useSeenChannelMutation
+  useSeenChannelMutation,
+  useGetChannelMembersQuery,
+  useGetChannelRequestJoinQuery,
+  useRequestJoinChannelMutation,
+  useAcceptChannelJoinRequestMutation,
 } = channelApiSlice;
