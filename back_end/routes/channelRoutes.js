@@ -1,24 +1,26 @@
 import express from "express";
 import verifyJWT from "../middleware/verifyJWT.js";
+
 import {
   createChannel,
-  createGroupChannel,
   userChannels,
   getChannel,
   deleteChannel,
   channelMessages,
   sendMessage,
-  addToGroup,
   seenChannel,
   changeGroupName,
   removeFromChannel,
+  requestJoinChannel,
+  getChannelMembers,
+  getChannelRequestJoin,
+  acceptRequestChannelJoin,
 } from "../controller/channelsController.js";
+
 const router = express.Router();
 router.use(verifyJWT);
 
 router.route("/").post(createChannel);
-
-router.route("/group").post(createGroupChannel);
 
 router.route("/userchannel/:userId").get(userChannels);
 
@@ -34,8 +36,13 @@ router.route("/seen").post(seenChannel);
 
 router.route("/group/changename").post(changeGroupName);
 
-router.route("/group/add").post(addToGroup);
-
 router.route("/group/remove").delete(removeFromChannel);
 
+router.route("/requestjoin").post(requestJoinChannel);
+
+router.route("/getmembers/:channelId").get(getChannelMembers);
+
+router.route("/requestjoin/:channelId").get(getChannelRequestJoin);
+
+router.route("/acceptjoinrequest").post(acceptRequestChannelJoin);
 export default router;
