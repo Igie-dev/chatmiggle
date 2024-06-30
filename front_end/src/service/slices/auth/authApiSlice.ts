@@ -16,13 +16,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         try {
           const { data } = await queryFulfilled;
           const { accessToken } = data;
+          console.log(accessToken)
           dispatch(setCredentials({ accessToken }));
           const decoded: any = jwtDecode(accessToken);
-          const { user_id, email, first_name, last_name } = decoded.User;
-          if (user_id && email && first_name && last_name) {
-            dispatch(setCurrentUser({ user_id, email, first_name, last_name }));
+          const { userId, email, firstName, lastName } = decoded.User;
+          if (userId && email && firstName && lastName) {
+            dispatch(setCurrentUser({ userId, email, firstName, lastName }));
           }
-        } catch (error) {}
+        } catch (error) { }
       },
     }),
 
@@ -39,7 +40,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
             dispatch(logOut());
             dispatch(removeCurrentUser());
           }
-        } catch (error) {}
+        } catch (error) { }
       },
     }),
 
@@ -55,11 +56,11 @@ export const authApiSlice = apiSlice.injectEndpoints({
           const { accessToken } = data;
           dispatch(setCredentials({ accessToken }));
           const decoded: any = jwtDecode(accessToken);
-          const { user_id, email, first_name, last_name } = decoded.User;
-          if (user_id && email && first_name && last_name) {
-            dispatch(setCurrentUser({ user_id, email, first_name, last_name }));
+          const { userId, email, firstName, lastName } = decoded.User;
+          if (userId && email && firstName && lastName) {
+            dispatch(setCurrentUser({ userId, email, firstName, lastName }));
           }
-        } catch (error) {}
+        } catch (error) { }
       },
     }),
 
