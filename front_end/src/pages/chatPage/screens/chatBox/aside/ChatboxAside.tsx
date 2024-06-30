@@ -1,14 +1,13 @@
-import { useParams } from "react-router-dom";
 import Header from "./Header";
-import { useGetChannelQuery } from "@/service/slices/channel/channelApiSlice";
-import GroupMembers from "./GroupMembers";
-import { useRef } from "react";
+import ChannelMembers from "./ChannelMembers";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical, X } from "lucide-react";
+import RequestJoinList from "./requestJoinChannel/RequestJoinList";
+
 export default function ChatboxAside() {
   const asideRef = useRef<HTMLDivElement | null>(null);
-  const { channelId } = useParams();
-  const { data, isFetching } = useGetChannelQuery(channelId as string);
+  const [activeList, setActiveList] = useState("memberList");
   const handleAside = () => {
     if (asideRef?.current?.classList.contains("translate-x-full")) {
       asideRef?.current?.classList.remove("translate-x-full");
@@ -17,6 +16,9 @@ export default function ChatboxAside() {
     }
   };
 
+  const handleChangeList = (key: string) => {
+    setActiveList(key);
+  };
   return (
     <aside
       ref={asideRef}
@@ -38,12 +40,34 @@ export default function ChatboxAside() {
       >
         <X size={20} />
       </Button>
-      <Header channel={data} isFetching={isFetching} />
-      {data?.channel_id ? (
-        <div className="relative flex-1 w-full px-2 pt-5 overflow-auto ">
-          <GroupMembers channel={data} />
-        </div>
-      ) : null}
+      <Header />
+
+      <div className="flex items-center w-full gap-1">
+        <Button
+          size="sm"
+          onClick={() => handleChangeList("memberList")}
+          variant="ghost"
+          className={`w-1/2 ${
+            activeList === "memberList" ? "bg-secondary" : "bg-transparent"
+          }`}
+        >
+          Members
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => handleChangeList("requestList")}
+          variant="ghost"
+          className={`w-1/2 ${
+            activeList === "requestList" ? "bg-secondary" : "bg-transparent"
+          }`}
+        >
+          Request
+        </Button>
+      </div>
+      <div className="relative flex-1 w-full px-2 pt-5 overflow-auto ">
+        {activeList === "memberList" ? <ChannelMembers /> : null}
+        {activeList === "requestList" ? <RequestJoinList /> : null}
+      </div>
     </aside>
   );
 }
