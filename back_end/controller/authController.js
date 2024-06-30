@@ -29,9 +29,9 @@ const signIn = asyncHandler(async (req, res) => {
       {
         User: {
           email: email,
-          first_name: foundUser?.first_name,
-          last_name: foundUser?.last_name,
-          user_id: foundUser?.user_id,
+          firstName: foundUser?.first_name,
+          lastName: foundUser?.last_name,
+          userId: foundUser?.user_id,
         },
         aud: `${audience}`,
         iss: `${issuer}`,
@@ -41,7 +41,7 @@ const signIn = asyncHandler(async (req, res) => {
 
     const refreshToken = jwt.sign(
       {
-        user_id: foundUser?.user_id,
+        userId: foundUser?.user_id,
         aud: `${audience}`,
         iss: `${issuer}`,
       },
@@ -76,7 +76,7 @@ const refresh = asyncHandler(async (req, res) => {
         if (error) {
           return res.status(403).json({ error: "Forbidden!" });
         }
-        const userId = decoded.user_id;
+        const userId = decoded.userId;
         if (!userId) {
           return res.status(401).json({ error: "Unauthorized!" });
         }
@@ -96,9 +96,9 @@ const refresh = asyncHandler(async (req, res) => {
           {
             User: {
               email: foundUser?.email,
-              first_name: foundUser?.first_name,
-              last_name: foundUser?.last_name,
-              user_id: foundUser?.user_id,
+              firstName: foundUser?.first_name,
+              lastName: foundUser?.last_name,
+              userId: foundUser?.user_id,
             },
             aud: `${audience}`,
             iss: `${issuer}`,
