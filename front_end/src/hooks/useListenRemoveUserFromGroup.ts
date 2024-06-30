@@ -6,14 +6,14 @@ import { useAppSelector } from '@/service/store';
 export default function useListenRemoveUserFromGroup() {
     const [channelId, setChannelId] = useState("");
     const [userId, setUserId] = useState("");
-    const { user_id } = useAppSelector(getCurrentUser);
+    const { userId: currentUserId } = useAppSelector(getCurrentUser);
 
     useEffect(() => {
-        socket.on("remove_group_member", (res: { data: { channel_id: string, user_id: string } }) => {
-            setChannelId(res.data.channel_id);
-            setUserId(res.data.user_id);
+        socket.on("remove_group_member", (res: { data: { channelId: string, userId: string } }) => {
+            setChannelId(res?.data?.channelId);
+            setUserId(res?.data?.userId);
         })
-    }, [user_id])
+    }, [currentUserId])
 
     return { channelId, userId }
 }

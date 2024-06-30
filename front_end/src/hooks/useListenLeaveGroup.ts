@@ -6,13 +6,13 @@ import { getCurrentUser } from '@/service/slices/user/userSlice';
 export default function useListenLeaveGroup() {
     const [channelId, setChannelId] = useState("");
     const [userId, setUserId] = useState("");
-    const { user_id } = useAppSelector(getCurrentUser);
+    const { userId: currentUserId } = useAppSelector(getCurrentUser);
 
     useEffect(() => {
-        socket.on("leave_channel", (res: { data: { channel_id: string, user_id: string } }) => {
-            if (user_id !== res.data.user_id) {
-                setChannelId(res.data.channel_id);
-                setUserId(res.data.user_id)
+        socket.on("leave_channel", (res: { data: { channelId: string, userId: string } }) => {
+            if (currentUserId !== res.data.userId) {
+                setChannelId(res?.data?.channelId);
+                setUserId(res?.data?.userId)
             } else {
                 setChannelId("");
                 setUserId("")
@@ -20,7 +20,7 @@ export default function useListenLeaveGroup() {
 
         })
 
-    }, [user_id])
+    }, [currentUserId])
 
     return { channelId, userId }
 }

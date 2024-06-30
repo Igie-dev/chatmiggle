@@ -5,12 +5,12 @@ import { useAppSelector } from '@/service/store';
 import { socket } from "@/socket";
 export default function useListenMessageSeen() {
     const [channel, setChannel] = useState<TChannelData | null>(null);
-    const { user_id } = useAppSelector(getCurrentUser);
+    const { userId: currentUserId } = useAppSelector(getCurrentUser);
     useEffect(() => {
         socket.on("seen", (res: { data: TChannelData }) => {
             const channel = res.data;
             const members = channel.members;
-            const user = members.filter((m) => m.user_id === user_id);
+            const user = members.filter((m) => m.userId === currentUserId);
             if (user.length <= 0) {
                 setChannel(null)
             } else {
@@ -19,7 +19,7 @@ export default function useListenMessageSeen() {
 
         })
 
-    }, [user_id])
+    }, [currentUserId])
 
     return channel;
 }
