@@ -19,14 +19,12 @@ type Props = {
   channelAvatarId: string;
   groupName?: string;
   userId: string;
-  isPrivate: boolean;
 };
 
 export default function DeleteChannel({
   channelId,
   groupName,
   userId,
-  isPrivate,
   channelAvatarId,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -58,28 +56,24 @@ export default function DeleteChannel({
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader className="items-center">
-            <DialogTitle>
-              {isPrivate ? "Delete channel" : "Delete group"}
-            </DialogTitle>
+            <DialogTitle>Delete channel</DialogTitle>
             <DialogDescription>
-              {`Are you sure you want to delete this ${
-                isPrivate ? "channel" : "group"
-              }?`}
+              Are you sure you want to delete this channel
             </DialogDescription>
           </DialogHeader>
-          {!isPrivate ? (
-            <div className="flex flex-col items-center justify-center gap-2 my-5">
-              <div className="w-16 h-16 overflow-hidden border rounded-full">
-                <DisplayAvatar id={channelAvatarId} />
-              </div>
-              <span className="w-full font-normal text-center truncate text-medium">
-                {groupName}
-              </span>
-              <p className="text-sm text-destructive">{error?.data?.message}</p>
+
+          <div className="flex flex-col items-center justify-center gap-2 my-5">
+            <div className="w-16 h-16 overflow-hidden border rounded-full">
+              <DisplayAvatar id={channelAvatarId} />
             </div>
-          ) : null}
+            <span className="w-full font-normal text-center truncate text-medium">
+              {groupName}
+            </span>
+            <p className="text-sm text-destructive">{error?.data?.message}</p>
+          </div>
+
           <p className="text-sm text-destructive">{error?.data?.message}</p>
-          <DialogFooter className={`${isPrivate ? "mt-10" : "mt-0"}`}>
+          <DialogFooter>
             <Button type="submit" disabled={isLoading} className="w-full">
               {isLoading ? <BtnsLoaderSpinner /> : "Delete"}
             </Button>
