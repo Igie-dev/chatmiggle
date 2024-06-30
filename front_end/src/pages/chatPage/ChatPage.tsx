@@ -7,7 +7,7 @@ export default function ChannelScreen() {
     <Container>
       <>
         <AsideNav />
-        <main className="w-full h-full lg:flex-1">
+        <main className="relative w-full h-full lg:flex-1">
           {!channelId ? null : <Outlet />}
         </main>
       </>
